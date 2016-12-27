@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      <ion-icon name="musical-notes"></ion-icon>
+      Display Song Number
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <song-number [value]="songNumberService.digits"></song-number>
+
+  <ion-item (click)="openSelectBookModal()">
+    <ion-thumbnail item-left *ngIf="songNumberService.book">
+      <img [src]="songNumberService.book.thumb">
+    </ion-thumbnail>
+    <h2 [hidden]="songNumberService.book">Carti</h2>
+    <h2 *ngIf="songNumberService.book">{{songNumberService.book.title}}</h2>
+    <p *ngIf="songNumberService.book">{{songNumberService.book.description}}</p>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Notes</ion-label>
+    <ion-input type="text" [(ngModel)]="songNumberService.notes"></ion-input>
+  </ion-item>
+
+  <ion-buttons text-center>
+    <button ion-button round (click)="songNumberService.showNumber()">Send</button>
+  </ion-buttons>
+
+</ion-content>

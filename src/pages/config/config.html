@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      <ion-icon name="settings"></ion-icon>
+      Settings
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="openAddBookModal()">
+        <ion-icon name="add-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-item>
+    <ion-label>Digits</ion-label>
+    <ion-select [(ngModel)]="digitLength" (ionChange)="changeDigitLength()">
+      <ion-option *ngFor="let value of possibleDigits">{{value}}</ion-option>
+    </ion-select>
+  </ion-item>
+  <ion-list>
+    <ion-list-header>Books</ion-list-header>
+    <ion-item-sliding *ngFor="let item of songNumberService.books">
+      <ion-item>
+        <ion-avatar item-left>
+          <img [src]="item.thumb">
+        </ion-avatar>
+        <h2>{{item.title}}</h2>
+        <p>{{item.description}}</p>
+      </ion-item>
+      <ion-item-options side="left">
+        <button ion-button color="danger" (click)="removeBook(item)">
+          <ion-icon name="trash"></ion-icon>
+          Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>

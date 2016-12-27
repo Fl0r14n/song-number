@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      <ion-icon name="information-cicle"></ion-icon>
+      Broadcast information
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-item>
+    <ion-textarea placeholder="General Information" clearInput rows="6"
+                  [(ngModel)]="songNumberService.info"></ion-textarea>
+  </ion-item>
+
+  <ion-buttons text-center>
+    <button ion-button round (click)="songNumberService.showInfo()">Send</button>
+  </ion-buttons>
+</ion-content>
