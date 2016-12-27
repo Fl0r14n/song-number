@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Storage} from '@ionic/storage';
-import {createPureProxy} from "@angular/compiler/src/compiler_util/identifier_util";
 
 interface Digit {
   pos: number;
