@@ -1,7 +1,7 @@
 {
-  "name": "ionic-hello-world",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "name": "SongNumber",
+  "author": "Florian Chiș",
+  "homepage": "https://github.com/Fl0r14n/",
   "private": true,
   "scripts": {
     "clean": "ionic-app-scripts clean",
@@ -39,5 +39,5 @@
     "ionic-plugin-keyboard"
   ],
   "cordovaPlatforms": [],
-  "description": "SongNumber: An Ionic project"
+  "description": "SongNumber: a small mobile app that will allow user to set a song number from a list of song books and cast it"
 }

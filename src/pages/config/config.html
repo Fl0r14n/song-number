@@ -25,10 +25,10 @@
   <ion-list>
     <ion-list-header>Books</ion-list-header>
     <ion-item-sliding *ngFor="let item of songNumberService.books">
-      <ion-item>
-        <ion-avatar item-left>
+      <ion-item [color]="item == songNumberService.book? 'primary': ''">
+        <ion-thumbnail item-left>
           <img [src]="item.thumb">
-        </ion-avatar>
+        </ion-thumbnail>
         <h2>{{item.title}}</h2>
         <p>{{item.description}}</p>
       </ion-item>

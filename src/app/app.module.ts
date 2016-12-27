@@ -1,5 +1,6 @@
 import {NgModule, ErrorHandler} from '@angular/core';
 import {IonicApp, IonicModule, IonicErrorHandler} from 'ionic-angular';
+import {Storage} from '@ionic/storage';
 import {MyApp} from './app.component';
 import {MainPage} from '../pages/main/main';
 import {InfoPage} from '../pages/info/info';
@@ -34,7 +35,7 @@ import {SongNumberService} from  '../providers/song-number';
     SelectBookModalPage
   ],
   providers: [
-    SongNumberService,
+    SongNumberService, Storage,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
