@@ -7,6 +7,11 @@
       <ion-icon name="musical-notes"></ion-icon>
       Display Song Number
     </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only color="primary" (click)="testConnectSDK()">
+        <ion-icon name="desktop"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -29,7 +34,7 @@
   </ion-item>
 
   <ion-buttons text-center>
-    <button ion-button round (click)="songNumberService.showNumber()">Send</button>
+    <button ion-button round (click)="showNumber()">Send</button>
   </ion-buttons>
 
 </ion-content>

@@ -45,8 +45,10 @@ export class ConfigPage {
   openAddBookModal() {
     let modal = this.modalCtrl.create(AddBookModalPage);
     modal.onDidDismiss(data => {
-      this.songNumberService.books.push(data);
-      this.songNumberService.book = data;
+      if(data) {
+        this.songNumberService.books.push(data);
+        this.songNumberService.book = data;
+      }
     });
     modal.present();
   }
