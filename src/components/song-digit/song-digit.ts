@@ -18,9 +18,12 @@ export class SongDigitComponent {
   }
 
   change(value: number) {
-    if (this.value >= 0 && this.value < 10) {
-      this.value += value;
-      this.valueChange.emit(this.value);
+    this.value += value;
+    if(this.value < 0) {
+      this.value = 9;
+    } else if(this.value > 9) {
+      this.value = 0;
     }
+    this.valueChange.emit(this.value);
   }
 }

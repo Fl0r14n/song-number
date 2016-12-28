@@ -41,8 +41,9 @@ export class SongNumberService {
           value: 0
         }];
       }
-      //override some array methods
-      this.digits = this.createArrayProxy(this.digits, STORAGE_ID_DIGITS);
+      //make digits observable
+      this.digits = this.enhanceArray(this.digits, this.saveDigits.bind(this));
+      this.digits = this.observableArray(this.digits, this.saveDigits.bind(this));
     });
     this.storage.get(STORAGE_ID_NOTES).then(data => {
       this._notes = data;
@@ -93,23 +94,30 @@ export class SongNumberService {
           }
         ];
       }
-      this.books = this.createArrayProxy(this.books, STORAGE_ID_BOOKS);
+      //make books observable
+      this.books = this.observableArray(this.books, this.saveBooks.bind(this));
     });
     this.storage.get(STORAGE_ID_INFO).then(data => {
       this._info = data;
     });
   }
 
-  createArrayProxy(array: any[], storageId: string) {
-    return new Proxy(array, {
-      set: (target, property, value) => {
-        target[property] = value;
-        if(property === 'length') {
-          this.storage.set(storageId, target);
-        }
-        return true;
-      }
-    });
+  showNumber() {
+    console.log('Show number');
+  }
+
+  showInfo() {
+    console.log('Show Info');
+  }
+
+  changeDigitLength(size: number) {
+    this.digits = this.observableArray([], this.saveDigits.bind(this));
+    for (let i = 0; i < size; i++) {
+      this.digits.push(this.observableObject({
+        pos: i,
+        value: 0
+      }, this.saveDigits.bind(this)));
+    }
   }
 
   get notes(): string {
@@ -139,21 +147,59 @@ export class SongNumberService {
     this.storage.set(STORAGE_ID_INFO, value);
   }
 
-  showNumber() {
-    console.log('Show number');
+
+  //watch for change in digit and save to storage
+  private observableObject(value: any, callback?: Function) {
+    return new Proxy(value, {
+      get: (target, property) => {
+        return target[property];
+      },
+      set: (target, property, value) => {
+        target[property] = value;
+        if (callback) {
+          callback(target);
+        }
+        return true;
+      }
+    });
   }
 
-  showInfo() {
-    console.log('Show Info');
+  //watch for change in array and save to storage
+  private observableArray(array: any[], callback?: Function) {
+    return new Proxy(array, {
+      get: (target, property) => {
+        return target[property];
+      },
+      set: (target, property, value) => {
+        target[property] = value;
+        if (property === 'length' && callback) {
+          callback(target);
+        }
+        return true;
+      }
+    });
   }
 
-  changeDigitLength(size: number) {
-    this.digits = this.createArrayProxy([], STORAGE_ID_DIGITS);
-    for (let i = 0; i < size; i++) {
-      this.digits.push({
-        pos: i,
-        value: 0
-      })
+  private enhanceArray(arr: any[], callback?: Function): any[] {
+    for (let i = 0; i < arr.length; i++) {
+      arr[i] = this.observableObject(arr[i], callback);
     }
+    return arr;
+  }
+
+  private saveBooks(books: any[]) {
+    this.storage.set(STORAGE_ID_BOOKS, books);
+  }
+
+  private saveDigits() {
+    // unwrap all proxys since there is something wrong with storage
+    let buf: Digit[] = [];
+    for (let obj of this.digits) {
+      buf.push({
+        pos: obj.pos,
+        value: obj.value
+      });
+    }
+    this.storage.set(STORAGE_ID_DIGITS, buf);
   }
 }

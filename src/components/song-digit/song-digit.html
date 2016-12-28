@@ -1,11 +1,11 @@
 <div text-center>
-  <button ion-button outline icon-only (click)="inc()" [disabled]="value>=9">
+  <button ion-button outline icon-only (click)="inc()">
     <ion-icon name="arrow-dropup"></ion-icon>
   </button>
   <ion-item no-lines text-center>
     {{value}}
   </ion-item>
-  <button ion-button outline icon-only (click)="dec()" [disabled]="value<=0">
+  <button ion-button outline icon-only (click)="dec()">
     <ion-icon name="arrow-dropdown"></ion-icon>
   </button>
 </div>

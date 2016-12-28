@@ -11,6 +11,7 @@ import { ConfigPage } from '../pages/config/config';
   templateUrl: 'app.html'
 })
 export class MyApp {
+
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any = MainPage;
@@ -26,7 +27,6 @@ export class MyApp {
       { title: 'Broadcast Information', component: InfoPage },
       { title: 'Settings', component: ConfigPage }
     ];
-
   }
 
   initializeApp() {
