@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {Validators, FormBuilder, FormGroup} from '@angular/forms';
 import {ViewController} from 'ionic-angular';
 import {Camera} from 'ionic-native';
 
@@ -8,12 +9,19 @@ import {Camera} from 'ionic-native';
 })
 export class AddBookModalPage {
 
-  book: any = {
-    title: '',
-    description: '',
-    thumb: 'assets/thumb/vrednic_este_mielul_1.jpg',
-    img: 'assets/thumb/vrednic_este_mielul_1.jpg',
-  };
+  bookForm: FormGroup;
+  book: any;
+
+  constructor(public formBuilder: FormBuilder, public viewCtrl: ViewController) {
+    this.bookForm = this.formBuilder.group({
+      title: ['', Validators.compose([Validators.required, Validators.minLength(5)])],
+      description: ['']
+    });
+    this.book = {
+      thumb: ['assets/thumb/vrednic_este_mielul_1.jpg'],
+      img: ['assets/thumb/vrednic_este_mielul_1.jpg'],
+    }
+  }
 
   cameraOptions(srcType): any {
     return {
@@ -30,11 +38,8 @@ export class AddBookModalPage {
     };
   }
 
-  constructor(public viewCtrl: ViewController) {
-  }
-
   addBook() {
-    this.viewCtrl.dismiss(this.book);
+    this.viewCtrl.dismiss(Object.assign(this.book, this.bookForm.value));
   }
 
   dismiss() {
@@ -52,6 +57,6 @@ export class AddBookModalPage {
       this.book.thumb = base64Image;
     }, (err) => {
       console.debug("Unable to obtain picture: " + err, "app");
-    }, );
+    },);
   }
 }
