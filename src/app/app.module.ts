@@ -10,6 +10,7 @@ import {SelectBookModalPage} from '../pages/select-book-modal/select-book-modal'
 import {SongDigitComponent} from '../components/song-digit/song-digit';
 import {SongNumberComponent} from '../components/song-number/song-number';
 import {SongNumberService} from  '../providers/song-number';
+import {ChromecastService} from '../providers/chromecast';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,7 @@ import {SongNumberService} from  '../providers/song-number';
     SelectBookModalPage
   ],
   providers: [
-    SongNumberService, Storage,
+    SongNumberService, ChromecastService, Storage,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
