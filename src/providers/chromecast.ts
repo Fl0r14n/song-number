@@ -65,7 +65,6 @@ export class ChromecastService {
           this.toast("receiver found");
         } else {
           this.toast("receiver list empty");
-          this.initialize();
         }
       });
       this.cast.initialize(apiConfig, () => {
