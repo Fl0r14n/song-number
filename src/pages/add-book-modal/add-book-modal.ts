@@ -19,7 +19,6 @@ export class AddBookModalPage {
     });
     this.book = {
       thumb: ['assets/thumb/vrednic_este_mielul_1.jpg'],
-      img: ['assets/thumb/vrednic_este_mielul_1.jpg'],
     }
   }
 

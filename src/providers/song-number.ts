@@ -7,7 +7,7 @@ interface Digit {
 }
 
 interface Book {
-  title: string, description: string, thumb: string, img: string
+  title: string, description: string, thumb: string
 }
 
 const STORAGE_ID_DIGITS: string = 'song-number-settings-digits';
@@ -60,37 +60,31 @@ export class SongNumberService {
             title: 'Caietele negre',
             description: 'Caietele vechi',
             thumb: 'assets/thumb/caiete_negre.jpg',
-            img: 'assets/img/'
           },
           {
             title: 'Vrednic este Mielul vol.1',
             description: 'Cartile portocalii',
             thumb: 'assets/thumb/vrednic_este_mielul_1.jpg',
-            img: 'assets/img/',
           },
           {
             title: 'Vrednic este Mielul vol.2',
             description: 'Cantari cor de pasti si craciun',
             thumb: 'assets/thumb/vrednic_este_mielul_2.jpg',
-            img: 'assets/img/',
           },
           {
             title: 'Caietele albastre',
             description: 'Caietele albastre',
             thumb: 'assets/thumb/caiete_albastre.jpg',
-            img: 'assets/img/',
           },
           {
             title: 'Un ospat nesfarsit',
             description: 'Cartea rosie Jubilate',
             thumb: 'assets/thumb/un_ospat_nesfarsit.jpg',
-            img: 'assets/img/',
           },
           {
             title: 'Cantarile Evangheliei',
             description: 'Cartile rosii',
             thumb: 'assets/thumb/cantarile_evangheliei_rosii.jpg',
-            img: 'assets/img/',
           }
         ];
       }
@@ -118,6 +112,7 @@ export class SongNumberService {
 
   presentNumber() {
     return {
+      type: 1,
       number: this.buildNumber(),
       book: this.book,
       notes: this.notes
@@ -126,6 +121,7 @@ export class SongNumberService {
 
   presentInfo() {
     return {
+      type: 2,
       message: this.info
     }
   }

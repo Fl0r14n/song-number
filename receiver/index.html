@@ -6,29 +6,104 @@
       overflow: hidden;
     }
 
-    div {
+    .row {
+      display: flex;
+    }
+
+    .info {
+      width: 100%;
+      text-align: center;
+      font-size: 4rem;
+      margin: 0 2rem 0 2rem;
+      color: cyan;
+    }
+
+    .number {
+      width: 100%;
+      text-align: center;
+      font-size: 15rem;
+      margin: 0 2rem 0 2rem;
+      color: dodgerblue;
+    }
+
+    .notes {
+      width: 100%;
+      text-align: center;
+      margin: 0 2rem 0 2rem;
+      color: aqua;
+    }
+
+    .image {
+      width: 20%;
+    }
+
+    .book {
+      width: 80%;
+    }
+
+    .thumb {
+      width: 200px;
+      height: 200px;
+    }
+
+    .title {
+      text-align: left;
+      font-size: 5rem;
+      color: magenta;
+    }
+
+    .subtitle {
+      text-align: left;
+    }
+
+    .content {
       height: 720PX;
       width: 1280PX;
       text-align: center;
       border: 0 solid silver;
       display: table-cell;
       vertical-align: middle;
-      color: #FFFFFF;
+      color: white;
       background-color: #000000;
       font-weight: bold;
       font-family: Verdana, Geneva, sans-serif;
-      font-size: 40px;
+      font-size: 3rem;
     }
   </style>
   <title>Cast Hello Text</title>
 </head>
 <body>
-<DIV id="message">Talk to me</DIV>
+<div class="content">
+  <div class="row">
+    <div class="info">
+    </div>
+  </div>
+  <div class="row">
+    <div class="number"></div>
+  </div>
+  <div class="row">
+    <div class="image">
+    </div>
+    <div class="book">
+      <div class="title"></div>
+      <div class="subtitle"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="notes"></div>
+  </div>
+</div>
 <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
 <script type="text/javascript">
   window.onload = function () {
     var namespace = 'urn:x-cast:ro.biserica2.cast.songnumber';
-//    var namespace = 'urn:x-cast:com.google.cast.sample.helloworld';
+
+    var info = document.getElementsByClassName('info')[0];
+    var number = document.getElementsByClassName('number')[0];
+    var image = document.getElementsByClassName('image')[0];
+    var title = document.getElementsByClassName('title')[0];
+    var subtitle = document.getElementsByClassName('subtitle')[0];
+    var notes = document.getElementsByClassName('notes')[0];
 
     cast.receiver.logger.setLevelValue(0);
     window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
@@ -67,7 +142,7 @@
     window.messageBus.onMessage = function (event) {
       console.log('Message [' + event.senderId + ']: ' + event.data);
       // display the message from the sender
-      displayText(event.data);
+      displayMessage(event.data);
       // inform all senders on the CastMessageBus of the incoming message event
       // sender message listener will be invoked
       window.messageBus.send(event.senderId, event.data);
@@ -79,10 +154,29 @@
   };
 
   // utility function to display the text message in the input field
-  function displayText(text) {
-    console.log(text);
-    document.getElementById("message").innerHTML = text;
-    window.castReceiverManager.setApplicationState(text);
+  function displayMessage(data) {
+    console.log(data);
+    switch (data.type) {
+      case 1: {
+        number.innerHTML = data.number;
+        notes.innerHTML = data.notes;
+        image.innerHTML = '<img class="thumb" src="' + data.book.thumb + '">';
+        title.innerHTML = data.book.title;
+        subtitle.innerHTML = data.book.subtitle;
+        info.innerHTML = '';
+        break;
+      }
+      case 2: {
+        info.innerHTML = data.message;
+        number.innerHTML = '';
+        notes.innerHTML = '';
+        image.innerHTML = '';
+        title.innerHTML = '';
+        subtitle.innerHTML = '';
+        break;
+      }
+    }
+    window.castReceiverManager.setApplicationState(data);
   }
 </script>
 </body>
