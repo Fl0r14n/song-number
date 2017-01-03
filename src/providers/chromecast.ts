@@ -10,6 +10,7 @@ export class ChromecastService {
   applicationId = '794B7BBF';
   namespace = 'urn:x-cast:com.google.cast.sample.helloworld';
   session: any = null;
+  isInitialized = false;
 
   constructor(public toastCtrl: ToastController) {
     this.loadScript();
@@ -32,7 +33,7 @@ export class ChromecastService {
 
   checkForCastApi() {
     this.cast = window['chrome'].cast;
-    if(!this.cast) {
+    if (!this.cast) {
       setTimeout(this.initialize.bind(this), 1000);
     } else {
       this.initialize();
@@ -46,9 +47,9 @@ export class ChromecastService {
       let apiConfig = new this.cast.ApiConfig(sessionRequest, (s) => {
         //new session
         this.session = s;
-        this.toast('New session ID:' + this.session.sessionId);
+        this.toast('new session:' + this.session.sessionId);
         this.session.addUpdateListener((isAlive) => {
-          let message = isAlive ? 'Session Updated' : 'Session Removed';
+          let message = isAlive ? 'session updated' : 'session removed';
           message += ': ' + this.session.sessionId;
           this.toast(message);
           if (!isAlive) {
@@ -57,49 +58,49 @@ export class ChromecastService {
         });
         this.session.addMessageListener(this.namespace, (namespace, message) => {
           //message received
-          this.toast("receiverMessage: " + namespace + ", " + message);
+          this.toast("received from " + namespace + ": " + message);
         });
       }, (status) => {
         if (status === this.cast.ReceiverAvailability.AVAILABLE) {
           this.toast("receiver found");
-        }
-        else {
+        } else {
           this.toast("receiver list empty");
           this.initialize();
         }
       });
       this.cast.initialize(apiConfig, () => {
-        this.toast('chromecast api init success');
+        this.toast('api init success');
+        this.isInitialized = true;
       }, this.onError);
     }
   }
 
   onError(msg) {
-    this.toast('onError: ' + JSON.stringify(msg));
+    this.toast('error: ' + JSON.stringify(msg));
   }
 
   onSuccess(msg) {
-    this.toast("onSuccess: " + msg);
+    this.toast("success: " + msg);
   }
 
   stop() {
     if (this.session) {
       this.session.stop(() => {
-        this.toast('onStopAppSuccess');
+        this.toast('stop');
       }, this.onError);
     }
   }
 
   send(msg) {
-    this.toast('Send Message: ' + msg);
+    this.toast('send meessage: ' + msg);
     if (this.session != null) {
-      this.session.sendMessage(this.namespace, msg, this.onSuccess.bind(this, "Message sent: " + msg), this.onError);
+      this.session.sendMessage(this.namespace, msg, this.onSuccess.bind(this, "sent: " + msg), this.onError);
     } else {
       this.toast('Request session');
       this.cast.requestSession((s) => {
         this.session = s;
         this.toast('Session: ' + this.session.sessionId);
-        this.session.sendMessage(this.namespace, msg, this.onSuccess.bind(this, "Message sent: " + msg), this.onError);
+        this.session.sendMessage(this.namespace, msg, this.onSuccess.bind(this, "sent: " + msg), this.onError);
       });
     }
   }

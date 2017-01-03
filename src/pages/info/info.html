@@ -18,6 +18,8 @@
   </ion-item>
 
   <ion-buttons text-center>
-    <button ion-button round (click)="songNumberService.showInfo()">Send</button>
+    <button ion-button round (click)="present()" [color]="presentButton.color"
+            [disabled]="!chromecastService.isInitialized">{{presentButton.text}}
+    </button>
   </ion-buttons>
 </ion-content>

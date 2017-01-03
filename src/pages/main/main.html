@@ -7,11 +7,6 @@
       <ion-icon name="musical-notes"></ion-icon>
       Display Song Number
     </ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only color="primary" (click)="searchDevices()">
-        <ion-icon name="desktop"></ion-icon>
-      </button>
-    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -34,7 +29,9 @@
   </ion-item>
 
   <ion-buttons text-center>
-    <button ion-button round (click)="showNumber()">Send</button>
+    <button ion-button round (click)="present()" [color]="presentButton.color"
+            [disabled]="!chromecastService.isInitialized">{{presentButton.text}}
+    </button>
   </ion-buttons>
 
 </ion-content>

@@ -4,11 +4,29 @@ import {SongNumberService} from  '../../providers/song-number';
 import {ChromecastService} from '../../providers/chromecast';
 import {SelectBookModalPage} from '../select-book-modal/select-book-modal';
 
+interface PresentButton {
+  isPresenting: boolean, text: string, color: string
+}
+
 @Component({
   selector: 'page-main',
   templateUrl: 'main.html'
 })
 export class MainPage {
+
+  presentButtonOFF: PresentButton = {
+    isPresenting: false,
+    text: 'Present',
+    color: 'primary'
+  };
+
+  presentButtonON: PresentButton = {
+    isPresenting: true,
+    text: 'Stop',
+    color: 'danger'
+  };
+
+  presentButton: PresentButton = this.presentButtonOFF;
 
   constructor(public songNumberService: SongNumberService, public chromecastService: ChromecastService, public modalCtrl: ModalController) {
   }
@@ -24,11 +42,13 @@ export class MainPage {
     modal.present();
   }
 
-  searchDevices() {
-    this.chromecastService.initialize();
-  }
-
-  showNumber() {
-    this.chromecastService.send('Hello World');
+  present() {
+    if (!this.presentButton.isPresenting) {
+      this.chromecastService.send('Hello World');
+      this.presentButton = this.presentButtonON;
+    } else {
+      this.chromecastService.stop();
+      this.presentButton = this.presentButtonOFF;
+    }
   }
 }
