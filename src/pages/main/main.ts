@@ -10,10 +10,6 @@ import {SelectBookModalPage} from '../select-book-modal/select-book-modal';
 })
 export class MainPage {
 
-  connectSdk: any;
-  discoveryManager: any;
-  devices: any;
-
   constructor(public songNumberService: SongNumberService, public chromecastService: ChromecastService, public modalCtrl: ModalController) {
   }
 

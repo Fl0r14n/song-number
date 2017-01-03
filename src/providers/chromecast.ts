@@ -5,33 +5,42 @@ import {ToastController} from 'ionic-angular'
 export class ChromecastService {
 
   cast: any;
-  applicationId = '20CAA3A2';
-  namespace = 'urn:x-cast:ro.biserica2.cast.songnumber';
-  // applicationId = '794B7BBF';
-  // namespace = 'urn:x-cast:com.google.cast.sample.helloworld';
-  session: any;
+  // applicationId = '20CAA3A2';
+  // namespace = 'urn:x-cast:ro.biserica2.cast.songnumber';
+  applicationId = '794B7BBF';
+  namespace = 'urn:x-cast:com.google.cast.sample.helloworld';
+  session: any = null;
 
   constructor(public toastCtrl: ToastController) {
-    this.cast = window['chrome'].cast;
     this.loadScript();
-    this.initialize();
   }
 
-
   loadScript() {
-    //inject script if in browser mode
+    this.cast = window['chrome'].cast;
     if (!this.cast) {
-      console.log('Loading js cast script');
+      //inject script if in browser mode
       let head = document.getElementsByTagName('head')[0];
       let script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = '//www.gstatic.com/cv/js/sender/v1/cast_sender.js';
-      script.onload = this.initialize;
+      script.onload = this.checkForCastApi.bind(this);
       head.appendChild(script);
+    } else {
+      this.initialize();
+    }
+  }
+
+  checkForCastApi() {
+    this.cast = window['chrome'].cast;
+    if(!this.cast) {
+      setTimeout(this.initialize.bind(this), 1000);
+    } else {
+      this.initialize();
     }
   }
 
   initialize() {
+    this.cast = window['chrome'].cast;
     if (this.cast) {
       let sessionRequest = new this.cast.SessionRequest(this.applicationId);
       let apiConfig = new this.cast.ApiConfig(sessionRequest, (s) => {
@@ -45,7 +54,6 @@ export class ChromecastService {
           if (!isAlive) {
             this.session = null;
           }
-
         });
         this.session.addMessageListener(this.namespace, (namespace, message) => {
           //message received
@@ -57,6 +65,7 @@ export class ChromecastService {
         }
         else {
           this.toast("receiver list empty");
+          this.initialize();
         }
       });
       this.cast.initialize(apiConfig, () => {
@@ -83,21 +92,20 @@ export class ChromecastService {
 
   send(msg) {
     this.toast('Send Message: ' + msg);
-    if (this.session) {
-      if (this.session) {
+    if (this.session != null) {
+      this.session.sendMessage(this.namespace, msg, this.onSuccess.bind(this, "Message sent: " + msg), this.onError);
+    } else {
+      this.toast('Request session');
+      this.cast.requestSession((s) => {
+        this.session = s;
+        this.toast('Session: ' + this.session.sessionId);
         this.session.sendMessage(this.namespace, msg, this.onSuccess.bind(this, "Message sent: " + msg), this.onError);
-      } else {
-        this.toast('Request session');
-        this.cast.requestSession((s) => {
-          this.session = s;
-          this.toast('Session: ' + this.session.sessionId);
-          this.session.sendMessage(this.namespace, msg, this.onSuccess.bind(this, "Message sent: " + msg), this.onError);
-        });
-      }
+      });
     }
   }
 
   toast(msg) {
+    console.log(msg);
     let toast = this.toastCtrl.create({
       message: msg,
       duration: 3000
