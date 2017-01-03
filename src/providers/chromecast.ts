@@ -5,10 +5,10 @@ import {ToastController} from 'ionic-angular'
 export class ChromecastService {
 
   cast: any;
-  // applicationId = '20CAA3A2';
-  // namespace = 'urn:x-cast:ro.biserica2.cast.songnumber';
-  applicationId = '794B7BBF';
-  namespace = 'urn:x-cast:com.google.cast.sample.helloworld';
+  applicationId = '20CAA3A2';
+  namespace = 'urn:x-cast:ro.biserica2.cast.songnumber';
+  // applicationId = '794B7BBF';
+  // namespace = 'urn:x-cast:com.google.cast.sample.helloworld';
   session: any = null;
   isInitialized = false;
 
@@ -71,7 +71,7 @@ export class ChromecastService {
       this.cast.initialize(apiConfig, () => {
         this.toast('api init success');
         this.isInitialized = true;
-      }, this.onError);
+      }, this.onError.bind(this));
     }
   }
 
@@ -87,20 +87,21 @@ export class ChromecastService {
     if (this.session) {
       this.session.stop(() => {
         this.toast('stop');
-      }, this.onError);
+        this.session = null;
+      }, this.onError.bind(this));
     }
   }
 
   send(msg) {
     this.toast('send meessage: ' + msg);
     if (this.session != null) {
-      this.session.sendMessage(this.namespace, msg, this.onSuccess.bind(this, "sent: " + msg), this.onError);
+      this.session.sendMessage(this.namespace, msg, this.onSuccess.bind(this, "sent: " + msg), this.onError.bind(this));
     } else {
       this.toast('Request session');
       this.cast.requestSession((s) => {
         this.session = s;
         this.toast('Session: ' + this.session.sessionId);
-        this.session.sendMessage(this.namespace, msg, this.onSuccess.bind(this, "sent: " + msg), this.onError);
+        this.session.sendMessage(this.namespace, msg, this.onSuccess.bind(this, "sent: " + msg), this.onError.bind(this));
       });
     }
   }

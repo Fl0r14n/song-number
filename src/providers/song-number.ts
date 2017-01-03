@@ -102,12 +102,32 @@ export class SongNumberService {
     });
   }
 
-  showNumber() {
-    console.log('Show number');
+  buildNumber(): string {
+    let result: string = '';
+    let leadingZeros = true;
+    for (let obj of this.digits) {
+      if(obj.value != 0) {
+        leadingZeros = false;
+        result += obj.value;
+      } else if(!leadingZeros) {
+        result += obj.value;
+      }
+    }
+    return result;
   }
 
-  showInfo() {
-    console.log('Show Info');
+  presentNumber() {
+    return {
+      number: this.buildNumber(),
+      book: this.book,
+      notes: this.notes
+    }
+  }
+
+  presentInfo() {
+    return {
+      message: this.info
+    }
   }
 
   changeDigitLength(size: number) {

@@ -44,7 +44,9 @@ export class MainPage {
 
   present() {
     if (!this.presentButton.isPresenting) {
-      this.chromecastService.send('Hello World');
+      let toPresent = this.songNumberService.presentNumber();
+      console.log(toPresent);
+      this.chromecastService.send(toPresent);
       this.presentButton = this.presentButtonON;
     } else {
       this.chromecastService.stop();

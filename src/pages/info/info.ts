@@ -31,7 +31,9 @@ export class InfoPage {
 
   present() {
     if (!this.presentButton.isPresenting) {
-      this.chromecastService.send('Hello info');
+      let toPresent = this.songNumberService.presentInfo();
+      console.log(toPresent);
+      this.chromecastService.send(toPresent);
       this.presentButton = this.presentButtonON;
     } else {
       this.chromecastService.stop();
