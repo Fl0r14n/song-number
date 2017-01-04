@@ -7,10 +7,10 @@ export class ChromecastService {
   cast: any;
   applicationId = '20CAA3A2';
   namespace = 'urn:x-cast:ro.biserica2.cast.songnumber';
-  // applicationId = '794B7BBF';
-  // namespace = 'urn:x-cast:com.google.cast.sample.helloworld';
   session: any = null;
   isInitialized = false;
+  //prevent some initialize bug when opening the application for the first time
+  private _reinitilize: boolean = true;
 
   constructor(public toastCtrl: ToastController) {
     this.loadScript();
@@ -27,7 +27,7 @@ export class ChromecastService {
       script.onload = this.checkForCastApi.bind(this);
       head.appendChild(script);
     } else {
-      this.initialize();
+      this.checkForCastApi();
     }
   }
 
@@ -65,6 +65,11 @@ export class ChromecastService {
           this.toast("receiver found");
         } else {
           this.toast("receiver list empty");
+          //workaround
+          if (this._reinitilize) {
+            this._reinitilize = false;
+            this.initialize();
+          }
         }
       });
       this.cast.initialize(apiConfig, () => {

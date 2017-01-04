@@ -98,13 +98,6 @@
   window.onload = function () {
     var namespace = 'urn:x-cast:ro.biserica2.cast.songnumber';
 
-    var info = document.getElementsByClassName('info')[0];
-    var number = document.getElementsByClassName('number')[0];
-    var image = document.getElementsByClassName('image')[0];
-    var title = document.getElementsByClassName('title')[0];
-    var subtitle = document.getElementsByClassName('subtitle')[0];
-    var notes = document.getElementsByClassName('notes')[0];
-
     cast.receiver.logger.setLevelValue(0);
     window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
     console.log('Starting Receiver Manager');
@@ -136,7 +129,7 @@
     };
 
     // create a CastMessageBus to handle messages for a custom namespace
-    window.messageBus = window.castReceiverManager.getCastMessageBus(namespace);
+    window.messageBus = window.castReceiverManager.getCastMessageBus(namespace, cast.receiver.CastMessageBus.MessageType.JSON);
 
     // handler for the CastMessageBus message event
     window.messageBus.onMessage = function (event) {
@@ -156,18 +149,28 @@
   // utility function to display the text message in the input field
   function displayMessage(data) {
     console.log(data);
+    var info = document.getElementsByClassName('info')[0];
+    var number = document.getElementsByClassName('number')[0];
+    var image = document.getElementsByClassName('image')[0];
+    var title = document.getElementsByClassName('title')[0];
+    var subtitle = document.getElementsByClassName('subtitle')[0];
+    var notes = document.getElementsByClassName('notes')[0];
+
     switch (data.type) {
       case 1: {
-        number.innerHTML = data.number;
-        notes.innerHTML = data.notes;
-        image.innerHTML = '<img class="thumb" src="' + data.book.thumb + '">';
-        title.innerHTML = data.book.title;
-        subtitle.innerHTML = data.book.subtitle;
+        number.innerHTML = data.number ? data.number : '';
+        notes.innerHTML = data.notes ? data.notes : '';
+        var book = data.book;
+        if (book) {
+          title.innerHTML = book.title ? book.title : '';
+          subtitle.innerHTML = book.description ? book.description : '';
+          image.innerHTML = book.thumb ? '<img class="thumb" src="' + book.thumb + '">' : '';
+        }
         info.innerHTML = '';
         break;
       }
       case 2: {
-        info.innerHTML = data.message;
+        info.innerHTML = data.message ? data.message : '';
         number.innerHTML = '';
         notes.innerHTML = '';
         image.innerHTML = '';
