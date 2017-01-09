@@ -1,61 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <style type="text/css">
     body {
       overflow: hidden;
     }
-
-    .row {
-      display: flex;
-    }
-
     .info {
-      width: 100%;
-      text-align: center;
-      font-size: 4rem;
-      margin: 0 2rem 0 2rem;
-      color: cyan;
+      font-size: 6rem;
     }
-
     .number {
-      width: 100%;
-      text-align: center;
+      font-weight: bolder;
       font-size: 15rem;
-      margin: 0 2rem 0 2rem;
-      color: dodgerblue;
     }
-
     .notes {
-      width: 100%;
-      text-align: center;
-      margin: 0 2rem 0 2rem;
       color: aqua;
     }
-
-    .image {
-      width: 20%;
-    }
-
-    .book {
-      width: 80%;
-    }
-
-    .thumb {
-      width: 200px;
-      height: 200px;
-    }
-
     .title {
-      text-align: left;
-      font-size: 5rem;
-      color: magenta;
+      font-size: 7.5rem;
     }
-
     .subtitle {
-      text-align: left;
+      color: lightgrey;
     }
-
     .content {
       height: 720PX;
       width: 1280PX;
@@ -66,32 +32,19 @@
       color: white;
       background-color: #000000;
       font-weight: bold;
-      font-family: Verdana, Geneva, sans-serif;
-      font-size: 3rem;
+      font-family: 'Roboto', sans-serif;
+      font-size: 4rem;
     }
   </style>
-  <title>Cast Hello Text</title>
+  <title>SongNumber Cast App</title>
 </head>
 <body>
 <div class="content">
-  <div class="row">
-    <div class="info">
-    </div>
-  </div>
-  <div class="row">
-    <div class="number"></div>
-  </div>
-  <div class="row">
-    <div class="image">
-    </div>
-    <div class="book">
-      <div class="title"></div>
-      <div class="subtitle"></div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="notes"></div>
-  </div>
+  <div class="info"></div>
+  <div class="number"></div>
+  <div class="title"></div>
+  <div class="subtitle"></div>
+  <div class="notes"></div>
 </div>
 <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
 <script type="text/javascript">
@@ -124,8 +77,7 @@
 
     // handler for 'systemvolumechanged' event
     castReceiverManager.onSystemVolumeChanged = function (event) {
-      console.log('Received System Volume Changed event: ' + event.data['level'] + ' ' +
-        event.data['muted']);
+      console.log('Received System Volume Changed event: ' + event.data['level'] + ' ' + event.data['muted']);
     };
 
     // create a CastMessageBus to handle messages for a custom namespace
@@ -151,7 +103,7 @@
     console.log(data);
     var info = document.getElementsByClassName('info')[0];
     var number = document.getElementsByClassName('number')[0];
-    var image = document.getElementsByClassName('image')[0];
+    var image = document.getElementsByClassName('content')[0];
     var title = document.getElementsByClassName('title')[0];
     var subtitle = document.getElementsByClassName('subtitle')[0];
     var notes = document.getElementsByClassName('notes')[0];
@@ -164,7 +116,14 @@
         if (book) {
           title.innerHTML = book.title ? book.title : '';
           subtitle.innerHTML = book.description ? book.description : '';
-          image.innerHTML = book.thumb ? '<img class="thumb" src="' + book.thumb + '">' : '';
+          if (book.thumb) {
+            image.style.background = book.thumb ? 'url("' + book.thumb + '") no-repeat' : '';
+            image.style.backgroundSize = 'contain';
+            image.style.backgroundPosition = 'center';
+            image.style.backgroundColor = '#000000';
+          } else {
+            image.style = '';
+          }
         }
         info.innerHTML = '';
         break;
@@ -173,7 +132,7 @@
         info.innerHTML = data.message ? data.message : '';
         number.innerHTML = '';
         notes.innerHTML = '';
-        image.innerHTML = '';
+        image.style = '';
         title.innerHTML = '';
         subtitle.innerHTML = '';
         break;
