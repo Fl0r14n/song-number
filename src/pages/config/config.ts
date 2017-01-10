@@ -10,18 +10,20 @@ import {LoggerService} from "../../providers/logger";
 })
 export class ConfigPage {
 
-  digitLength: number;
   possibleDigits: number[] = [1, 2, 3, 4, 5];
 
   constructor(public songNumberService: SongNumberService,
               public alertCtrl: AlertController,
               public modalCtrl: ModalController,
               public log: LoggerService) {
-    this.digitLength = songNumberService.digits.length;
   }
 
-  changeDigitLength() {
-    this.songNumberService.changeDigitLength(this.digitLength);
+  get digitLength(): number {
+    return this.songNumberService.digits.length;
+  }
+
+  set digitLength(value: number) {
+    this.songNumberService.changeDigitLength(value);
   }
 
   removeBook(item) {

@@ -65,7 +65,6 @@ export class LoggerService {
     if (cssClass) {
       toastSettings.cssClass = cssClass;
     }
-    console.log(toastSettings);
     let toast = this.toastCtrl.create(toastSettings);
     toast.present();
   }

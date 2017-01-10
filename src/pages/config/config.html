@@ -23,7 +23,7 @@
     </ion-item>
     <ion-item>
       <ion-label>Digits</ion-label>
-      <ion-select [(ngModel)]="digitLength" (ionChange)="changeDigitLength()">
+      <ion-select [(ngModel)]="digitLength">
         <ion-option *ngFor="let value of possibleDigits">{{value}}</ion-option>
       </ion-select>
     </ion-item>
