@@ -1,18 +1,19 @@
 import {Injectable} from '@angular/core';
-import {ToastController} from 'ionic-angular'
+import {LoggerService} from "./logger";
 
 @Injectable()
 export class ChromecastService {
 
   cast: any;
-  applicationId = '20CAA3A2';
-  namespace = 'urn:x-cast:ro.biserica2.cast.songnumber';
+  applicationId: string = '20CAA3A2';
+  namespace: string = 'urn:x-cast:ro.biserica2.cast.songnumber';
   session: any = null;
-  isInitialized = false;
+  isInitialized: boolean = false;
+  receivesFound: boolean = false;
   //prevent some initialize bug when opening the application for the first time
   private _reinitilize: boolean = true;
 
-  constructor(public toastCtrl: ToastController) {
+  constructor(public log: LoggerService) {
     this.loadScript();
   }
 
@@ -47,24 +48,26 @@ export class ChromecastService {
       let apiConfig = new this.cast.ApiConfig(sessionRequest, (s) => {
         //new session
         this.session = s;
-        this.toast('new session:' + this.session.sessionId);
+        this.log.info('new session:' + this.session.sessionId);
         this.session.addUpdateListener((isAlive) => {
           let message = isAlive ? 'session updated' : 'session removed';
           message += ': ' + this.session.sessionId;
-          this.toast(message);
+          this.log.debug(message);
           if (!isAlive) {
             this.session = null;
           }
         });
         this.session.addMessageListener(this.namespace, (namespace, message) => {
           //message received
-          this.toast("received from " + namespace + ": " + message);
+          this.log.debug('received from ' + namespace + ': ' + message);
         });
       }, (status) => {
         if (status === this.cast.ReceiverAvailability.AVAILABLE) {
-          this.toast("receiver found");
+          this.receivesFound = true;
+          this.log.info('receiver found');
         } else {
-          this.toast("receiver list empty");
+          this.receivesFound = false;
+          this.log.warn('receiver list empty');
           //workaround
           if (this._reinitilize) {
             this._reinitilize = false;
@@ -73,49 +76,40 @@ export class ChromecastService {
         }
       });
       this.cast.initialize(apiConfig, () => {
-        this.toast('api init success');
+        this.log.info('api init success');
         this.isInitialized = true;
       }, this.onError.bind(this));
     }
   }
 
   onError(msg) {
-    this.toast('error: ' + JSON.stringify(msg));
+    this.log.error('error: ' + JSON.stringify(msg));
   }
 
   onSuccess(msg) {
-    this.toast("success: " + msg);
+    this.log.debug('success: ' + msg);
   }
 
   stop() {
     if (this.session) {
       this.session.stop(() => {
-        this.toast('stop');
+        this.log.debug('stop');
         this.session = null;
       }, this.onError.bind(this));
     }
   }
 
   send(msg) {
-    this.toast('send meessage: ' + msg);
+    this.log.debug('send meessage: ' + msg);
     if (this.session != null) {
       this.session.sendMessage(this.namespace, msg, this.onSuccess.bind(this, "sent: " + msg), this.onError.bind(this));
     } else {
-      this.toast('Request session');
+      this.log.debug('Request session');
       this.cast.requestSession((s) => {
         this.session = s;
-        this.toast('Session: ' + this.session.sessionId);
+        this.log.debug('Session: ' + this.session.sessionId);
         this.session.sendMessage(this.namespace, msg, this.onSuccess.bind(this, "sent: " + msg), this.onError.bind(this));
       });
     }
-  }
-
-  toast(msg) {
-    console.log(msg);
-    let toast = this.toastCtrl.create({
-      message: msg,
-      duration: 3000
-    });
-    toast.present();
   }
 }

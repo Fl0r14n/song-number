@@ -30,7 +30,7 @@
 
   <ion-buttons text-center>
     <button ion-button round (click)="present()" [color]="presentButton.color"
-            [disabled]="!chromecastService.isInitialized">{{presentButton.text}}
+            [disabled]="!(chromecastService.isInitialized && chromecastService.receivesFound)">{{presentButton.text}}
     </button>
   </ion-buttons>
 

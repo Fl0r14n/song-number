@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {AlertController, ModalController} from 'ionic-angular';
 import {SongNumberService} from '../../providers/song-number';
 import {AddBookModalPage} from '../add-book-modal/add-book-modal';
+import {LoggerService} from "../../providers/logger";
 
 @Component({
   selector: 'page-config',
@@ -12,7 +13,10 @@ export class ConfigPage {
   digitLength: number;
   possibleDigits: number[] = [1, 2, 3, 4, 5];
 
-  constructor(public songNumberService: SongNumberService, public alertCtrl: AlertController, public modalCtrl: ModalController) {
+  constructor(public songNumberService: SongNumberService,
+              public alertCtrl: AlertController,
+              public modalCtrl: ModalController,
+              public log: LoggerService) {
     this.digitLength = songNumberService.digits.length;
   }
 
@@ -45,11 +49,19 @@ export class ConfigPage {
   openAddBookModal() {
     let modal = this.modalCtrl.create(AddBookModalPage);
     modal.onDidDismiss(data => {
-      if(data) {
+      if (data) {
         this.songNumberService.books.push(data);
         this.songNumberService.book = data;
       }
     });
     modal.present();
+  }
+
+  get debug(): boolean {
+    return this.log.logLevel == LoggerService.DEBUG;
+  }
+
+  set debug(value: boolean) {
+    this.log.logLevel = value ? LoggerService.DEBUG : LoggerService.ERROR;
   }
 }

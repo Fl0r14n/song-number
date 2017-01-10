@@ -26,9 +26,15 @@ $font-path: "../assets/fonts";
 $colors: (
   primary:    #387ef5,
   secondary:  #32db64,
+  warn:       #ff5a0c,
   danger:     #f53d3d,
   light:      #f4f4f4,
-  dark:       #222
+  dark:       #222,
+  energized:  #ffc527,
+  royal:      #7e60ff,
+  subtle:     #444444,
+  vibrant:    rebeccapurple,
+  bright:     #ffc125
 );
 
 
@@ -76,3 +82,25 @@ $colors: (
 
 @import "roboto";
 @import "noto-sans";
+
+
+.toast-info .toast-container {
+  border-color: #0a9dc7;
+  background-color: #11c1f3;
+  color: #fff;
+}
+.toast-warn .toast-container {
+  border-color: #e6b500;
+  background-color: #ffc900;
+  color: #fff;
+}
+.toast-error .toast-container {
+  border-color: #e42112;
+  background-color: #ef473a;
+  color: #fff;
+}
+.toast-debug .toast-container {
+  border-color: #111;
+  background-color: #444444;
+  color: #fff;
+}

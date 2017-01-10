@@ -11,6 +11,7 @@ import {SongDigitComponent} from '../components/song-digit/song-digit';
 import {SongNumberComponent} from '../components/song-number/song-number';
 import {SongNumberService} from  '../providers/song-number';
 import {ChromecastService} from '../providers/chromecast';
+import {LoggerService} from '../providers/logger';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,7 @@ import {ChromecastService} from '../providers/chromecast';
     SelectBookModalPage
   ],
   providers: [
-    SongNumberService, ChromecastService, Storage,
+    SongNumberService, ChromecastService, LoggerService, Storage,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
