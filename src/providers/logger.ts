@@ -23,11 +23,15 @@ export class LoggerService {
     return 3;
   }
 
-  private _logLevel: number;
+  private _logLevel: number = LoggerService.ERROR;
 
   constructor(public storage: Storage, public toastCtrl: ToastController) {
     this.storage.get(STORAGE_ID_DEBUG).then(data => {
-      this._logLevel = data;
+      if (data) {
+        this._logLevel = data;
+      } else {
+        this.logLevel = LoggerService.ERROR;
+      }
     });
   }
 

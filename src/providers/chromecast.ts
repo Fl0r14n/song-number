@@ -76,7 +76,6 @@ export class ChromecastService {
         }
       });
       this.cast.initialize(apiConfig, () => {
-        this.log.info('api init success');
         this.isInitialized = true;
       }, this.onError.bind(this));
     }
