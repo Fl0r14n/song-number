@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {SongNumberService} from  '../../providers/song-number';
-import {ChromecastService} from '../../providers/chromecast';
+import {ChromecastService} from "../../providers/chromecast";
 
 interface PresentButton {
   isPresenting: boolean, text: string, color: string
@@ -31,12 +31,10 @@ export class InfoPage {
 
   present() {
     if (!this.presentButton.isPresenting) {
-      let toPresent = this.songNumberService.presentInfo();
-      console.log(toPresent);
-      this.chromecastService.send(toPresent);
+      this.songNumberService.presentInfo();
       this.presentButton = this.presentButtonON;
     } else {
-      this.chromecastService.stop();
+      this.songNumberService.stopPresentaion();
       this.presentButton = this.presentButtonOFF;
     }
   }

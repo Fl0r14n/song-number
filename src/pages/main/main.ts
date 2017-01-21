@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
 import {ModalController} from 'ionic-angular';
 import {SongNumberService} from  '../../providers/song-number';
-import {ChromecastService} from '../../providers/chromecast';
 import {SelectBookModalPage} from '../select-book-modal/select-book-modal';
+import {ChromecastService} from "../../providers/chromecast";
 
 interface PresentButton {
   isPresenting: boolean, text: string, color: string
@@ -28,7 +28,7 @@ export class MainPage {
 
   presentButton: PresentButton = this.presentButtonOFF;
 
-  constructor(public songNumberService: SongNumberService, public chromecastService: ChromecastService, public modalCtrl: ModalController) {
+  constructor(public songNumberService: SongNumberService, public modalCtrl: ModalController, public chromecastService: ChromecastService) {
   }
 
   openSelectBookModal() {
@@ -44,12 +44,10 @@ export class MainPage {
 
   present() {
     if (!this.presentButton.isPresenting) {
-      let toPresent = this.songNumberService.presentNumber();
-      console.log(toPresent);
-      this.chromecastService.send(toPresent);
+      this.songNumberService.presentNumber();
       this.presentButton = this.presentButtonON;
     } else {
-      this.chromecastService.stop();
+      this.songNumberService.stopPresentaion();
       this.presentButton = this.presentButtonOFF;
     }
   }

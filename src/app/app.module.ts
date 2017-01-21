@@ -37,7 +37,7 @@ import {LoggerService} from '../providers/logger';
     SelectBookModalPage
   ],
   providers: [
-    SongNumberService, ChromecastService, LoggerService, Storage,
+    Storage, LoggerService, ChromecastService, SongNumberService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

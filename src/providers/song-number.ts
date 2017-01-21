@@ -1,5 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Storage} from '@ionic/storage';
+import {BackgroundMode} from 'ionic-native';
+import {ChromecastService} from "./chromecast";
 
 interface Digit {
   pos: number;
@@ -25,7 +27,7 @@ export class SongNumberService {
   books: Book[];
   private _info: string;
 
-  constructor(public storage: Storage) {
+  constructor(public storage: Storage, public chromecastService: ChromecastService) {
     this.storage.get(STORAGE_ID_DIGITS).then(data => {
       if (data) {
         this.digits = data;
@@ -80,19 +82,39 @@ export class SongNumberService {
   }
 
   presentNumber() {
-    return {
+    let number = this.buildNumber();
+    BackgroundMode.configure({
+      title: 'Presenting...',
+      text: number + ' ' + this.book.title,
+      ticker: number + ' ' + this.book.title
+    });
+    this.chromecastService.send({
       type: 1,
-      number: this.buildNumber(),
+      number: number,
       book: this.book,
       notes: this.notes
-    }
+    });
   }
 
   presentInfo() {
-    return {
+    BackgroundMode.configure({
+      title: 'Presenting...',
+      text: this.info,
+      ticker: this.info
+    });
+    this.chromecastService.send({
       type: 2,
       message: this.info
-    }
+    });
+  }
+
+  stopPresentaion() {
+    BackgroundMode.configure({
+      title: 'Not presenting',
+      text: 'Touch to present',
+      ticker: ''
+    });
+    this.chromecastService.stop();
   }
 
   changeDigitLength(size: number) {

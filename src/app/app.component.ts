@@ -1,10 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
-import { StatusBar, Splashscreen } from 'ionic-native';
+import {Component, ViewChild} from '@angular/core';
+import {Nav, Platform} from 'ionic-angular';
+import {StatusBar, Splashscreen, BackgroundMode} from 'ionic-native';
 
-import { MainPage } from '../pages/main/main';
-import { InfoPage } from '../pages/info/info';
-import { ConfigPage } from '../pages/config/config';
+import {MainPage} from '../pages/main/main';
+import {InfoPage} from '../pages/info/info';
+import {ConfigPage} from '../pages/config/config';
 
 
 @Component({
@@ -23,9 +23,9 @@ export class MyApp {
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Display Song Number', component: MainPage },
-      { title: 'Display Information', component: InfoPage },
-      { title: 'Settings', component: ConfigPage }
+      {title: 'Display Song Number', component: MainPage},
+      {title: 'Display Information', component: InfoPage},
+      {title: 'Settings', component: ConfigPage}
     ];
   }
 
@@ -35,6 +35,12 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       StatusBar.styleDefault();
       Splashscreen.hide();
+      BackgroundMode.enable();
+      BackgroundMode.setDefaults({
+        title: 'Not presenting',
+        text: 'Touch to present',
+        ticker: ''
+      });
     });
   }
 
