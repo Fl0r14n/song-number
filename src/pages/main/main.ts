@@ -3,6 +3,7 @@ import {ModalController} from 'ionic-angular';
 import {SongNumberService} from  '../../providers/song-number';
 import {SelectBookModalPage} from '../select-book-modal/select-book-modal';
 import {ChromecastService} from "../../providers/chromecast";
+import {TranslateService} from "ng2-translate";
 
 interface PresentButton {
   isPresenting: boolean, text: string, color: string
@@ -14,21 +15,26 @@ interface PresentButton {
 })
 export class MainPage {
 
-  presentButtonOFF: PresentButton = {
-    isPresenting: false,
-    text: 'Present',
-    color: 'primary'
-  };
+  i18n: any[];
+  presentButtonOFF: PresentButton;
+  presentButtonON: PresentButton;
+  presentButton: PresentButton;
 
-  presentButtonON: PresentButton = {
-    isPresenting: true,
-    text: 'Stop',
-    color: 'danger'
-  };
-
-  presentButton: PresentButton = this.presentButtonOFF;
-
-  constructor(public songNumberService: SongNumberService, public modalCtrl: ModalController, public chromecastService: ChromecastService) {
+  constructor(i18nService: TranslateService, public songNumberService: SongNumberService, public modalCtrl: ModalController, public chromecastService: ChromecastService) {
+    i18nService.get(['pages.main.startPresenting', 'pages.main.stopPresenting']).subscribe((value) => {
+      this.i18n = value;
+      this.presentButtonON = {
+        isPresenting: true,
+        text: this.i18n['pages.main.stopPresenting'],
+        color: 'danger'
+      };
+      this.presentButtonOFF = {
+        isPresenting: false,
+        text: this.i18n['pages.main.startPresenting'],
+        color: 'primary'
+      };
+      this.presentButton = this.presentButtonOFF;
+    });
   }
 
   openSelectBookModal() {

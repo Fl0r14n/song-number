@@ -5,14 +5,14 @@
     </button>
     <ion-title>
       <ion-icon name="information-circle"></ion-icon>
-      Broadcast information
+      {{ 'pages.info.title' | translate}}
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   <ion-item>
-    <ion-textarea placeholder="General Information" clearInput rows="6"
+    <ion-textarea placeholder="{{ 'pages.info.textArea' | translate}}" clearInput rows="6"
                   [(ngModel)]="songNumberService.info"></ion-textarea>
   </ion-item>
   <ion-buttons text-center>

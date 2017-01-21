@@ -3,6 +3,7 @@ import {AlertController, ModalController} from 'ionic-angular';
 import {SongNumberService} from '../../providers/song-number';
 import {AddBookModalPage} from '../add-book-modal/add-book-modal';
 import {LoggerService} from "../../providers/logger";
+import {TranslateService} from "ng2-translate";
 
 @Component({
   selector: 'page-config',
@@ -10,12 +11,22 @@ import {LoggerService} from "../../providers/logger";
 })
 export class ConfigPage {
 
+  i18n: any[];
   possibleDigits: number[] = [1, 2, 3, 4, 5];
 
-  constructor(public songNumberService: SongNumberService,
+  constructor(public i18nService: TranslateService,
+              public songNumberService: SongNumberService,
               public alertCtrl: AlertController,
               public modalCtrl: ModalController,
               public log: LoggerService) {
+    i18nService.get([
+      'config.cancel',
+      'config.remove',
+      'config.permanentRemoval',
+      'config.removeBook'
+    ]).subscribe((value) => {
+      this.i18n = value;
+    });
   }
 
   get digitLength(): number {
@@ -27,25 +38,27 @@ export class ConfigPage {
   }
 
   removeBook(item) {
-    let confirm = this.alertCtrl.create({
-      title: 'Remove ' + item.title + '?',
-      message: 'This operation cannot be undone',
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: () => {
+    this.i18nService.get('config.removeBook', {value: item.title}).subscribe((value) => {
+      let confirm = this.alertCtrl.create({
+        title: value,
+        message: this.i18n['config.permanentRemoval'],
+        buttons: [
+          {
+            text: this.i18n['config.cancel'],
+            handler: () => {
+            }
+          },
+          {
+            text: this.i18n['config.remove'],
+            handler: () => {
+              let idx = this.songNumberService.books.indexOf(item);
+              this.songNumberService.books.splice(idx, 1);
+            }
           }
-        },
-        {
-          text: 'Remove',
-          handler: () => {
-            let idx = this.songNumberService.books.indexOf(item);
-            this.songNumberService.books.splice(idx, 1);
-          }
-        }
-      ]
+        ]
+      });
+      confirm.present();
     });
-    confirm.present();
   }
 
   openAddBookModal() {

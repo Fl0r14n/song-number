@@ -1,6 +1,8 @@
 import {NgModule, ErrorHandler} from '@angular/core';
+import {Http} from '@angular/http';
 import {IonicApp, IonicModule, IonicErrorHandler} from 'ionic-angular';
 import {Storage} from '@ionic/storage';
+import {TranslateStaticLoader, TranslateModule, TranslateLoader} from 'ng2-translate';
 import {MyApp} from './app.component';
 import {MainPage} from '../pages/main/main';
 import {InfoPage} from '../pages/info/info';
@@ -12,6 +14,10 @@ import {SongNumberComponent} from '../components/song-number/song-number';
 import {SongNumberService} from  '../providers/song-number';
 import {ChromecastService} from '../providers/chromecast';
 import {LoggerService} from '../providers/logger';
+
+export function createTranslateLoader(http: Http) {
+  return new TranslateStaticLoader(http, 'assets/i18n', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -25,7 +31,13 @@ import {LoggerService} from '../providers/logger';
     SongNumberComponent
   ],
   imports: [
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    //i18n
+    TranslateModule.forRoot({
+      provide: TranslateLoader,
+      useFactory: (createTranslateLoader),
+      deps: [Http]
+    })
   ],
   bootstrap: [IonicApp],
   entryComponents: [

@@ -1,11 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-title text-center>
-      Add Book
+      {{ 'pages.selectBookModal.title' | translate}}
     </ion-title>
     <ion-buttons start>
       <button ion-button (click)="dismiss()">
-        <span color="primary" showWhen="ios">Cancel</span>
+        <span color="primary" showWhen="ios">{{ 'pages.selectBookModal.cancel' | translate}}</span>
         <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
       </button>
     </ion-buttons>

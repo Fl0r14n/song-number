@@ -1,0 +1,64 @@
+{
+  "nav": {
+    "title": "Menu",
+    "main": "Display Song Number",
+    "info": "Display Information",
+    "config": "Settings"
+  },
+  "backgroundMode": {
+    "defaultTitle": "Not presenting",
+    "defaultText": "Touch to present",
+    "presenting": "Presenting..."
+  },
+  "pages": {
+    "main": {
+      "title": "Display Song Number",
+      "book": "Book",
+      "startPresenting": "Present",
+      "stopPresenting": "Stop"
+    },
+    "info": {
+      "title": "Broadcast information",
+      "textArea": "General Information",
+      "startPresenting": "Present",
+      "stopPresenting": "Stop"
+    },
+    "config": {
+      "title": "Settings",
+      "debug": "Debug",
+      "digits": "Digits",
+      "books": "Books",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "remove": "Remove",
+      "permanentRemoval": "This operation cannot be undone",
+      "removeBook": "Remove {{value}}?"
+    },
+    "addBookModal": {
+      "title": "Add Book",
+      "cancel": "Cancel",
+      "bookTitle": "Title",
+      "bookDescription": "Description",
+      "submit": "Add Book"
+    },
+    "selectBookModal": {
+      "title": "Select Book",
+      "cancel": "Cancel"
+    }
+  },
+  "providers": {
+    "chromecast": {
+      "session": "session: ",
+      "newSession": "new session: ",
+      "sessionUpdated": "session updated",
+      "sessionRemoved": "session removed",
+      "messageReceived": "received: ",
+      "sendMessage": "sent: ",
+      "receiverFound": "receiver found",
+      "receiverNotFound": "receiver list empty",
+      "error": "error: ",
+      "success": "success: ",
+      "stop": "stop"
+    }
+  }
+}

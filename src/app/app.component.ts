@@ -1,11 +1,10 @@
 import {Component, ViewChild} from '@angular/core';
 import {Nav, Platform} from 'ionic-angular';
 import {StatusBar, Splashscreen, BackgroundMode} from 'ionic-native';
-
+import {TranslateService} from 'ng2-translate'
 import {MainPage} from '../pages/main/main';
 import {InfoPage} from '../pages/info/info';
 import {ConfigPage} from '../pages/config/config';
-
 
 @Component({
   templateUrl: 'app.html'
@@ -16,17 +15,31 @@ export class MyApp {
 
   rootPage: any = MainPage;
 
-  pages: Array<{title: string, component: any}>;
+  pages: {title: string, component: any}[];
 
-  constructor(public platform: Platform) {
-    this.initializeApp();
+  i18n: any[];
 
-    // used for an example of ngFor and navigation
-    this.pages = [
-      {title: 'Display Song Number', component: MainPage},
-      {title: 'Display Information', component: InfoPage},
-      {title: 'Settings', component: ConfigPage}
-    ];
+  constructor(public platform: Platform, i18nService: TranslateService) {
+    i18nService.setDefaultLang('en');
+    let lang = i18nService.getBrowserCultureLang().split('-')[0];
+    i18nService.use(lang);
+    console.log();
+    i18nService.get([
+      'nav.main',
+      'nav.info',
+      'nav.config',
+      'backgroundMode.defaultTitle',
+      'backgroundMode.defaultText'
+    ]).subscribe((value) => {
+      this.i18n = value;
+      this.initializeApp();
+      // used for an example of ngFor and navigation
+      this.pages = [
+        {title: this.i18n['nav.main'], component: MainPage},
+        {title: this.i18n['nav.info'], component: InfoPage},
+        {title: this.i18n['nav.config'], component: ConfigPage}
+      ];
+    });
   }
 
   initializeApp() {
@@ -37,8 +50,8 @@ export class MyApp {
       Splashscreen.hide();
       BackgroundMode.enable();
       BackgroundMode.setDefaults({
-        title: 'Not presenting',
-        text: 'Touch to present',
+        title: this.i18n['backgroundMode.defaultTitle'],
+        text: this.i18n['backgroundMode.defaultText'],
         ticker: ''
       });
     });

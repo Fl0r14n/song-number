@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Storage} from '@ionic/storage';
 import {BackgroundMode} from 'ionic-native';
 import {ChromecastService} from "./chromecast";
+import {TranslateService} from "ng2-translate";
 
 interface Digit {
   pos: number;
@@ -21,13 +22,21 @@ const STORAGE_ID_INFO: string = 'song-number-settings-info';
 @Injectable()
 export class SongNumberService {
 
+  i18n: any[];
   digits: Digit[];
   private _notes: string;
   private _book: Book;
   books: Book[];
   private _info: string;
 
-  constructor(public storage: Storage, public chromecastService: ChromecastService) {
+  constructor(i18nService: TranslateService, public storage: Storage, public chromecastService: ChromecastService) {
+    i18nService.get([
+      'backgroundMode.defaultTitle',
+      'backgroundMode.defaultText',
+      'backgroundMode.presenting'
+    ]).subscribe((value)=> {
+      this.i18n = value;
+    });
     this.storage.get(STORAGE_ID_DIGITS).then(data => {
       if (data) {
         this.digits = data;
@@ -84,7 +93,7 @@ export class SongNumberService {
   presentNumber() {
     let number = this.buildNumber();
     BackgroundMode.configure({
-      title: 'Presenting...',
+      title: this.i18n['backgroundMode.presenting'],
       text: number + ' ' + this.book.title,
       ticker: number + ' ' + this.book.title
     });
@@ -98,7 +107,7 @@ export class SongNumberService {
 
   presentInfo() {
     BackgroundMode.configure({
-      title: 'Presenting...',
+      title: this.i18n['backgroundMode.presenting'],
       text: this.info,
       ticker: this.info
     });
@@ -110,8 +119,8 @@ export class SongNumberService {
 
   stopPresentaion() {
     BackgroundMode.configure({
-      title: 'Not presenting',
-      text: 'Touch to present',
+      title: this.i18n['backgroundMode.defaultTitle'],
+      text: this.i18n['backgroundMode.defaultText'],
       ticker: ''
     });
     this.chromecastService.stop();

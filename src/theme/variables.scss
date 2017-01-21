@@ -83,6 +83,11 @@ $colors: (
 @import "roboto";
 @import "noto-sans";
 
+@import "../../node_modules/ubuntu-fontface/_ubuntu";
+
+$font-family-md-base: "Ubuntu";
+$font-family-ios-base: "Ubuntu";
+$font-family-wp-base: "Ubuntu";
 
 .toast-info .toast-container {
   border-color: #0a9dc7;

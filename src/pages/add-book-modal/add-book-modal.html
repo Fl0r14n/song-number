@@ -1,11 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-title text-center="">
-      Add Book
+      {{ 'pages.addBookModal.title' | translate}}
     </ion-title>
     <ion-buttons start>
       <button ion-button (click)="dismiss()">
-        <span color="primary" showWhen="ios">Cancel</span>
+        <span color="primary" showWhen="ios">{{ 'pages.addBookModal.cancel' | translate}}</span>
         <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
       </button>
     </ion-buttons>
@@ -18,16 +18,18 @@
       <ion-card-content>
         <ion-list>
           <ion-item>
-            <ion-label floating>Title</ion-label>
+            <ion-label floating>{{ 'pages.addBookModal.bookTitle' | translate}}</ion-label>
             <ion-input type="text" formControlName="title"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label floating>Description</ion-label>
+            <ion-label floating>{{ 'pages.addBookModal.bookDescription' | translate}}</ion-label>
             <ion-input type="text" formControlName="description"></ion-input>
           </ion-item>
         </ion-list>
         <ion-buttons text-center>
-          <button ion-button round type="submit" [disabled]="!bookForm.valid">Add Book</button>
+          <button ion-button round type="submit" [disabled]="!bookForm.valid">
+            {{ 'pages.addBookModal.submit' | translate}}
+          </button>
         </ion-buttons>
       </ion-card-content>
     </ion-card>

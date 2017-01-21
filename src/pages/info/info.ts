@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {SongNumberService} from  '../../providers/song-number';
 import {ChromecastService} from "../../providers/chromecast";
+import {TranslateService} from "ng2-translate";
 
 interface PresentButton {
   isPresenting: boolean, text: string, color: string
@@ -12,21 +13,26 @@ interface PresentButton {
 })
 export class InfoPage {
 
-  presentButtonOFF: PresentButton = {
-    isPresenting: false,
-    text: 'Present',
-    color: 'primary'
-  };
+  i18n: any[];
+  presentButtonOFF: PresentButton;
+  presentButtonON: PresentButton;
+  presentButton: PresentButton;
 
-  presentButtonON: PresentButton = {
-    isPresenting: true,
-    text: 'Stop',
-    color: 'danger'
-  };
-
-  presentButton: PresentButton = this.presentButtonOFF;
-
-  constructor(public songNumberService: SongNumberService, public chromecastService: ChromecastService) {
+  constructor(i18nService: TranslateService, public songNumberService: SongNumberService, public chromecastService: ChromecastService) {
+    i18nService.get(['pages.info.startPresenting', 'pages.info.stopPresenting']).subscribe((value) => {
+      this.i18n = value;
+      this.presentButtonON = {
+        isPresenting: true,
+        text: this.i18n['pages.info.stopPresenting'],
+        color: 'danger'
+      };
+      this.presentButtonOFF = {
+        isPresenting: false,
+        text: this.i18n['pages.info.startPresenting'],
+        color: 'primary'
+      };
+      this.presentButton = this.presentButtonOFF;
+    });
   }
 
   present() {
