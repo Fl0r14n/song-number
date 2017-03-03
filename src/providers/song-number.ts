@@ -117,6 +117,12 @@ export class SongNumberService {
     });
   }
 
+  readPresented() {
+    this.chromecastService.send({
+      type: 0
+    });
+  }
+
   stopPresentaion() {
     BackgroundMode.configure({
       title: this.i18n['backgroundMode.defaultTitle'],

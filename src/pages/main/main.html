@@ -35,12 +35,17 @@
     <ion-input type="text" [(ngModel)]="songNumberService.notes"></ion-input>
   </ion-item>
 
-  <ion-buttons text-center>
-    <button ion-button round
-            [disabled]="!chromecastService.isConnected()"
-            [color]="presentButton ? presentButton.color : 'primary'"
-            (click)="present()">
-      {{presentButton ? presentButton.text : ''}}
-    </button>
-  </ion-buttons>
+  <div padding>
+    <ion-buttons text-center>
+      <button ion-button block
+              [disabled]="!chromecastService.isConnected()"
+              [color]="presentButton ? presentButton.color : 'primary'"
+              (click)="present()">
+        {{presentButton ? presentButton.text : ''}}
+      </button>
+      <button ion-button block
+              [disabled]="!chromecastService.isConnected()"
+              (click)="songNumberService.readPresented()">Query state</button>
+    </ion-buttons>
+  </div>
 </ion-content>

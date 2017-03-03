@@ -23,12 +23,15 @@
     <ion-textarea placeholder="{{ 'pages.info.textArea' | translate}}" clearInput rows="6"
                   [(ngModel)]="songNumberService.info"></ion-textarea>
   </ion-item>
-  <ion-buttons text-center>
-    <button ion-button round
-            [disabled]="!chromecastService.isConnected()"
-            [color]="presentButton.color"
-            (click)="present()">
-      {{presentButton.text}}
-    </button>
-  </ion-buttons>
+
+  <div padding>
+    <ion-buttons text-center>
+      <button ion-button block
+              [disabled]="!chromecastService.isConnected()"
+              [color]="presentButton.color"
+              (click)="present()">
+        {{presentButton.text}}
+      </button>
+    </ion-buttons>
+  </div>
 </ion-content>
