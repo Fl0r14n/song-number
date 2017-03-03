@@ -35,6 +35,10 @@ export class InfoPage {
     });
   }
 
+  cast() {
+    this.chromecastService.isConnected() ? this.chromecastService.close() : this.chromecastService.open();
+  }
+
   present() {
     if (!this.presentButton.isPresenting) {
       this.songNumberService.presentInfo();

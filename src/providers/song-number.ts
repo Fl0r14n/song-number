@@ -123,7 +123,7 @@ export class SongNumberService {
       text: this.i18n['backgroundMode.defaultText'],
       ticker: ''
     });
-    this.chromecastService.stop();
+    this.chromecastService.close();
   }
 
   changeDigitLength(size: number) {

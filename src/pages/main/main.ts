@@ -37,6 +37,10 @@ export class MainPage {
     });
   }
 
+  cast() {
+    this.chromecastService.isConnected() ? this.chromecastService.close() : this.chromecastService.open();
+  }
+
   openSelectBookModal() {
     let modal = this.modalCtrl.create(SelectBookModalPage, {
       books: this.songNumberService.books,

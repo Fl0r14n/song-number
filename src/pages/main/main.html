@@ -7,6 +7,14 @@
       <ion-icon name="musical-notes"></ion-icon>
       {{ 'pages.main.title' | translate}}
     </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only
+              [disabled]="!chromecastService.isInitialised()"
+              [color]="chromecastService.isConnected() ? 'secondary' : 'primary'"
+              (click)="cast()">
+        <ion-icon name="desktop"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -28,8 +36,10 @@
   </ion-item>
 
   <ion-buttons text-center>
-    <button ion-button round (click)="present()" [color]="presentButton ? presentButton.color : 'primary'"
-            [disabled]="!(chromecastService.isInitialized && chromecastService.receivesFound)">
+    <button ion-button round
+            [disabled]="!chromecastService.isConnected()"
+            [color]="presentButton ? presentButton.color : 'primary'"
+            (click)="present()">
       {{presentButton ? presentButton.text : ''}}
     </button>
   </ion-buttons>
