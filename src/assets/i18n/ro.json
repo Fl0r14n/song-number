@@ -19,7 +19,10 @@
       "title": "Prezintă numărul cântării",
       "book": "Carte",
       "startPresenting": "Prezintă",
-      "stopPresenting": "Oprește"
+      "stopPresenting": "Oprește",
+      "currentlyPresenting": "Este afișat:",
+      "close": "Închide",
+      "empty": "Ecaranul este gol"
     },
     "info": {
       "title": "Prezintă informații generale",

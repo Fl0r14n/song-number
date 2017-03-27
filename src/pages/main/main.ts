@@ -1,5 +1,5 @@
 import {AfterViewInit, Component} from '@angular/core';
-import {ModalController} from 'ionic-angular';
+import {AlertController, ModalController} from 'ionic-angular';
 import {SongNumberService} from  '../../providers/song-number';
 import {SelectBookModalPage} from '../select-book-modal/select-book-modal';
 import {ChromecastService} from '../../providers/chromecast';
@@ -12,12 +12,54 @@ import {CastPage} from '../cast-page';
 })
 export class MainPage extends CastPage implements AfterViewInit {
 
-  constructor(i18nService: TranslateService, protected songNumberService: SongNumberService, protected modalCtrl: ModalController, protected chromecastService: ChromecastService) {
+  constructor(i18nService: TranslateService,
+              protected songNumberService: SongNumberService,
+              protected modalCtrl: ModalController,
+              protected chromecastService: ChromecastService,
+              protected alertCtrl: AlertController) {
     super(i18nService, chromecastService);
-    i18nService.get(['pages.main.startPresenting', 'pages.main.stopPresenting']).subscribe((value) => {
+    i18nService.get([
+      'pages.main.startPresenting',
+      'pages.main.stopPresenting',
+      'pages.main.currentlyPresenting',
+      'pages.main.close',
+      'pages.main.empty'
+    ]).subscribe((value) => {
       this.i18n = value;
       this.presentButtonON.text = this.i18n['pages.main.stopPresenting'];
       this.presentButtonOFF.text = this.i18n['pages.main.startPresenting'];
+    });
+    chromecastService.messageListener.subscribe(data => {
+      if(data.isFeedback) {
+        let subTitle = '';
+        switch(data.type) {
+          case 1: {
+            subTitle = [
+              data.number,
+              ' ',
+              data.book.title,
+              '<br>',
+              data.book.description,
+              '<br>',
+              data.notes
+            ].join('');
+            break;
+          }
+          case 2: {
+            subTitle = data.message;
+            break;
+          }
+          default: {
+            subTitle = this.i18n['pages.main.empty'];
+          }
+        }
+        let feedbackMessage = alertCtrl.create({
+          title: this.i18n['pages.main.currentlyPresenting'],
+          subTitle: subTitle,
+          buttons: [this.i18n['pages.main.close']]
+        });
+        feedbackMessage.present();
+      }
     });
   }
 

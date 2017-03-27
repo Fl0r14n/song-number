@@ -120,6 +120,7 @@
         switch (type.innerHTML) {
           case '1': {
             var response = {
+              isFeedback: true,
               type: 1,
               number: number.innerHTML,
               book: {
@@ -134,6 +135,7 @@
           }
           case '2': {
             var response = {
+              isFeedback: true,
               type: 2,
               message: info.innerHTML
             };
@@ -141,8 +143,9 @@
             window.messageBus.send(senderId, response);
             break;
           }
-          case '3': {
+          default: {
             response = {
+              isFeedback: true,
               type: 3
             };
             // send feedback

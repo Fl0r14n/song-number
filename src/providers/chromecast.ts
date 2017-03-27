@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {LoggerService} from "./logger";
 import {TranslateService} from "ng2-translate";
 
@@ -15,6 +15,8 @@ export class ChromecastService {
   private session: any = null;
   // prevent some initialize bug when opening the application for the first time
   private _reinitilize: boolean = true;
+
+  messageListener: EventEmitter<any> = new EventEmitter();
 
   constructor(i18nService: TranslateService, public log: LoggerService) {
     i18nService.get([
@@ -95,7 +97,7 @@ export class ChromecastService {
 
   send(msg) {
     if (this.session != null) {
-      this.session.sendMessage(this.namespace, msg, this.onSuccess.bind(this, this.i18n['providers.chromecast.sendMessage'] + JSON.stringify(msg)), this.onError.bind(this));
+      this.session.sendMessage(this.namespace, msg, this.onSendSuccess.bind(this, msg), this.onError.bind(this));
     }
   }
 
@@ -127,16 +129,19 @@ export class ChromecastService {
     this.session = session;
     this.log.info(this.i18n['providers.chromecast.newSession'] + this.session.sessionId);
     this.session.addUpdateListener((isAlive) => {
-      let message = isAlive ? this.i18n['providers.chromecast.sessionUpdated'] : this.i18n['providers.chromecast.sessionRemoved'];
-      message += ': ' + this.session.sessionId;
-      this.log.debug(message);
-      if (!isAlive) {
-        this.session = null;
+      if(this.session) {
+        let message = isAlive ? this.i18n['providers.chromecast.sessionUpdated'] : this.i18n['providers.chromecast.sessionRemoved'];
+        message += ': ' + this.session.sessionId;
+        this.log.debug(message);
+        if (!isAlive) {
+          this.session = null;
+        }
       }
     });
     this.session.addMessageListener(this.namespace, (namespace, message) => {
       // message received
       this.log.debug(this.i18n['providers.chromecast.messageReceived'] + message);
+      this.messageListener.next(JSON.parse(message));
     });
   }
 
@@ -144,7 +149,7 @@ export class ChromecastService {
     this.log.error(this.i18n['providers.chromecast.error'] + JSON.stringify(msg));
   }
 
-  private onSuccess(msg) {
-    this.log.debug(this.i18n['providers.chromecast.success'] + msg);
+  private onSendSuccess(msg) {
+    this.log.debug(this.i18n['providers.chromecast.sendMessage'] + JSON.stringify(msg));
   }
 }

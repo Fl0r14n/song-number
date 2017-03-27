@@ -19,7 +19,10 @@
       "title": "Display Song Number",
       "book": "Book",
       "startPresenting": "Present",
-      "stopPresenting": "Stop"
+      "stopPresenting": "Stop",
+      "currentlyPresenting": "On display:",
+      "close": "Close",
+      "empty": "Nothing is displayed"
     },
     "info": {
       "title": "Broadcast information",
