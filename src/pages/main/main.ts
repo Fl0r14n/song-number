@@ -1,49 +1,24 @@
-import {Component} from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import {ModalController} from 'ionic-angular';
 import {SongNumberService} from  '../../providers/song-number';
 import {SelectBookModalPage} from '../select-book-modal/select-book-modal';
-import {ChromecastService} from "../../providers/chromecast";
-import {TranslateService} from "ng2-translate";
-
-interface PresentButton {
-  isPresenting: boolean, text: string, color: string
-}
+import {ChromecastService} from '../../providers/chromecast';
+import {TranslateService} from 'ng2-translate';
+import {CastPage} from '../cast-page';
 
 @Component({
   selector: 'page-main',
   templateUrl: 'main.html'
 })
-export class MainPage {
+export class MainPage extends CastPage implements AfterViewInit {
 
-  i18n: any[];
-  presentButtonOFF: PresentButton;
-  presentButtonON: PresentButton;
-  presentButton: PresentButton;
-
-  constructor(i18nService: TranslateService, public songNumberService: SongNumberService, public modalCtrl: ModalController, public chromecastService: ChromecastService) {
+  constructor(i18nService: TranslateService, protected songNumberService: SongNumberService, protected modalCtrl: ModalController, protected chromecastService: ChromecastService) {
+    super(i18nService, chromecastService);
     i18nService.get(['pages.main.startPresenting', 'pages.main.stopPresenting']).subscribe((value) => {
       this.i18n = value;
-      this.presentButtonON = {
-        isPresenting: true,
-        text: this.i18n['pages.main.stopPresenting'],
-        color: 'danger'
-      };
-      this.presentButtonOFF = {
-        isPresenting: false,
-        text: this.i18n['pages.main.startPresenting'],
-        color: 'primary'
-      };
-      this.presentButton = this.presentButtonOFF;
+      this.presentButtonON.text = this.i18n['pages.main.stopPresenting'];
+      this.presentButtonOFF.text = this.i18n['pages.main.startPresenting'];
     });
-  }
-
-  cast() {
-    if(this.chromecastService.isConnected()) {
-      this.presentButton = this.presentButtonOFF;
-      this.chromecastService.close();
-    } else {
-      this.chromecastService.open();
-    }
   }
 
   openSelectBookModal() {
@@ -58,11 +33,20 @@ export class MainPage {
   }
 
   present() {
-    if (!this.presentButton.isPresenting) {
+    if (!this.songNumberService.isPresenting) {
       this.songNumberService.presentNumber();
       this.presentButton = this.presentButtonON;
     } else {
       this.songNumberService.stopPresentaion();
+      this.presentButton = this.presentButtonOFF;
+    }
+  }
+
+  ngAfterViewInit(): void {
+    // reinit button state
+    if (this.songNumberService.isPresenting) {
+      this.presentButton = this.presentButtonON;
+    } else {
       this.presentButton = this.presentButtonOFF;
     }
   }

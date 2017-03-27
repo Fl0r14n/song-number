@@ -11,6 +11,10 @@
     "presenting": "Se prezintă..."
   },
   "pages": {
+    "cast": {
+      "startPresenting": "Prezintă",
+      "stopPresenting": "Oprește"
+    },
     "main": {
       "title": "Prezintă numărul cântării",
       "book": "Carte",

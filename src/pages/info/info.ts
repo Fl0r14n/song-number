@@ -1,55 +1,39 @@
-import {Component} from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import {SongNumberService} from  '../../providers/song-number';
-import {ChromecastService} from "../../providers/chromecast";
-import {TranslateService} from "ng2-translate";
-
-interface PresentButton {
-  isPresenting: boolean, text: string, color: string
-}
+import {ChromecastService} from '../../providers/chromecast';
+import {TranslateService} from 'ng2-translate';
+import {CastPage} from '../cast-page';
 
 @Component({
   selector: 'page-info',
   templateUrl: 'info.html'
 })
-export class InfoPage {
-
-  i18n: any[];
-  presentButtonOFF: PresentButton;
-  presentButtonON: PresentButton;
-  presentButton: PresentButton;
+export class InfoPage extends CastPage implements AfterViewInit {
 
   constructor(i18nService: TranslateService, public songNumberService: SongNumberService, public chromecastService: ChromecastService) {
+    super(i18nService, chromecastService);
     i18nService.get(['pages.info.startPresenting', 'pages.info.stopPresenting']).subscribe((value) => {
       this.i18n = value;
-      this.presentButtonON = {
-        isPresenting: true,
-        text: this.i18n['pages.info.stopPresenting'],
-        color: 'danger'
-      };
-      this.presentButtonOFF = {
-        isPresenting: false,
-        text: this.i18n['pages.info.startPresenting'],
-        color: 'primary'
-      };
-      this.presentButton = this.presentButtonOFF;
+      this.presentButtonON.text = this.i18n['pages.info.stopPresenting'];
+      this.presentButtonOFF.text = this.i18n['pages.info.startPresenting'];
     });
   }
 
-  cast() {
-    if(this.chromecastService.isConnected()) {
-      this.presentButton = this.presentButtonOFF;
-      this.chromecastService.close();
-    } else {
-      this.chromecastService.open();
-    }
-  }
-
   present() {
-    if (!this.presentButton.isPresenting) {
+    if (!this.songNumberService.isPresenting) {
       this.songNumberService.presentInfo();
       this.presentButton = this.presentButtonON;
     } else {
       this.songNumberService.stopPresentaion();
+      this.presentButton = this.presentButtonOFF;
+    }
+  }
+
+  ngAfterViewInit(): void {
+    // reinit button state
+    if (this.songNumberService.isPresenting) {
+      this.presentButton = this.presentButtonON;
+    } else {
       this.presentButton = this.presentButtonOFF;
     }
   }

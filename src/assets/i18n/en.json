@@ -11,6 +11,10 @@
     "presenting": "Presenting..."
   },
   "pages": {
+    "cast": {
+      "startPresenting": "Present",
+      "stopPresenting": "Stop"
+    },
     "main": {
       "title": "Display Song Number",
       "book": "Book",

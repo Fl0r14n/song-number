@@ -33,6 +33,7 @@ export class SongNumberService {
   private _book: Book;
   books: Book[];
   private _info: string;
+  isPresenting: boolean = false;
 
   constructor(i18nService: TranslateService, public storage: Storage, public chromecastService: ChromecastService) {
     i18nService.get([
@@ -108,6 +109,7 @@ export class SongNumberService {
       book: this.book,
       notes: this.notes
     });
+    this.isPresenting = true;
   }
 
   presentInfo() {
@@ -120,6 +122,7 @@ export class SongNumberService {
       type: MESSAGE_TYPE_INFO,
       message: this.info
     });
+    this.isPresenting = true;
   }
 
   readPresented() {
@@ -137,6 +140,7 @@ export class SongNumberService {
     this.chromecastService.send({
       type: MESSAGE_TYPE_CLEAR
     });
+    this.isPresenting = false;
   }
 
   changeDigitLength(size: number) {
