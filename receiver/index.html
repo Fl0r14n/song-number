@@ -106,7 +106,7 @@
   };
 
   function processMessage(senderId, data) {
-    var type = document.getElementsByClassName('info')[0];
+    var type = document.getElementsByClassName('type')[0];
     var info = document.getElementsByClassName('info')[0];
     var number = document.getElementsByClassName('number')[0];
     var image = document.getElementsByClassName('content')[0];
@@ -118,7 +118,7 @@
       case 0: {
         // read presented information
         switch (type.innerHTML) {
-          case 1: {
+          case '1': {
             var response = {
               type: 1,
               number: number.innerHTML,
@@ -132,10 +132,18 @@
             window.messageBus.send(senderId, response);
             break;
           }
-          case 2: {
+          case '2': {
             var response = {
               type: 2,
               message: info.innerHTML
+            };
+            // send feedback
+            window.messageBus.send(senderId, response);
+            break;
+          }
+          case '3': {
+            response = {
+              type: 3
             };
             // send feedback
             window.messageBus.send(senderId, response);
@@ -146,7 +154,7 @@
       }
       case 1: {
         // present song
-        type.innerHTML = data.type ? data.type : '';
+        type.innerHTML = 1;
         number.innerHTML = data.number ? data.number : '';
         notes.innerHTML = data.notes ? data.notes : '';
         var book = data.book;
@@ -169,7 +177,7 @@
       }
       case 2: {
         // present song
-        type.innerHTML = data.type ? data.type : '';
+        type.innerHTML = 2;
         info.innerHTML = data.message ? data.message : '';
         number.innerHTML = '';
         notes.innerHTML = '';
@@ -182,7 +190,7 @@
       }
       case 3: {
         // clear screen
-        type.innerHTML = data.type ? data.type : '';
+        type.innerHTML = 3;
         info.innerHTML = '';
         number.innerHTML = '';
         notes.innerHTML = '';

@@ -95,7 +95,7 @@ export class ChromecastService {
 
   send(msg) {
     if (this.session != null) {
-      this.session.sendMessage(this.namespace, msg, this.onSuccess.bind(this, this.i18n['providers.chromecast.sendMessage'] + msg), this.onError.bind(this));
+      this.session.sendMessage(this.namespace, msg, this.onSuccess.bind(this, this.i18n['providers.chromecast.sendMessage'] + JSON.stringify(msg)), this.onError.bind(this));
     }
   }
 
