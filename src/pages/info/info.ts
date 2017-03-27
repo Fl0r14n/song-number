@@ -36,7 +36,12 @@ export class InfoPage {
   }
 
   cast() {
-    this.chromecastService.isConnected() ? this.chromecastService.close() : this.chromecastService.open();
+    if(this.chromecastService.isConnected()) {
+      this.presentButton = this.presentButtonOFF;
+      this.chromecastService.close();
+    } else {
+      this.chromecastService.open();
+    }
   }
 
   present() {

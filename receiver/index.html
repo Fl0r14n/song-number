@@ -116,6 +116,7 @@
 
     switch (data.type) {
       case 0: {
+        // read presented information
         switch (type.innerHTML) {
           case 1: {
             var response = {
@@ -144,6 +145,7 @@
         break;
       }
       case 1: {
+        // present song
         type.innerHTML = data.type ? data.type : '';
         number.innerHTML = data.number ? data.number : '';
         notes.innerHTML = data.notes ? data.notes : '';
@@ -166,8 +168,22 @@
         break;
       }
       case 2: {
+        // present song
         type.innerHTML = data.type ? data.type : '';
         info.innerHTML = data.message ? data.message : '';
+        number.innerHTML = '';
+        notes.innerHTML = '';
+        image.style = '';
+        title.innerHTML = '';
+        subtitle.innerHTML = '';
+        // send feedback
+        window.messageBus.broadcast(data);
+        break;
+      }
+      case 3: {
+        // clear screen
+        type.innerHTML = data.type ? data.type : '';
+        info.innerHTML = '';
         number.innerHTML = '';
         notes.innerHTML = '';
         image.style = '';

@@ -19,6 +19,11 @@ const STORAGE_ID_BOOK: string = 'song-number-settings-book';
 const STORAGE_ID_BOOKS: string = 'song-number-settings-books';
 const STORAGE_ID_INFO: string = 'song-number-settings-info';
 
+const MESSAGE_TYPE_READ: number = 0;
+const MESSAGE_TYPE_SONG: number = 1;
+const MESSAGE_TYPE_INFO: number = 2;
+const MESSAGE_TYPE_CLEAR: number = 3;
+
 @Injectable()
 export class SongNumberService {
 
@@ -98,7 +103,7 @@ export class SongNumberService {
       ticker: number + ' ' + this.book.title
     });
     this.chromecastService.send({
-      type: 1,
+      type: MESSAGE_TYPE_SONG,
       number: number,
       book: this.book,
       notes: this.notes
@@ -112,14 +117,14 @@ export class SongNumberService {
       ticker: this.info
     });
     this.chromecastService.send({
-      type: 2,
+      type: MESSAGE_TYPE_INFO,
       message: this.info
     });
   }
 
   readPresented() {
     this.chromecastService.send({
-      type: 0
+      type: MESSAGE_TYPE_READ
     });
   }
 
@@ -129,7 +134,9 @@ export class SongNumberService {
       text: this.i18n['backgroundMode.defaultText'],
       ticker: ''
     });
-    this.chromecastService.close();
+    this.chromecastService.send({
+      type: MESSAGE_TYPE_CLEAR
+    });
   }
 
   changeDigitLength(size: number) {
