@@ -33,8 +33,11 @@ export class ChromecastService {
       'providers.chromecast.stop'
     ]).subscribe((value) => {
       this.i18n = value;
-      // now initialize chromecast
-      this.loadScript();
+      // decouple
+      setTimeout(()=>{
+        // now initialize chromecast
+        this.loadScript();
+      }, 1000);
     });
   }
 

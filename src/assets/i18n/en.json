@@ -22,7 +22,8 @@
       "stopPresenting": "Stop",
       "currentlyPresenting": "On display:",
       "close": "Close",
-      "empty": "Nothing is displayed"
+      "empty": "Nothing is displayed",
+      "queryState": "Query State"
     },
     "info": {
       "title": "Broadcast information",

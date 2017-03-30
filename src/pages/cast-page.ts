@@ -1,15 +1,15 @@
 import {TranslateService} from 'ng2-translate';
 import {ChromecastService} from '../providers/chromecast';
 
-interface PresentButton {
+export interface CastButton {
   text: string, color: string
 }
 
 export abstract class CastPage {
 
-  protected presentButtonOFF: PresentButton;
-  protected presentButtonON: PresentButton;
-  protected presentButton: PresentButton;
+  protected presentButtonOFF: CastButton;
+  protected presentButtonON: CastButton;
+  protected presentButton: CastButton;
   protected i18n: any[];
 
   constructor(i18nService: TranslateService, protected chromecastService: ChromecastService) {

@@ -22,7 +22,8 @@
       "stopPresenting": "Oprește",
       "currentlyPresenting": "Este afișat:",
       "close": "Închide",
-      "empty": "Ecaranul este gol"
+      "empty": "Ecaranul este gol",
+      "queryState": "Interoghează afișajul"
     },
     "info": {
       "title": "Prezintă informații generale",

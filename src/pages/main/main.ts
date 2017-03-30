@@ -4,13 +4,15 @@ import {SongNumberService} from  '../../providers/song-number';
 import {SelectBookModalPage} from '../select-book-modal/select-book-modal';
 import {ChromecastService} from '../../providers/chromecast';
 import {TranslateService} from 'ng2-translate';
-import {CastPage} from '../cast-page';
+import {CastButton, CastPage} from '../cast-page';
 
 @Component({
   selector: 'page-main',
   templateUrl: 'main.html'
 })
 export class MainPage extends CastPage implements AfterViewInit {
+
+  protected queryStateButton: CastButton;
 
   constructor(i18nService: TranslateService,
               protected songNumberService: SongNumberService,
@@ -23,11 +25,16 @@ export class MainPage extends CastPage implements AfterViewInit {
       'pages.main.stopPresenting',
       'pages.main.currentlyPresenting',
       'pages.main.close',
-      'pages.main.empty'
+      'pages.main.empty',
+      'pages.main.queryState'
     ]).subscribe((value) => {
       this.i18n = value;
       this.presentButtonON.text = this.i18n['pages.main.stopPresenting'];
       this.presentButtonOFF.text = this.i18n['pages.main.startPresenting'];
+      this.queryStateButton = {
+        text: this.i18n['pages.main.queryState'],
+        color: 'primary'
+      }
     });
     chromecastService.messageListener.subscribe(data => {
       if(data.isFeedback) {

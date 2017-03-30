@@ -45,7 +45,10 @@
       </button>
       <button ion-button block
               [disabled]="!chromecastService.isConnected()"
-              (click)="songNumberService.readPresented()">Query state</button>
+              [color]="queryStateButton ? queryStateButton.color: 'primary'"
+              (click)="songNumberService.readPresented()">
+        {{queryStateButton ? queryStateButton.text : ''}}
+      </button>
     </ion-buttons>
   </div>
 </ion-content>
