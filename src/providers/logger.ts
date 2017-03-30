@@ -30,7 +30,7 @@ export class LoggerService {
       if (data) {
         this._logLevel = data;
       } else {
-        this.logLevel = LoggerService.ERROR;
+        this.logLevel = LoggerService.INFO;
       }
     });
   }

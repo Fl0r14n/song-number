@@ -77,6 +77,6 @@ export class ConfigPage {
   }
 
   set debug(value: boolean) {
-    this.log.logLevel = value ? LoggerService.DEBUG : LoggerService.ERROR;
+    this.log.logLevel = value ? LoggerService.DEBUG : LoggerService.INFO;
   }
 }

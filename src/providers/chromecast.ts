@@ -49,7 +49,9 @@ export class ChromecastService {
           this._isReceiverFound = true;
           this.log.info(this.i18n['providers.chromecast.receiverFound']);
           if (onReceiverFound) {
-            onReceiverFound();
+            setTimeout(() => {
+              onReceiverFound();
+            }, 100);
           }
         } else {
           this._isReceiverFound = false;
@@ -148,8 +150,8 @@ export class ChromecastService {
     });
   }
 
-  private onError(msg) {
-    this.log.error(this.i18n['providers.chromecast.error'] + JSON.stringify(msg));
+  private onError(err) {
+    this.log.error(this.i18n['providers.chromecast.error'] + err);
   }
 
   private onSendSuccess(msg) {
