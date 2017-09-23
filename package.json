@@ -47,7 +47,6 @@
     "zone.js": "0.8.12"
   },
   "devDependencies": {
-    "@ionic/app-scripts": "2.1.4",
     "typescript": "2.3.4"
   },
   "description": "SongNumber: a small mobile app that will allow user to set a song number from a list of song books and cast it",
@@ -65,5 +64,9 @@
     "platforms": [
       "android"
     ]
+  },
+  "config": {
+    "ionic_copy": "./config/copy.config.js",
+    "ionic_sass": "./config/sass.config.js"
   }
 }

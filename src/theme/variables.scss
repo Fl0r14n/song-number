@@ -68,7 +68,9 @@ $colors: (
 
 @import "roboto";
 @import "noto-sans";
-@import "../../node_modules/ubuntu-fontface/_ubuntu";
+
+$UbuntuFontsPath: $font-path;
+@import "_ubuntu";
 
 $font-family-md-base: "Ubuntu";
 $font-family-ios-base: "Ubuntu";
