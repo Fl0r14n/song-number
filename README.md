@@ -1,26 +1,30 @@
-This is a starter template for [Ionic](http://ionicframework.com/docs/) projects.
+# song-number
+SongNumber is a small mobile app that will allow user to set a song number from a list of song books and cast it
 
-## How to use this template
+###Build
+* sudo npm install -g ionic cordova
+* cordova platforms add android
+* ionic cordova plugin add cordova-plugin-camera
+* npm install --save @ionic-native/camera
+* ionic cordova plugin add cordova-plugin-splashscreen
+* npm install --save @ionic-native/splash-screen
+* ionic cordova plugin add https://github.com/Fl0r14n/cordova-chromecast
 
-*This template does not work on its own*. The shared files for each starter are found in the [ionic2-app-base repo](https://github.com/ionic-team/ionic2-app-base).
+* android update project --subprojects --path "platforms/android" --target android-25 --library "CordovaLib" 
+* ionic build android
 
-To use this template, either create a new ionic project using the ionic node.js utility, or copy the files from this repository into the [Starter App Base](https://github.com/ionic-team/ionic2-app-base).
+###Deploy
+* set android phone in develop mode 
+* ionic cordova run android
 
-### With the Ionic CLI:
+###Setup Receiver App
+* Get a Chromecast device and get it set up for development: https://developers.google.com/cast/docs/developers#Get_started
+* Register an application on the Developers Console (http://cast.google.com/publish). Select the Custom Receiver option and specify the URL to where you are hosting the receiver index.html file
+* Insert your App ID in the src/providers/chromecast.ts file
+* Copy index.html from receiver to your own server
 
-Take the name after `ionic2-starter-`, and that is the name of the template to be used when using the `ionic start` command below:
+### License
+See LICENSE
 
-```bash
-$ sudo npm install -g ionic cordova
-$ ionic start myTabs tabs
-```
 
-Then, to run it, cd into `myTabs` and run:
-
-```bash
-$ ionic cordova platform add ios
-$ ionic cordova run ios
-```
-
-Substitute ios for android if not on a Mac.
 
