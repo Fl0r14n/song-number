@@ -7,8 +7,8 @@ import {SelectBookModalPage} from './select-book-modal/select-book-modal.page';
 import {ComponentsModule} from '../components/components.module';
 import {ProvidersModule} from '../providers/providers.module';
 import {IonicModule} from 'ionic-angular';
-import {TranslateModule} from 'ng2-translate';
 import {TabsPage} from './tabs/tabs.page';
+import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
   imports: [

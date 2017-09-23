@@ -1,10 +1,10 @@
 import {AfterViewInit, Component} from '@angular/core';
 import {AlertController, ModalController} from 'ionic-angular';
-import {TranslateService} from 'ng2-translate';
 import {CastButton, CastPage} from '../cast-page';
 import {SongNumberService} from '../../providers/song-number.service';
 import {ChromecastService} from '../../providers/chromecast.service';
 import {SelectBookModalPage} from '../select-book-modal/select-book-modal.page';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'page-main',

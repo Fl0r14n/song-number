@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Storage} from '@ionic/storage';
-import {TranslateService} from 'ng2-translate';
 import {BackgroundMode} from '@ionic-native/background-mode';
 import {ChromecastService} from './chromecast.service';
+import {TranslateService} from '@ngx-translate/core';
 
 interface Digit {
   pos: number;

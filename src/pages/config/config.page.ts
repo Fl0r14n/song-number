@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
 import {AlertController, ModalController} from 'ionic-angular';
-import {TranslateService} from 'ng2-translate';
 import {SongNumberService} from '../../providers/song-number.service';
 import {LoggerService} from '../../providers/logger.service';
 import {AddBookModalPage} from '../add-book-modal/add-book-modal.page';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'page-config',

@@ -1,5 +1,5 @@
-import {TranslateService} from 'ng2-translate';
 import {ChromecastService} from '../providers/chromecast.service';
+import {TranslateService} from '@ngx-translate/core';
 
 export interface CastButton {
   text: string, color: string
