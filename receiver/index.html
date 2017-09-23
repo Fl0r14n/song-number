@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <style type="text/css">
+    body {
+      overflow: hidden;
+    }
+
+    .type {
+      display: none;
+    }
+
+    .info {
+      font-size: 6rem;
+    }
+
+    .number {
+      font-weight: bolder;
+      font-size: 15rem;
+    }
+
+    .notes {
+      color: aqua;
+    }
+
+    .title {
+      font-size: 7.5rem;
+    }
+
+    .subtitle {
+      color: lightgrey;
+    }
+
+    .content {
+      height: 720PX;
+      width: 1280PX;
+      text-align: center;
+      border: 0 solid silver;
+      display: table-cell;
+      vertical-align: middle;
+      color: white;
+      background-color: #000000;
+      font-weight: bold;
+      font-family: 'Roboto', sans-serif;
+      font-size: 4rem;
+    }
+  </style>
+  <title>SongNumber Cast App</title>
+</head>
+<body>
+<div class="content">
+  <div class="type"></div>
+  <div class="info"></div>
+  <div class="number"></div>
+  <div class="title"></div>
+  <div class="subtitle"></div>
+  <div class="notes"></div>
+</div>
+<script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+<script type="text/javascript">
+  window.onload = function () {
+    var namespace = 'urn:x-cast:ro.biserica2.cast.songnumber';
+
+    cast.receiver.logger.setLevelValue(0);
+    window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+    console.log('Starting Receiver Manager');
+
+    // handler for the 'ready' event
+    castReceiverManager.onReady = function (event) {
+      console.log('Received Ready event: ' + JSON.stringify(event.data));
+      window.castReceiverManager.setApplicationState("Application status is ready...");
+    };
+
+    // handler for 'senderconnected' event
+    castReceiverManager.onSenderConnected = function (event) {
+      console.log('Received Sender Connected event: ' + event.data);
+      console.log(window.castReceiverManager.getSender(event.data).userAgent);
+    };
+
+    // handler for 'senderdisconnected' event
+    castReceiverManager.onSenderDisconnected = function (event) {
+      console.log('Received Sender Disconnected event: ' + event.data);
+      if (window.castReceiverManager.getSenders().length == 0) {
+        window.close();
+      }
+    };
+
+    // handler for 'systemvolumechanged' event
+    castReceiverManager.onSystemVolumeChanged = function (event) {
+      console.log('Received System Volume Changed event: ' + event.data['level'] + ' ' + event.data['muted']);
+    };
+
+    // create a CastMessageBus to handle messages for a custom namespace
+    window.messageBus = window.castReceiverManager.getCastMessageBus(namespace, cast.receiver.CastMessageBus.MessageType.JSON);
+
+    // handler for the CastMessageBus message event
+    window.messageBus.onMessage = function (event) {
+      console.log('Message [' + event.senderId + ']: ' + event.data);
+      processMessage(event.senderId, event.data);
+    };
+
+    // initialize the CastReceiverManager with an application status message
+    window.castReceiverManager.start({statusText: "Application is starting"});
+    console.log('Receiver Manager started');
+  };
+
+  function processMessage(senderId, data) {
+    var type = document.getElementsByClassName('type')[0];
+    var info = document.getElementsByClassName('info')[0];
+    var number = document.getElementsByClassName('number')[0];
+    var image = document.getElementsByClassName('content')[0];
+    var title = document.getElementsByClassName('title')[0];
+    var subtitle = document.getElementsByClassName('subtitle')[0];
+    var notes = document.getElementsByClassName('notes')[0];
+
+    switch (data.type) {
+      case 0: {
+        // read presented information
+        switch (type.innerHTML) {
+          case '1': {
+            var response = {
+              isFeedback: true,
+              type: 1,
+              number: number.innerHTML,
+              book: {
+                title: title.innerHTML,
+                description: subtitle.innerHTML
+              },
+              notes: notes.innerHTML
+            };
+            // send feedback
+            window.messageBus.send(senderId, response);
+            break;
+          }
+          case '2': {
+            var response = {
+              isFeedback: true,
+              type: 2,
+              message: info.innerHTML
+            };
+            // send feedback
+            window.messageBus.send(senderId, response);
+            break;
+          }
+          default: {
+            response = {
+              isFeedback: true,
+              type: 3
+            };
+            // send feedback
+            window.messageBus.send(senderId, response);
+            break;
+          }
+        }
+        break;
+      }
+      case 1: {
+        // present song
+        type.innerHTML = 1;
+        number.innerHTML = data.number ? data.number : '';
+        notes.innerHTML = data.notes ? data.notes : '';
+        var book = data.book;
+        if (book) {
+          title.innerHTML = book.title ? book.title : '';
+          subtitle.innerHTML = book.description ? book.description : '';
+          if (book.thumb) {
+            image.style.background = book.thumb ? 'url("' + book.thumb + '") no-repeat' : '';
+            image.style.backgroundSize = 'contain';
+            image.style.backgroundPosition = 'center';
+            image.style.backgroundColor = '#000000';
+          } else {
+            image.style = '';
+          }
+        }
+        info.innerHTML = '';
+        // send feedback
+        window.messageBus.broadcast(data);
+        break;
+      }
+      case 2: {
+        // present song
+        type.innerHTML = 2;
+        info.innerHTML = data.message ? data.message : '';
+        number.innerHTML = '';
+        notes.innerHTML = '';
+        image.style = '';
+        title.innerHTML = '';
+        subtitle.innerHTML = '';
+        // send feedback
+        window.messageBus.broadcast(data);
+        break;
+      }
+      case 3: {
+        // clear screen
+        type.innerHTML = 3;
+        info.innerHTML = '';
+        number.innerHTML = '';
+        notes.innerHTML = '';
+        image.style = '';
+        title.innerHTML = '';
+        subtitle.innerHTML = '';
+        // send feedback
+        window.messageBus.broadcast(data);
+        break;
+      }
+    }
+    window.castReceiverManager.setApplicationState(data);
+  }
+</script>
+</body>
+</html>
