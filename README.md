@@ -13,7 +13,8 @@ SongNumber is a small mobile app that will allow user to set a song number from 
 * npm install --save @ionic-native/background-mode
 * npm install --save @ionic/storage
 
-* android update project --subprojects --path "platforms/android" --target android-25 --library "CordovaLib"
+if you want to change the api version search for "android-XX" in project where XX is the current version and change it to whatever  android api version you like
+
 * ionic cordova resources 
 * ionic build android
 
