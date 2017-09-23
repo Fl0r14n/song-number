@@ -1,13 +1,15 @@
 {
+  "manifest_version": 2,
+  "version": "0.1",
   "name": "SongNumber",
   "short_name": "SongN",
-  "start_url": "index.html",
-  "display": "standalone",
-  "icons": [{
-    "src": "assets/imgs/logo.png",
-    "sizes": "512x512",
-    "type": "image/png"
-  }],
-  "background_color": "#4e8ef7",
-  "theme_color": "#4e8ef7"
+  "icons": {
+    "64": "assets/icon/favicon.ico"
+  },
+  "app": {
+    "launch": {
+      "local_path": "index.html",
+      "scripts": ["build/main.js", "build/polyfills.js", "build/sw-toolbox.js", "build/vendor.js"]
+    }
+  }
 }
