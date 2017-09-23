@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Storage} from '@ionic/storage';
-import {ChromecastService} from './chromecast';
 import {TranslateService} from 'ng2-translate';
 import {BackgroundMode} from '@ionic-native/background-mode';
+import {ChromecastService} from './chromecast.service';
 
 interface Digit {
   pos: number;
@@ -10,19 +10,21 @@ interface Digit {
 }
 
 interface Book {
-  title: string, description: string, thumb: string
+  title: string,
+  description: string,
+  thumb: string
 }
 
-const STORAGE_ID_DIGITS: string = 'song-number-settings-digits';
-const STORAGE_ID_NOTES: string = 'song-number-settings-notes';
-const STORAGE_ID_BOOK: string = 'song-number-settings-book';
-const STORAGE_ID_BOOKS: string = 'song-number-settings-books';
-const STORAGE_ID_INFO: string = 'song-number-settings-info';
+const STORAGE_ID_DIGITS = 'song-number-settings-digits';
+const STORAGE_ID_NOTES = 'song-number-settings-notes';
+const STORAGE_ID_BOOK = 'song-number-settings-book';
+const STORAGE_ID_BOOKS = 'song-number-settings-books';
+const STORAGE_ID_INFO = 'song-number-settings-info';
 
-const MESSAGE_TYPE_READ: number = 0;
-const MESSAGE_TYPE_SONG: number = 1;
-const MESSAGE_TYPE_INFO: number = 2;
-const MESSAGE_TYPE_CLEAR: number = 3;
+const MESSAGE_TYPE_READ = 0;
+const MESSAGE_TYPE_SONG = 1;
+const MESSAGE_TYPE_INFO = 2;
+const MESSAGE_TYPE_CLEAR = 3;
 
 @Injectable()
 export class SongNumberService {
@@ -33,14 +35,17 @@ export class SongNumberService {
   private _book: Book;
   books: Book[];
   private _info: string;
-  isPresenting: boolean = false;
+  isPresenting = false;
 
-  constructor(i18nService: TranslateService, protected storage: Storage, protected chromecastService: ChromecastService, protected backgroundMode: BackgroundMode) {
+  constructor(i18nService: TranslateService,
+              protected storage: Storage,
+              protected chromecastService: ChromecastService,
+              protected backgroundMode: BackgroundMode) {
     i18nService.get([
       'backgroundMode.defaultTitle',
       'backgroundMode.defaultText',
       'backgroundMode.presenting'
-    ]).subscribe((value)=> {
+    ]).subscribe((value) => {
       this.i18n = value;
     });
     this.storage.get(STORAGE_ID_DIGITS).then(data => {
@@ -58,7 +63,7 @@ export class SongNumberService {
           value: 0
         }];
       }
-      //make digits observable
+      // make digits observable
       this.digits = this.enhanceArray(this.digits, this.saveDigits.bind(this));
       this.digits = this.observableArray(this.digits, this.saveDigits.bind(this));
     });
@@ -74,7 +79,7 @@ export class SongNumberService {
       } else {
         this.books = this.getDefaultBooks();
       }
-      //make books observable
+      // make books observable
       this.books = this.observableArray(this.books, this.saveBooks.bind(this));
     });
     this.storage.get(STORAGE_ID_INFO).then(data => {
@@ -83,10 +88,10 @@ export class SongNumberService {
   }
 
   buildNumber(): string {
-    let result: string = '';
+    let result = '';
     let leadingZeros = true;
     for (let obj of this.digits) {
-      if (obj.value != 0) {
+      if (obj.value !== 0) {
         leadingZeros = false;
         result += obj.value;
       } else if (!leadingZeros) {
@@ -181,9 +186,9 @@ export class SongNumberService {
   }
 
 
-  //watch for change in digit and save to storage
-  private observableObject(value: any, callback?: Function) {
-    return new Proxy(value, {
+  // watch for change in digit and save to storage
+  private observableObject(val: any, callback?: Function) {
+    return new Proxy(val, {
       get: (target, property) => {
         return target[property];
       },
@@ -197,7 +202,7 @@ export class SongNumberService {
     });
   }
 
-  //watch for change in array and save to storage
+  // watch for change in array and save to storage
   private observableArray(array: any[], callback?: Function) {
     return new Proxy(array, {
       get: (target, property) => {

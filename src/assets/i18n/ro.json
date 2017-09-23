@@ -1,0 +1,72 @@
+{
+  "nav": {
+    "title": "Meniu",
+    "main": "Cântare",
+    "info": "Informații",
+    "config": "Setări"
+  },
+  "backgroundMode": {
+    "defaultTitle": "Nimic de prezentat",
+    "defaultText": "Atinge pentru a prezenta",
+    "presenting": "Se prezintă..."
+  },
+  "pages": {
+    "cast": {
+      "startPresenting": "Prezintă",
+      "stopPresenting": "Oprește"
+    },
+    "main": {
+      "title": "Prezintă numărul cântării",
+      "book": "Carte",
+      "startPresenting": "Prezintă",
+      "stopPresenting": "Oprește",
+      "currentlyPresenting": "Este afișat:",
+      "close": "Închide",
+      "empty": "Ecaranul este gol",
+      "queryState": "Interoghează afișajul"
+    },
+    "info": {
+      "title": "Prezintă informații generale",
+      "textArea": "Informații generale",
+      "startPresenting": "Prezintă",
+      "stopPresenting": "Oprește"
+    },
+    "config": {
+      "title": "Setări",
+      "debug": "Mod depanare",
+      "digits": "Numărul de cifre",
+      "books": "Cărți",
+      "delete": "Șterge",
+      "cancel": "Anulează",
+      "remove": "Elimină",
+      "permanentRemoval": "Această operație nu poate fi anulată",
+      "removeBook": "Eliminați {{value}}?"
+    },
+    "addBookModal": {
+      "title": "Adaugați o carte",
+      "cancel": "Anulează",
+      "bookTitle": "Titlu",
+      "bookDescription": "Descriere",
+      "submit": "Adaugați cartea"
+    },
+    "selectBookModal": {
+      "title": "Selectați o carte",
+      "cancel": "Anulează"
+    }
+  },
+  "providers": {
+    "chromecast": {
+      "session": "sesiune: ",
+      "newSession": "sesiune nouă: ",
+      "sessionUpdated": "sesiune actualizată",
+      "sessionRemoved": "sesiune eliminată",
+      "messageReceived": "primit: ",
+      "sendMessage": "trimis: ",
+      "receiverFound": "receptor găsit",
+      "receiverNotFound": "lista de receptori este goală",
+      "error": "eroare: ",
+      "success": "succes: ",
+      "stop": "oprit"
+    }
+  }
+}

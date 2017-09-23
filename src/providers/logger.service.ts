@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Storage} from '@ionic/storage';
 import {ToastController} from 'ionic-angular'
 
-const STORAGE_ID_DEBUG: string = 'song-number-settings-log-level';
+const STORAGE_ID_DEBUG = 'song-number-settings-log-level';
 
 @Injectable()
 export class LoggerService {
@@ -25,7 +25,8 @@ export class LoggerService {
 
   private _logLevel: number = LoggerService.ERROR;
 
-  constructor(public storage: Storage, public toastCtrl: ToastController) {
+  constructor(protected storage: Storage,
+              protected toastCtrl: ToastController) {
     this.storage.get(STORAGE_ID_DEBUG).then(data => {
       if (data) {
         this._logLevel = data;
@@ -49,15 +50,21 @@ export class LoggerService {
   }
 
   warn(message) {
-    if (this.logLevel >= LoggerService.WARN) this.toast(message, 'toast-warn');
+    if (this.logLevel >= LoggerService.WARN) {
+      this.toast(message, 'toast-warn');
+    }
   }
 
   error(message) {
-    if (this.logLevel >= LoggerService.ERROR) this.toast(message, 'toast-error');
+    if (this.logLevel >= LoggerService.ERROR) {
+      this.toast(message, 'toast-error');
+    }
   }
 
   debug(message) {
-    if (this.logLevel >= LoggerService.DEBUG) this.toast(message, 'toast-debug');
+    if (this.logLevel >= LoggerService.DEBUG) {
+      this.toast(message, 'toast-debug');
+    }
   }
 
   private toast(msg, cssClass?: string) {

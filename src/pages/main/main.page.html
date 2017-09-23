@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      <ion-icon name="musical-notes"></ion-icon>
+      {{ 'pages.main.title' | translate}}
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only
+              [disabled]="!chromecastService.isInitialised()"
+              [color]="chromecastService.isConnected() ? 'secondary' : 'primary'"
+              (click)="cast()">
+        <ion-icon name="desktop"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <song-number [value]="songNumberService.digits"></song-number>
+
+  <ion-item (click)="openSelectBookModal()">
+    <ion-thumbnail item-left *ngIf="songNumberService.book">
+      <img [src]="songNumberService.book.thumb">
+    </ion-thumbnail>
+    <h2 [hidden]="songNumberService.book">{{ 'pages.main.book' | translate}}</h2>
+    <h2 *ngIf="songNumberService.book">{{songNumberService.book.title}}</h2>
+    <p *ngIf="songNumberService.book">{{songNumberService.book.description}}</p>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Notes</ion-label>
+    <ion-input type="text" [(ngModel)]="songNumberService.notes"></ion-input>
+  </ion-item>
+
+  <div padding>
+    <ion-buttons text-center>
+      <button ion-button block
+              [disabled]="!chromecastService.isConnected()"
+              [color]="presentButton ? presentButton.color : 'primary'"
+              (click)="present()">
+        {{presentButton ? presentButton.text : ''}}
+      </button>
+      <button ion-button block
+              [disabled]="!chromecastService.isConnected()"
+              [color]="queryStateButton ? queryStateButton.color: 'primary'"
+              (click)="songNumberService.readPresented()">
+        {{queryStateButton ? queryStateButton.text : ''}}
+      </button>
+    </ion-buttons>
+  </div>
+</ion-content>

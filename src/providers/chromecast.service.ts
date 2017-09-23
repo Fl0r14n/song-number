@@ -1,24 +1,25 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {LoggerService} from './logger';
 import {TranslateService} from 'ng2-translate';
+import {LoggerService} from './logger.service';
 
 @Injectable()
 export class ChromecastService {
 
-  applicationId: string = '20CAA3A2';
-  namespace: string = 'urn:x-cast:ro.biserica2.cast.songnumber';
+  applicationId = '20CAA3A2';
+  namespace = 'urn:x-cast:ro.biserica2.cast.songnumber';
 
-  private _isInitialised: boolean = false;
-  private _isReceiverFound: boolean = false;
+  private _isInitialised = false;
+  private _isReceiverFound = false;
   private i18n: any[];
   private cast: any;
   private session: any = null;
   // prevent some initialize bug when opening the application for the first time
-  private _reinitilize: boolean = true;
+  private _reinitilize = true;
 
   messageListener: EventEmitter<any> = new EventEmitter();
 
-  constructor(i18nService: TranslateService, protected log: LoggerService) {
+  constructor(i18nService: TranslateService,
+              protected log: LoggerService) {
     i18nService.get([
       'providers.chromecast.session',
       'providers.chromecast.newSession',
@@ -34,7 +35,7 @@ export class ChromecastService {
     ]).subscribe((value) => {
       this.i18n = value;
       // decouple
-      setTimeout(()=>{
+      setTimeout(() => {
         // now initialize chromecast
         this.loadScript();
       }, 1000);
@@ -56,7 +57,7 @@ export class ChromecastService {
         } else {
           this._isReceiverFound = false;
           this.log.warn(this.i18n['providers.chromecast.receiverNotFound']);
-          //workaround
+          // workaround
           if (this._reinitilize) {
             this._reinitilize = false;
             this.init();
@@ -134,7 +135,7 @@ export class ChromecastService {
     this.session = session;
     this.log.info(this.i18n['providers.chromecast.newSession'] + this.session.sessionId);
     this.session.addUpdateListener((isAlive) => {
-      if(this.session) {
+      if (this.session) {
         let message = isAlive ? this.i18n['providers.chromecast.sessionUpdated'] : this.i18n['providers.chromecast.sessionRemoved'];
         message += ': ' + this.session.sessionId;
         this.log.debug(message);
