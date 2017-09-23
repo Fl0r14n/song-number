@@ -11,6 +11,7 @@ SongNumber is a small mobile app that will allow user to set a song number from 
 * ionic cordova plugin add https://github.com/Fl0r14n/cordova-chromecast
 * ionic cordova plugin add cordova-plugin-background-mode
 * npm install --save @ionic-native/background-mode
+* npm install --save @ionic/storage
 
 * android update project --subprojects --path "platforms/android" --target android-25 --library "CordovaLib"
 * ionic cordova resources 

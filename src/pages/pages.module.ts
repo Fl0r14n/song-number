@@ -6,9 +6,14 @@ import {MainPage} from './main/main.page';
 import {SelectBookModalPage} from './select-book-modal/select-book-modal.page';
 import {ComponentsModule} from '../components/components.module';
 import {ProvidersModule} from '../providers/providers.module';
+import {IonicModule} from 'ionic-angular';
+import {TranslateModule} from 'ng2-translate';
+import {TabsPage} from './tabs/tabs.page';
 
 @NgModule({
   imports: [
+    IonicModule,
+    TranslateModule,
     ComponentsModule,
     ProvidersModule
   ],
@@ -17,14 +22,16 @@ import {ProvidersModule} from '../providers/providers.module';
     ConfigPage,
     InfoPage,
     MainPage,
-    SelectBookModalPage
+    SelectBookModalPage,
+    TabsPage
   ],
   exports: [
     AddBookModalPage,
     ConfigPage,
     InfoPage,
     MainPage,
-    SelectBookModalPage
+    SelectBookModalPage,
+    TabsPage
   ]
 })
 export class PagesModule {

@@ -25,7 +25,7 @@
     "@ionic-native/core": "3.12.1",
     "@ionic-native/splash-screen": "^3.12.1",
     "@ionic-native/status-bar": "3.12.1",
-    "@ionic/storage": "2.0.1",
+    "@ionic/storage": "^2.0.1",
     "acidhax.cordova.chromecast": "https://github.com/Fl0r14n/cordova-chromecast",
     "cordova-android": "^6.2.3",
     "cordova-chromecast": "git+https://github.com/Fl0r14n/cordova-chromecast.git",
