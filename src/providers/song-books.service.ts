@@ -10,10 +10,10 @@ export class SongBooksService {
   }
 
   getDefaultSongBooks(): Observable<Book[]> {
-    return this.http.get('/assets/json/song-books.json').map(res => res.json());
+    return this.http.get('assets/json/song-books.json').map(res => res.json());
   }
 
   getCoverBook(): Observable<Book> {
-    return this.http.get('/assets/json/cover-book.json').map(res => res.json());
+    return this.http.get('assets/json/cover-book.json').map(res => res.json());
   }
 }

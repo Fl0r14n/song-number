@@ -34,8 +34,7 @@ export class SongNumberService {
               protected storage: Storage,
               protected chromecastService: ChromecastService,
               protected backgroundMode: BackgroundMode) {
-    this.init().then(() => {
-    });
+    this.init();
   }
 
   async init() {
@@ -44,8 +43,8 @@ export class SongNumberService {
       'backgroundMode.defaultText',
       'backgroundMode.presenting'
     ]);
-    let digits = await this.storage.get(STORAGE_ID_DIGITS);
-    if (!digits) {
+    this.digits = await this.storage.get(STORAGE_ID_DIGITS);
+    if (!this.digits) {
       this.digits = [{
         pos: 0,
         value: 0
