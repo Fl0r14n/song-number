@@ -30,7 +30,6 @@ export class AddBookModalPage {
     return {
       // Some common settings are 20, 50, and 100
       quality: 50,
-      // destinationType: Camera.DestinationType.FILE_URI,
       destinationType: this.camera.DestinationType.DATA_URL,
       // In this app, dynamically set the picture source, Camera or photo gallery
       sourceType: srcType,
