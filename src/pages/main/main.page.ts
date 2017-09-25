@@ -15,9 +15,9 @@ export class MainPage extends CastPage implements AfterViewInit {
   protected queryStateButton: CastButton;
 
   constructor(i18nService: TranslateService,
+              chromecastService: ChromecastService,
               protected songNumberService: SongNumberService,
               protected modalCtrl: ModalController,
-              protected chromecastService: ChromecastService,
               protected alertCtrl: AlertController) {
     super(i18nService, chromecastService);
     i18nService.get([
@@ -92,7 +92,7 @@ export class MainPage extends CastPage implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // reinit button state
+    // reinitialize button state
     if (this.songNumberService.isPresenting) {
       this.presentButton = this.presentButtonON;
     } else {
