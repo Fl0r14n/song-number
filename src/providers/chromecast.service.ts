@@ -114,7 +114,7 @@ export class ChromecastService {
       let head = document.getElementsByTagName('head')[0];
       let script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = '//www.gstatic.com/cv/js/sender/v1/cast_sender.js';
+      script.src = 'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js';
       script.onload = this.checkForCastApi.bind(this);
       head.appendChild(script);
     } else {

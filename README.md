@@ -19,8 +19,18 @@ if you want to change the api version search for "android-XX" in project where X
 * ionic build android
 
 ###Deploy
+
+####Android
+
 * set android phone in develop mode 
 * ionic cordova run android
+
+#### Chrome extension
+
+* in index.html comment cordova.js and uncomment service worker and popup size
+* npm run build --prod
+* in Chrome go to chrome://extensions and load unpacked extension from the www directory.  
+
 
 ###Setup Receiver App
 * Get a Chromecast device and get it set up for development: https://developers.google.com/cast/docs/developers#Get_started

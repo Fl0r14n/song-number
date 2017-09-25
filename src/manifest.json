@@ -2,14 +2,27 @@
   "manifest_version": 2,
   "version": "0.1",
   "name": "SongNumber",
-  "short_name": "SongN",
+  "description": "SongNumber: a small mobile app that will allow user to set a song number from a list of song books and cast it",
+  "author": "Florian Chis",
   "icons": {
     "64": "assets/icon/favicon.ico"
   },
-  "app": {
-    "launch": {
-      "local_path": "index.html",
-      "scripts": ["build/main.js", "build/polyfills.js", "build/sw-toolbox.js", "build/vendor.js"]
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.gstatic.com 'sha256-09KZXTcT82tRn5QumiNL904BbZLeDmDJc8KT4WUxQs0='; object-src 'self';",
+  "browser_action": {
+    "default_popup": "index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.gstatic.com/*"],
+      "js": [
+        "build/main.js",
+        "build/polyfills.js",
+        "build/sw-toolbox.js",
+        "build/vendor.js"
+      ]
     }
-  }
+  ],
+  "permissions": [
+    "tabs", "https://www.gstatic.com/*"
+  ]
 }
