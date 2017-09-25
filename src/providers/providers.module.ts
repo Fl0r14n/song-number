@@ -6,6 +6,7 @@ import {IonicStorageModule} from '@ionic/storage';
 import {BackgroundMode} from '@ionic-native/background-mode';
 import {CameraService} from './camera.service';
 import {Camera} from '@ionic-native/camera';
+import {SongBooksService} from './song-books.service';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import {Camera} from '@ionic-native/camera';
   providers: [
     ChromecastService,
     LoggerService,
+    SongBooksService,
     SongNumberService,
     CameraService,
     BackgroundMode,
