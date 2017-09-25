@@ -9,7 +9,6 @@ import {ProvidersModule} from '../providers/providers.module';
 import {IonicModule} from 'ionic-angular';
 import {TabsPage} from './tabs/tabs.page';
 import {TranslateModule} from '@ngx-translate/core';
-import {Camera} from '@ionic-native/camera';
 
 @NgModule({
   imports: [
@@ -33,9 +32,6 @@ import {Camera} from '@ionic-native/camera';
     MainPage,
     SelectBookModalPage,
     TabsPage
-  ],
-  providers: [
-    Camera
   ]
 })
 export class PagesModule {

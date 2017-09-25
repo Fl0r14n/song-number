@@ -14,7 +14,15 @@
 <ion-content>
   <form [formGroup]="bookForm" (ngSubmit)="addBook()">
     <ion-card>
-      <img [src]="book.thumb" (click)="getPicture()">
+      <img [src]="book.thumb">
+      <ion-fab right top>
+        <button type="button" ion-fab (click)="takePicture()">
+          <ion-icon name="camera"></ion-icon>
+        </button>
+        <button type="button" ion-fab (click)="selectPicture()">
+          <ion-icon name="image"></ion-icon>
+        </button>
+      </ion-fab>
       <ion-card-content>
         <ion-list>
           <ion-item>

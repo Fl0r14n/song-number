@@ -20,10 +20,10 @@ export class ConfigPage {
               protected modalCtrl: ModalController,
               protected log: LoggerService) {
     i18nService.get([
-      'config.cancel',
-      'config.remove',
-      'config.permanentRemoval',
-      'config.removeBook'
+      'pages.config.cancel',
+      'pages.config.remove',
+      'pages.config.permanentRemoval',
+      'pages.config.removeBook'
     ]).subscribe((value) => {
       this.i18n = value;
     });
@@ -38,18 +38,18 @@ export class ConfigPage {
   }
 
   removeBook(item) {
-    this.i18nService.get('config.removeBook', {value: item.title}).subscribe((value) => {
+    this.i18nService.get('pages.config.removeBook', {value: item.title}).subscribe((value) => {
       let confirm = this.alertCtrl.create({
         title: value,
-        message: this.i18n['config.permanentRemoval'],
+        message: this.i18n['pages.config.permanentRemoval'],
         buttons: [
           {
-            text: this.i18n['config.cancel'],
+            text: this.i18n['pages.config.cancel'],
             handler: () => {
             }
           },
           {
-            text: this.i18n['config.remove'],
+            text: this.i18n['pages.config.remove'],
             handler: () => {
               let idx = this.songNumberService.books.indexOf(item);
               this.songNumberService.books.splice(idx, 1);

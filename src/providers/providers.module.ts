@@ -4,6 +4,8 @@ import {LoggerService} from './logger.service';
 import {SongNumberService} from './song-number.service';
 import {IonicStorageModule} from '@ionic/storage';
 import {BackgroundMode} from '@ionic-native/background-mode';
+import {CameraService} from './camera.service';
+import {Camera} from '@ionic-native/camera';
 
 @NgModule({
   imports: [
@@ -13,7 +15,9 @@ import {BackgroundMode} from '@ionic-native/background-mode';
     ChromecastService,
     LoggerService,
     SongNumberService,
-    BackgroundMode
+    CameraService,
+    BackgroundMode,
+    Camera
   ]
 })
 export class ProvidersModule {

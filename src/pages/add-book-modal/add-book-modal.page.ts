@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
 import {Validators, FormBuilder, FormGroup} from '@angular/forms';
 import {ViewController} from 'ionic-angular';
-import {Camera} from '@ionic-native/camera';
 import {LoggerService} from '../../providers/logger.service';
+import {CameraService, SourceType} from '../../providers/camera.service';
 
 @Component({
   selector: 'page-add-book-modal',
@@ -15,7 +15,7 @@ export class AddBookModalPage {
 
   constructor(protected formBuilder: FormBuilder,
               protected viewCtrl: ViewController,
-              protected camera: Camera,
+              protected cameraService: CameraService,
               protected log: LoggerService) {
     this.bookForm = this.formBuilder.group({
       title: ['', Validators.compose([Validators.required, Validators.minLength(5)])],
@@ -26,20 +26,6 @@ export class AddBookModalPage {
     }
   }
 
-  cameraOptions(srcType): any {
-    return {
-      // Some common settings are 20, 50, and 100
-      quality: 50,
-      destinationType: this.camera.DestinationType.DATA_URL,
-      // In this app, dynamically set the picture source, Camera or photo gallery
-      sourceType: srcType,
-      encodingType: this.camera.EncodingType.JPEG,
-      mediaType: this.camera.MediaType.PICTURE,
-      allowEdit: true,
-      correctOrientation: true  // Corrects Android orientation quirks
-    };
-  }
-
   addBook() {
     this.viewCtrl.dismiss(Object.assign(this.book, this.bookForm.value));
   }
@@ -48,17 +34,15 @@ export class AddBookModalPage {
     this.viewCtrl.dismiss();
   }
 
-  getPicture() {
-    let options = this.cameraOptions(this.camera.PictureSourceType.CAMERA);
-    options.targetHeight = 200;
-    options.targetWidth = 200;
-    this.camera.getPicture(options).then((imageData) => {
-      // imageData is either a base64 encoded string or a file URI
-      // If it's base64:
-      let base64Image = 'data:image/jpeg;base64,' + imageData;
-      this.book.thumb = base64Image;
-    }, (err) => {
-      this.log.error(err);
+  takePicture() {
+    this.cameraService.getPicture(SourceType.CAMERA).subscribe((image) => {
+      this.book.thumb = image;
+    });
+  }
+
+  selectPicture() {
+    this.cameraService.getPicture(SourceType.GALLERY).subscribe((image) => {
+      this.book.thumb = image;
     });
   }
 }
