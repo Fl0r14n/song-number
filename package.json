@@ -28,7 +28,6 @@
         "@ionic/storage": "^2.0.1",
         "@ngx-translate/core": "^8.0.0",
         "@ngx-translate/http-loader": "^0.1.0",
-        "acidhax.cordova.chromecast": "https://github.com/Fl0r14n/cordova-chromecast",
         "cordova-android": "^6.2.3",
         "cordova-browser": "^4.1.0",
         "cordova-chromecast": "git+https://github.com/Fl0r14n/cordova-chromecast.git",
@@ -47,7 +46,8 @@
         "rxjs": "5.4.0",
         "sw-toolbox": "3.6.0",
         "ubuntu-fontface": "^0.1.13",
-        "zone.js": "0.8.12"
+        "zone.js": "0.8.12",
+        "acidhax.cordova.chromecast": "https://github.com/Fl0r14n/cordova-chromecast"
     },
     "devDependencies": {
         "@ionic/app-scripts": "^2.1.4",
@@ -63,14 +63,14 @@
             "ionic-plugin-keyboard": {},
             "cordova-plugin-camera": {},
             "cordova-plugin-background-mode": {},
-            "acidhax.cordova.chromecast": {},
             "cordova-plugin-ionic": {
                 "APP_ID": "20adb2ff",
                 "CHANNEL_NAME": "Master",
                 "UPDATE_METHOD": "auto",
                 "UPDATE_API": "https://api.ionicjs.com",
                 "MAX_STORE": "2"
-            }
+            },
+            "acidhax.cordova.chromecast": {}
         },
         "platforms": [
             "android",

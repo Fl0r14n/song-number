@@ -8,8 +8,10 @@
     "64": "assets/icon/favicon.ico"
   },
   "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.gstatic.com 'sha256-09KZXTcT82tRn5QumiNL904BbZLeDmDJc8KT4WUxQs0='; object-src 'self';",
-  "browser_action": {
-    "default_popup": "index.html"
+  "app": {
+    "launch": {
+      "local_path": "index.html"
+    }
   },
   "content_scripts": [
     {
