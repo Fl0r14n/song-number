@@ -13,7 +13,7 @@
     "dev": "nf start",
     "start": "ionic-app-scripts serve",
     "electron dist": "electron .",
-    "ebuild": "ionic cordova build browser && ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true node_modules/.bin/build",
+    "ebuild": "ionic cordova build browser && node_modules/.bin/build",
     "clean": "ionic-app-scripts clean",
     "build": "ionic-app-scripts build",
     "lint": "ionic-app-scripts lint",

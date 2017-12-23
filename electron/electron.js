@@ -15,8 +15,8 @@ let win;
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 1024,
-    height: 600
+    width: 360,
+    height: 640
   });
   let urlPath = url.format({
     pathname: path.join(__dirname, '../platforms/browser/www/index.html'),
@@ -33,7 +33,7 @@ function createWindow() {
   // and load the index.html of the app.
   win.loadURL(urlPath);
   // Open the DevTools.
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
   // Emitted when the window is closed.
   win.on('closed', () => {
     // Dereference the window object, usually you would store windows
