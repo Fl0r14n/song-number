@@ -1,16 +1,26 @@
 {
   "name": "SongNumber",
+  "description": "SongNumber: a small mobile app that will allow user to set a song number from a list of song books and cast it",
   "version": "0.0.1",
-  "author": "Florian Chiș",
+  "author": {
+    "name": "Florian Chiș",
+    "email": "florian.chis@gmail.com",
+    "url": "https://github.com/Fl0r14n/"
+  },
   "homepage": "https://github.com/Fl0r14n/",
   "private": true,
   "scripts": {
+    "dev": "nf start",
+    "start": "ionic-app-scripts serve",
+    "electron dist": "electron .",
+    "ebuild": "ionic cordova build browser && ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true node_modules/.bin/build",
     "clean": "ionic-app-scripts clean",
     "build": "ionic-app-scripts build",
     "lint": "ionic-app-scripts lint",
     "ionic:build": "ionic-app-scripts build",
     "ionic:serve": "ionic-app-scripts serve"
   },
+  "main": "electron/electron.js",
   "dependencies": {
     "@angular/common": "5.0.3",
     "@angular/compiler": "5.0.3",
@@ -49,9 +59,11 @@
   },
   "devDependencies": {
     "@ionic/app-scripts": "3.1.6",
+    "electron": "^1.7.10",
+    "electron-builder": "^19.49.2",
+    "foreman": "^2.0.0",
     "typescript": "2.4.2"
   },
-  "description": "SongNumber: a small mobile app that will allow user to set a song number from a list of song books and cast it",
   "cordova": {
     "plugins": {
       "cordova-plugin-camera": {},
@@ -70,6 +82,17 @@
   },
   "config": {
     "ionic_copy": "./config/copy.config.js",
-    "ionic_sass": "./config/sass.config.js"
+    "ionic_sass": "./config/sass.config.js",
+    "ionic_bundler": "webpack",
+    "ionic_webpack": "./config/webpack.config.js"
+  },
+  "build": {
+    "appId": "com.ionicframework.songnumber142959",
+    "electronVersion": "1.7.9",
+    "asar": false,
+    "files": [
+      "platforms/browser/www/**/*",
+      "electron/electron.js"
+    ]
   }
 }

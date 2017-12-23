@@ -15,6 +15,7 @@ SongNumber is a small mobile app that will allow user to set a song number from 
 * ```npm install ubuntu-fontface --save```
 * ```npm install @ngx-translate/core --save```
 * ```npm install @ngx-translate/http-loader --save```
+* ```npm install electron electron-builder foreman --save-dev```
 
 if you want to change the api version search for "android-XX" in project where XX is the current version and change it to whatever  android api version you like
 
@@ -48,6 +49,21 @@ if you want to change the api version search for "android-XX" in project where X
   },
 ```  
 
+#### Desktop application
+ 
+ ```npm run ebuild```
+ 
+ This will build your application for the operating system you are currently using
+ 
+ ```npm run ebuild -l```
+ 
+ building for linux
+ 
+ ```npm run ebuild -w```
+ 
+ building for windows
+ 
+ ```npm run ebuild -m```
 
 ###Setup Receiver App
 * Get a Chromecast device and get it set up for development: https://developers.google.com/cast/docs/developers#Get_started
