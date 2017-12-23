@@ -1,24 +1,24 @@
-import { NgModule, ErrorHandler } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
-import { MyApp } from './app.component';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {ErrorHandler, NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {SplashScreen} from '@ionic-native/splash-screen';
 
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import {PagesModule} from '../pages/pages.module';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import {StatusBar} from '@ionic-native/status-bar';
+import {IonicStorageModule} from '@ionic/storage';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
+import {AddBookModalPage} from '../pages/add-book-modal/add-book-modal.page';
+import {ConfigPage} from '../pages/config/config.page';
 import {InfoPage} from '../pages/info/info.page';
 import {MainPage} from '../pages/main/main.page';
-import {ConfigPage} from '../pages/config/config.page';
-import {AddBookModalPage} from '../pages/add-book-modal/add-book-modal.page';
+import {PagesModule} from '../pages/pages.module';
 import {SelectBookModalPage} from '../pages/select-book-modal/select-book-modal.page';
 import {TabsPage} from '../pages/tabs/tabs.page';
-import {IonicStorageModule} from '@ionic/storage';
-import {Http, HttpModule} from '@angular/http';
+import {MyApp} from './app.component';
 
 
-export function createTranslateLoader(http: Http) {
+export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
@@ -28,16 +28,16 @@ export function createTranslateLoader(http: Http) {
   ],
   imports: [
     BrowserModule,
-    HttpModule,
+    HttpClientModule,
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot(MyApp),
+    IonicStorageModule.forRoot(),
     PagesModule,
     // i18n
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [Http]
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
       }
     })
   ],
@@ -57,4 +57,5 @@ export function createTranslateLoader(http: Http) {
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
-export class AppModule {}
+export class AppModule {
+}
