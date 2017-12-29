@@ -11,13 +11,28 @@ export enum SourceType {
 @Injectable()
 export class CameraService {
 
-  public static get INFO(): number {
-    return 0;
+  constructor(private camera: Camera,
+              private log: LoggerService) {}
+
+  getPicture(type: SourceType): Observable<string> {
+    return new Observable(subscriber => {
+      let options = this.cameraOptions(type);
+      options.targetHeight = 200;
+      options.targetWidth = 200;
+      this.camera.getPicture(options).then((imageData) => {
+        // imageData is either a base64 encoded string or a file URI
+        // If it's base64:
+        let base64Image = 'data:image/jpeg;base64,' + imageData;
+        subscriber.next(base64Image);
+        subscriber.complete();
+      }, (err) => {
+        this.log.error(err);
+        subscriber.error(err);
+      });
+    });
   }
 
-  constructor(protected camera: Camera, protected log: LoggerService) {}
-
-  cameraOptions(type: SourceType): any {
+  private cameraOptions(type: SourceType): any {
     let srcType = PictureSourceType.CAMERA;
     switch (type) {
       case SourceType.GALLERY: {
@@ -40,23 +55,5 @@ export class CameraService {
       allowEdit: true,
       correctOrientation: true  // Corrects Android orientation quirks
     };
-  }
-
-  getPicture(type: SourceType): Observable<string> {
-    return new Observable(subscriber => {
-      let options = this.cameraOptions(type);
-      options.targetHeight = 200;
-      options.targetWidth = 200;
-      this.camera.getPicture(options).then((imageData) => {
-        // imageData is either a base64 encoded string or a file URI
-        // If it's base64:
-        let base64Image = 'data:image/jpeg;base64,' + imageData;
-        subscriber.next(base64Image);
-        subscriber.complete();
-      }, (err) => {
-        this.log.error(err);
-        subscriber.error(err);
-      });
-    });
   }
 }

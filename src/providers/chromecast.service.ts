@@ -1,6 +1,13 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {LoggerService} from './logger.service';
 import {TranslateService} from '@ngx-translate/core';
+import {LoggerService} from './logger.service';
+
+export enum ChromecastState {
+  DISABLED = 0,
+  INITIALIZED = 1,
+  AVAILABLE = 3,
+  CONNECTED = 7
+}
 
 @Injectable()
 export class ChromecastService {
@@ -8,19 +15,19 @@ export class ChromecastService {
   applicationId = '20CAA3A2';
   namespace = 'urn:x-cast:ro.biserica2.cast.songnumber';
 
-  private _isInitialised = false;
-  private _isReceiverFound = false;
   private i18n: any[];
   private cast: any;
-  private session: any = null;
+  private session: any;
   // prevent some initialize bug when opening the application for the first time
   private _reinitilize = true;
 
-  messageListener: EventEmitter<any> = new EventEmitter();
+  private _state: ChromecastState = ChromecastState.DISABLED;
+  public stateChanged: EventEmitter<ChromecastState> = new EventEmitter();
+  public messageListener: EventEmitter<any> = new EventEmitter();
 
-  constructor(i18nService: TranslateService,
-              protected log: LoggerService) {
-    i18nService.get([
+  constructor(private i18nService: TranslateService,
+              private log: LoggerService) {
+    this.i18nService.get([
       'providers.chromecast.session',
       'providers.chromecast.newSession',
       'providers.chromecast.sessionUpdated',
@@ -42,96 +49,99 @@ export class ChromecastService {
     });
   }
 
-  init(onReceiverFound?: () => void) {
+  public get state(): ChromecastState {
+    return this._state;
+  }
+
+  private setState(state: ChromecastState) {
+    this._state = state;
+    this.stateChanged.emit(state);
+  }
+
+  init() {
     this.cast = window['chrome'].cast;
     if (this.cast) {
-      let apiConfig = new this.cast.ApiConfig(new this.cast.SessionRequest(this.applicationId), this.onSession.bind(this), (status) => {
-        if (status === this.cast.ReceiverAvailability.AVAILABLE) {
-          this._isReceiverFound = true;
-          this.log.info(this.i18n['providers.chromecast.receiverFound']);
-          if (onReceiverFound) {
-            setTimeout(() => {
-              onReceiverFound();
-            }, 100);
+      const apiConfig = new this.cast.ApiConfig(new this.cast.SessionRequest(this.applicationId), this.onSession.bind(this), (status) => {
+        switch (status) {
+          case this.cast.ReceiverAvailability.UNAVAILABLE: {
+            this.setState(ChromecastState.INITIALIZED);
+            this.log.warn(this.i18n['providers.chromecast.receiverNotFound']);
+            // workaround
+            if (this._reinitilize) {
+              this._reinitilize = false;
+              this.init();
+            }
+            break;
           }
-        } else {
-          this._isReceiverFound = false;
-          this.log.warn(this.i18n['providers.chromecast.receiverNotFound']);
-          // workaround
-          if (this._reinitilize) {
-            this._reinitilize = false;
-            this.init();
+          case this.cast.ReceiverAvailability.AVAILABLE: {
+            this.setState(ChromecastState.AVAILABLE);
+            this.log.info(this.i18n['providers.chromecast.receiverFound']);
+            break;
+          }
+          default: {
+            this.setState(ChromecastState.DISABLED);
           }
         }
       });
       this.cast.initialize(apiConfig, () => {
-        this._isInitialised = true;
+        this.setState(ChromecastState.INITIALIZED);
       }, this.onError.bind(this));
     }
   }
 
   open() {
-    if (this._isReceiverFound) {
+    if (this.state === ChromecastState.AVAILABLE) {
       this.cast.requestSession(this.onSession.bind(this));
     } else {
-      this.init(() => {
-        this.open();
-      })
+      if (this.state === ChromecastState.INITIALIZED) {
+        this.log.info(this.i18n['providers.chromecast.receiverNotFound']);
+      }
     }
   }
 
   close() {
     if (this.session) {
       this.session.stop(() => {
+        this.setState(ChromecastState.AVAILABLE);
         this.log.debug(this.i18n['providers.chromecast.stop']);
-        this.session = null;
+        delete this.session;
       }, this.onError.bind(this));
     }
   }
 
-  isInitialised(): boolean {
-    return this._isInitialised
-  }
-
-  isReceiverFound(): boolean {
-    return this._isReceiverFound
-  }
-
-  isConnected(): boolean {
-    return !!this.session;
-  }
-
   send(msg) {
-    if (this.session != null) {
+    if (this.session) {
       this.session.sendMessage(this.namespace, msg, this.onSendSuccess.bind(this, msg), this.onError.bind(this));
     }
   }
 
   private loadScript() {
     this.cast = window['chrome'].cast;
-    if (!this.cast) {
+    if (this.cast) {
+      this.init();
+    } else {
       // inject script if in browser mode
       let head = document.getElementsByTagName('head')[0];
       let script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = 'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js';
-      script.onload = this.checkForCastApi.bind(this);
+      script.onload = this.onLoadCastApi.bind(this);
       head.appendChild(script);
-    } else {
-      this.checkForCastApi();
     }
   }
 
-  private checkForCastApi() {
+  private onLoadCastApi() {
     this.cast = window['chrome'].cast;
-    if (!this.cast) {
-      setTimeout(this.init.bind(this), 1000);
-    } else {
+    if (this.cast) {
       this.init();
+    } else {
+      // might not be injected in page
+      setTimeout(this.init.bind(this), 1000);
     }
   }
 
   private onSession(session: any) {
+    this.setState(ChromecastState.CONNECTED);
     this.session = session;
     this.log.info(this.i18n['providers.chromecast.newSession'] + this.session.sessionId);
     this.session.addUpdateListener((isAlive) => {
@@ -140,14 +150,14 @@ export class ChromecastService {
         message += ': ' + this.session.sessionId;
         this.log.debug(message);
         if (!isAlive) {
-          this.session = null;
+          this.close();
         }
       }
     });
     this.session.addMessageListener(this.namespace, (namespace, message) => {
       // message received
       this.log.debug(this.i18n['providers.chromecast.messageReceived'] + message);
-      this.messageListener.next(JSON.parse(message));
+      this.messageListener.emit(JSON.parse(message));
     });
   }
 

@@ -29,11 +29,11 @@ export class SongNumberService {
   private _info: string;
   isPresenting = false;
 
-  constructor(protected i18nService: TranslateService,
-              protected songBooksService: SongBooksService,
-              protected storage: Storage,
-              protected chromecastService: ChromecastService,
-              protected backgroundMode: BackgroundMode) {
+  constructor(private i18nService: TranslateService,
+              private songBooksService: SongBooksService,
+              private storage: Storage,
+              private chromecastService: ChromecastService,
+              private backgroundMode: BackgroundMode) {
     this.init();
   }
 

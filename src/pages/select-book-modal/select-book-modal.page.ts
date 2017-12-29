@@ -1,19 +1,17 @@
-import {Component} from '@angular/core';
-import {ViewController, NavParams} from 'ionic-angular';
+import {Component, OnInit} from '@angular/core';
+import {NavParams, ViewController} from 'ionic-angular';
 
 @Component({
   selector: 'page-select-book-modal',
   templateUrl: 'select-book-modal.page.html'
 })
-export class SelectBookModalPage {
+export class SelectBookModalPage implements OnInit {
 
   books: any[];
   book: any;
 
-  constructor(protected viewCtrl: ViewController,
-              params: NavParams) {
-    this.books = params.get('books');
-    this.book = params.get('book');
+  constructor(private viewCtrl: ViewController,
+              private params: NavParams) {
   }
 
   selectBook(item) {
@@ -22,5 +20,10 @@ export class SelectBookModalPage {
 
   dismiss() {
     this.viewCtrl.dismiss();
+  }
+
+  ngOnInit(): void {
+    this.books = this.params.get('books');
+    this.book = this.params.get('book');
   }
 }

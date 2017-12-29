@@ -9,8 +9,8 @@
     </ion-title>
     <ion-buttons end>
       <button ion-button icon-only
-              [color]="chromecastService.isConnected() ? 'secondary' : 'primary'"
-              [disabled]="!chromecastService.isInitialised()"
+              [color]="connected ? 'secondary' : 'primary'"
+              [disabled]="!initialized"
               (click)="cast()">
         <ion-icon name="desktop"></ion-icon>
       </button>
@@ -27,7 +27,7 @@
   <div padding>
     <ion-buttons text-center>
       <button ion-button block
-              [disabled]="!chromecastService.isConnected()"
+              [disabled]="!connected"
               [color]="presentButton.color"
               (click)="present()">
         {{presentButton.text}}
