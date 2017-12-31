@@ -19,7 +19,7 @@ export class ChromecastService {
   private cast: any;
   private session: any;
   // prevent some initialize bug when opening the application for the first time
-  private _reinitilize = true;
+  // private _reinitilize = true;
 
   private _state: ChromecastState = ChromecastState.DISABLED;
   public stateChanged: EventEmitter<ChromecastState> = new EventEmitter();
@@ -65,16 +65,20 @@ export class ChromecastService {
         switch (status) {
           case this.cast.ReceiverAvailability.UNAVAILABLE: {
             this.setState(ChromecastState.INITIALIZED);
+            // close session if existed
+            this.close(ChromecastState.INITIALIZED);
             this.log.warn(this.i18n['providers.chromecast.receiverNotFound']);
             // workaround
-            if (this._reinitilize) {
-              this._reinitilize = false;
-              this.init();
-            }
+            // if (this._reinitilize) {
+            //   this._reinitilize = false;
+            //   this.init();
+            // }
             break;
           }
           case this.cast.ReceiverAvailability.AVAILABLE: {
-            this.setState(ChromecastState.AVAILABLE);
+            if (!this.session) {
+              this.setState(ChromecastState.AVAILABLE);
+            }
             this.log.info(this.i18n['providers.chromecast.receiverFound']);
             break;
           }
@@ -99,10 +103,10 @@ export class ChromecastService {
     }
   }
 
-  close() {
+  close(state?: ChromecastState) {
     if (this.session) {
       this.session.stop(() => {
-        this.setState(ChromecastState.AVAILABLE);
+        this.setState(state ? state : ChromecastState.AVAILABLE);
         this.log.debug(this.i18n['providers.chromecast.stop']);
         delete this.session;
       }, this.onError.bind(this));
