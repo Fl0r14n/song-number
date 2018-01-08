@@ -1,73 +1,25 @@
-import {AfterViewInit, Component} from '@angular/core';
-import {AlertController, ModalController} from 'ionic-angular';
-import {CastButton, CastPage} from '../cast-page';
-import {SongNumberService} from '../../providers/song-number.service';
-import {ChromecastService} from '../../providers/chromecast.service';
-import {SelectBookModalPage} from '../select-book-modal/select-book-modal.page';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
+import {AlertController, ModalController} from 'ionic-angular';
+import {ChromecastService} from '../../providers/chromecast.service';
+import {SongNumberService} from '../../providers/song-number.service';
+import {CastButton, CastPage} from '../cast-page';
+import {SelectBookModalPage} from '../select-book-modal/select-book-modal.page';
 
 @Component({
   selector: 'page-main',
   templateUrl: 'main.page.html'
 })
-export class MainPage extends CastPage implements AfterViewInit {
+export class MainPage extends CastPage implements OnInit, AfterViewInit {
 
   protected queryStateButton: CastButton;
 
-  constructor(i18nService: TranslateService,
-              chromecastService: ChromecastService,
-              protected songNumberService: SongNumberService,
-              protected modalCtrl: ModalController,
-              protected alertCtrl: AlertController) {
+  constructor(protected i18nService: TranslateService,
+              protected chromecastService: ChromecastService,
+              private songNumberService: SongNumberService,
+              private modalCtrl: ModalController,
+              private alertCtrl: AlertController) {
     super(i18nService, chromecastService);
-    i18nService.get([
-      'pages.main.startPresenting',
-      'pages.main.stopPresenting',
-      'pages.main.currentlyPresenting',
-      'pages.main.close',
-      'pages.main.empty',
-      'pages.main.queryState'
-    ]).subscribe((value) => {
-      this.i18n = value;
-      this.presentButtonON.text = this.i18n['pages.main.stopPresenting'];
-      this.presentButtonOFF.text = this.i18n['pages.main.startPresenting'];
-      this.queryStateButton = {
-        text: this.i18n['pages.main.queryState'],
-        color: 'primary'
-      }
-    });
-    chromecastService.messageListener.subscribe(data => {
-      if (data.isFeedback) {
-        let subTitle = '';
-        switch (data.type) {
-          case 1: {
-            subTitle = [
-              data.number,
-              ' ',
-              data.book.title,
-              '<br>',
-              data.book.description,
-              '<br>',
-              data.notes
-            ].join('');
-            break;
-          }
-          case 2: {
-            subTitle = data.message;
-            break;
-          }
-          default: {
-            subTitle = this.i18n['pages.main.empty'];
-          }
-        }
-        let feedbackMessage = alertCtrl.create({
-          title: this.i18n['pages.main.currentlyPresenting'],
-          subTitle: subTitle,
-          buttons: [this.i18n['pages.main.close']]
-        });
-        feedbackMessage.present();
-      }
-    });
   }
 
   openSelectBookModal() {
@@ -98,5 +50,56 @@ export class MainPage extends CastPage implements AfterViewInit {
     } else {
       this.presentButton = this.presentButtonOFF;
     }
+  }
+
+  ngOnInit(): void {
+    this.i18nService.get([
+      'pages.main.startPresenting',
+      'pages.main.stopPresenting',
+      'pages.main.currentlyPresenting',
+      'pages.main.close',
+      'pages.main.empty',
+      'pages.main.queryState'
+    ]).subscribe((value) => {
+      this.i18n = value;
+      this.presentButtonON.text = this.i18n['pages.main.stopPresenting'];
+      this.presentButtonOFF.text = this.i18n['pages.main.startPresenting'];
+      this.queryStateButton = {
+        text: this.i18n['pages.main.queryState'],
+        color: 'primary'
+      }
+    });
+    this.chromecastService.messageListener.subscribe(data => {
+      if (data.isFeedback) {
+        let subTitle = '';
+        switch (data.type) {
+          case 1: {
+            subTitle = [
+              data.number,
+              ' ',
+              data.book.title,
+              '<br>',
+              data.book.description,
+              '<br>',
+              data.notes
+            ].join('');
+            break;
+          }
+          case 2: {
+            subTitle = data.message;
+            break;
+          }
+          default: {
+            subTitle = this.i18n['pages.main.empty'];
+          }
+        }
+        let feedbackMessage = this.alertCtrl.create({
+          title: this.i18n['pages.main.currentlyPresenting'],
+          subTitle: subTitle,
+          buttons: [this.i18n['pages.main.close']]
+        });
+        feedbackMessage.present();
+      }
+    });
   }
 }

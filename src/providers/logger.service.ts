@@ -25,8 +25,8 @@ export class LoggerService {
 
   private _logLevel: number = LoggerService.ERROR;
 
-  constructor(protected storage: Storage,
-              protected toastCtrl: ToastController) {
+  constructor(private storage: Storage,
+              private toastCtrl: ToastController) {
     this.storage.get(STORAGE_ID_DEBUG).then(data => {
       if (data) {
         this._logLevel = data;

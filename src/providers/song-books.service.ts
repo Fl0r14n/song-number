@@ -6,7 +6,7 @@ import {Book} from './types/api';
 @Injectable()
 export class SongBooksService {
 
-  constructor(protected http: HttpClient) {
+  constructor(private http: HttpClient) {
   }
 
   getDefaultSongBooks(): Observable<Book[]> {

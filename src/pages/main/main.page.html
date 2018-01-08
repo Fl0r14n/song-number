@@ -9,8 +9,8 @@
     </ion-title>
     <ion-buttons end>
       <button ion-button icon-only
-              [disabled]="!chromecastService.isInitialised()"
-              [color]="chromecastService.isConnected() ? 'secondary' : 'primary'"
+              [disabled]="!initialized"
+              [color]="connected ? 'secondary' : 'primary'"
               (click)="cast()">
         <ion-icon name="desktop"></ion-icon>
       </button>
@@ -38,13 +38,13 @@
   <div padding>
     <ion-buttons text-center>
       <button ion-button block
-              [disabled]="!chromecastService.isConnected()"
+              [disabled]="!connected"
               [color]="presentButton ? presentButton.color : 'primary'"
               (click)="present()">
         {{presentButton ? presentButton.text : ''}}
       </button>
       <button ion-button block
-              [disabled]="!chromecastService.isConnected()"
+              [disabled]="!connected"
               [color]="queryStateButton ? queryStateButton.color: 'primary'"
               (click)="songNumberService.readPresented()">
         {{queryStateButton ? queryStateButton.text : ''}}

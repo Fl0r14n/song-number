@@ -1,32 +1,24 @@
-import {Component} from '@angular/core';
-import {AlertController, ModalController} from 'ionic-angular';
-import {SongNumberService} from '../../providers/song-number.service';
-import {LoggerService} from '../../providers/logger.service';
-import {AddBookModalPage} from '../add-book-modal/add-book-modal.page';
+import {Component, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
+import {AlertController, ModalController} from 'ionic-angular';
+import {LoggerService} from '../../providers/logger.service';
+import {SongNumberService} from '../../providers/song-number.service';
+import {AddBookModalPage} from '../add-book-modal/add-book-modal.page';
 
 @Component({
   selector: 'page-config',
   templateUrl: 'config.page.html'
 })
-export class ConfigPage {
+export class ConfigPage implements OnInit {
 
   i18n: any[];
   possibleDigits: number[] = [1, 2, 3, 4, 5];
 
-  constructor(protected i18nService: TranslateService,
-              protected songNumberService: SongNumberService,
-              protected alertCtrl: AlertController,
-              protected modalCtrl: ModalController,
-              protected log: LoggerService) {
-    i18nService.get([
-      'pages.config.cancel',
-      'pages.config.remove',
-      'pages.config.permanentRemoval',
-      'pages.config.removeBook'
-    ]).subscribe((value) => {
-      this.i18n = value;
-    });
+  constructor(private i18nService: TranslateService,
+              private songNumberService: SongNumberService,
+              private alertCtrl: AlertController,
+              private modalCtrl: ModalController,
+              private log: LoggerService) {
   }
 
   get digitLength(): number {
@@ -78,5 +70,16 @@ export class ConfigPage {
 
   set debug(value: boolean) {
     this.log.logLevel = value ? LoggerService.DEBUG : LoggerService.INFO;
+  }
+
+  ngOnInit(): void {
+    this.i18nService.get([
+      'pages.config.cancel',
+      'pages.config.remove',
+      'pages.config.permanentRemoval',
+      'pages.config.removeBook'
+    ]).subscribe((value) => {
+      this.i18n = value;
+    });
   }
 }
