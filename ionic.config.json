@@ -1,5 +1,7 @@
 {
   "name": "SongNumber",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

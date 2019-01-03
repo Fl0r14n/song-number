@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title text-center>
+      {{'pages.addBookModal.title' | translate}}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="primary" (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="form" (submit)="addBook()">
+    <ion-card>
+      <img [src]="book.thumb">
+      <ion-fab vertical="top" horizontal="end">
+        <ion-fab-button (click)="takePicture()" margin-bottom>
+          <ion-icon name="camera"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button (click)="selectPicture()">
+          <ion-icon name="image"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+      <ion-card-content>
+        <ion-list>
+          <ion-item>
+            <ion-label position="floating">
+              {{'pages.addBookModal.bookTitle' | translate}}
+            </ion-label>
+            <ion-input type="text" formControlName="title"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">
+              {{'pages.addBookModal.bookDescription' | translate}}
+            </ion-label>
+            <ion-input type="text" formControlName="description"></ion-input>
+          </ion-item>
+        </ion-list>
+        <ion-button expand="block" color="primary" type="submit" [disabled]="!form.valid">
+          {{'pages.addBookModal.submit' | translate}}
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </form>
+</ion-content>
+
