@@ -5,7 +5,7 @@ SongNumber is a small mobile app that will allow user to set a song number from 
 * ```sudo npm install -g ionic cordova```
 * ```cordova platforms add android```
 * ```ionic cordova plugin add cordova-plugin-camera```
-* ```npm install --save @ionic-native/camera@beta```
+* ```npm install --save @ionic-native/camera```
 * ```ionic cordova plugin add https://github.com/Fl0r14n/cordova-chromecast```
 * ```npm install @ionic/storage --save```
 * ```npm install ubuntu-fontface --save```
