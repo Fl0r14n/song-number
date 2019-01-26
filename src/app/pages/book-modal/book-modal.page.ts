@@ -6,14 +6,15 @@ import {CameraService, SourceType} from '../../services/camera.service';
 import {ModalController} from '@ionic/angular';
 
 @Component({
-  selector: 'add-book-modal-page',
-  templateUrl: 'add-book-modal.page.html',
-  styleUrls: ['add-book-modal.page.scss']
+  selector: 'book-modal-page',
+  templateUrl: 'book-modal.page.html',
+  styleUrls: ['book-modal.page.scss']
 })
-export class AddBookModalPageComponent implements OnInit {
+export class BookModalPageComponent implements OnInit {
 
   form: FormGroup;
   book: Book;
+  editMode;
 
   constructor(private songBookService: SongBooksService,
               private modalController: ModalController,
@@ -42,6 +43,7 @@ export class AddBookModalPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.book = this.book || {};
+    this.editMode = !!this.book.title;
     this.form = new FormGroup({
       title: new FormControl(this.book.title, [Validators.required, Validators.minLength(5)]),
       description: new FormControl(this.book.description)

@@ -164,6 +164,7 @@ export class SongNumberService {
         return target[property];
       },
       set: (target, property, value) => {
+        console.log(property);
         target[property] = value;
         if (property === 'length' && callback) {
           callback(target);
@@ -181,6 +182,7 @@ export class SongNumberService {
   }
 
   private saveBooks(books: any[]) {
+    console.log(books);
     this.storage.set(STORAGE_ID_BOOKS, books);
   }
 

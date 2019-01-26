@@ -33,12 +33,18 @@
       "permanentRemoval": "Această operație nu poate fi anulată",
       "removeBook": "Eliminați {{value}}?"
     },
-    "addBookModal": {
-      "title": "Adaugați o carte",
+    "bookModal": {
+      "add": {
+        "title": "Adaugați o carte",
+        "submit": "Adaugați cartea"
+      },
+      "edit": {
+        "title": "Editați o carte",
+        "submit": "Editați cartea"
+      },
       "cancel": "Anulează",
       "bookTitle": "Titlu",
-      "bookDescription": "Descriere",
-      "submit": "Adaugați cartea"
+      "bookDescription": "Descriere"
     },
     "selectBookModal": {
       "title": "Selectați o carte",

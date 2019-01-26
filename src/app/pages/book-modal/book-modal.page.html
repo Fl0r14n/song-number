@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title text-center>
-      {{'pages.addBookModal.title' | translate}}
+      {{editMode ? 'pages.bookModal.edit.title' : 'pages.bookModal.add.title' | translate}}
     </ion-title>
     <ion-buttons slot="end">
       <ion-button color="primary" (click)="dismiss()">
@@ -27,19 +27,19 @@
         <ion-list>
           <ion-item>
             <ion-label position="floating">
-              {{'pages.addBookModal.bookTitle' | translate}}
+              {{'pages.bookModal.bookTitle' | translate}}
             </ion-label>
             <ion-input type="text" formControlName="title"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">
-              {{'pages.addBookModal.bookDescription' | translate}}
+              {{'pages.bookModal.bookDescription' | translate}}
             </ion-label>
             <ion-input type="text" formControlName="description"></ion-input>
           </ion-item>
         </ion-list>
         <ion-button expand="block" color="primary" type="submit" [disabled]="!form.valid">
-          {{'pages.addBookModal.submit' | translate}}
+          {{editMode ? 'pages.bookModal.edit.submit' : 'pages.bookModal.add.submit' | translate}}
         </ion-button>
       </ion-card-content>
     </ion-card>

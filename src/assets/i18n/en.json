@@ -33,12 +33,18 @@
       "permanentRemoval": "This operation cannot be undone",
       "removeBook": "Remove {{value}}?"
     },
-    "addBookModal": {
-      "title": "Add Book",
+    "bookModal": {
+      "add": {
+        "title": "Add Book",
+        "submit": "Add Book"
+      },
+      "edit": {
+        "title": "Edit Book",
+        "submit": "Edit Book"
+      },
       "cancel": "Cancel",
       "bookTitle": "Title",
-      "bookDescription": "Description",
-      "submit": "Add Book"
+      "bookDescription": "Description"
     },
     "selectBookModal": {
       "title": "Select Book",

@@ -3,8 +3,8 @@ import {TranslateService} from '@ngx-translate/core';
 import {SongNumberService} from '../../services/song-number.service';
 import {AlertController, ModalController} from '@ionic/angular';
 import {LoggerService} from '../../services/logger.service';
-import {AddBookModalPageComponent} from '../add-book-modal/add-book-modal.page';
 import {Book} from '../../services/types/api';
+import {BookModalPageComponent} from '../book-modal/book-modal.page';
 
 @Component({
   selector: 'config-page',
@@ -57,20 +57,24 @@ export class ConfigPageComponent implements OnInit {
 
   async openAddBookModal(item: Book) {
     const modal = await this.modalCtrl.create({
-      component: AddBookModalPageComponent,
+      component: BookModalPageComponent,
       componentProps: {
-        book: item
+        book: Object.assign({}, item)
       }
     });
     await modal.present();
     const {data} = await modal.onDidDismiss();
     if (data) {
       if (item) {
-
+        const index = this.songNumberService.books.findIndex(i => i.title === item.title && i.description === item.description);
+        if (index > -1) {
+          // use splice in order to trigger the save db
+          this.songNumberService.books.splice(index, 1, data);
+        }
       } else {
         this.songNumberService.books.push(data);
-        this.songNumberService.book = data;
       }
+      this.songNumberService.book = data;
     }
   }
 
