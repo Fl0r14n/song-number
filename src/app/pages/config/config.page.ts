@@ -4,6 +4,7 @@ import {SongNumberService} from '../../services/song-number.service';
 import {AlertController, ModalController} from '@ionic/angular';
 import {LoggerService} from '../../services/logger.service';
 import {AddBookModalPageComponent} from '../add-book-modal/add-book-modal.page';
+import {Book} from '../../services/types/api';
 
 @Component({
   selector: 'config-page',
@@ -16,7 +17,7 @@ export class ConfigPageComponent implements OnInit {
   possibleDigits: number[] = [1, 2, 3, 4, 5];
 
   constructor(private i18nService: TranslateService,
-              private songNumberService: SongNumberService,
+              protected songNumberService: SongNumberService,
               private alertCtrl: AlertController,
               private modalCtrl: ModalController,
               private log: LoggerService) {
@@ -30,7 +31,7 @@ export class ConfigPageComponent implements OnInit {
     this.songNumberService.changeDigitLength(value);
   }
 
-  removeBook(item) {
+  removeBook(item: Book) {
     this.i18nService.get('pages.config.removeBook', {value: item.title}).subscribe(async (value) => {
       const confirm = await this.alertCtrl.create({
         header: value,
@@ -54,13 +55,22 @@ export class ConfigPageComponent implements OnInit {
     });
   }
 
-  async openAddBookModal() {
-    const modal = await this.modalCtrl.create({component: AddBookModalPageComponent});
+  async openAddBookModal(item: Book) {
+    const modal = await this.modalCtrl.create({
+      component: AddBookModalPageComponent,
+      componentProps: {
+        book: item
+      }
+    });
     await modal.present();
     const {data} = await modal.onDidDismiss();
     if (data) {
-      this.songNumberService.books.push(data);
-      this.songNumberService.book = data;
+      if (item) {
+
+      } else {
+        this.songNumberService.books.push(data);
+        this.songNumberService.book = data;
+      }
     }
   }
 

@@ -13,16 +13,14 @@ import {ModalController} from '@ionic/angular';
 export class AddBookModalPageComponent implements OnInit {
 
   form: FormGroup;
-  book: Book = {
-    thumb: ''
-  };
+  book: Book;
 
   constructor(private songBookService: SongBooksService,
               private modalController: ModalController,
               private cameraService: CameraService) {
   }
 
-  addBook() {
+  submit() {
     this.modalController.dismiss(Object.assign(this.book, this.form.value));
   }
 
@@ -43,12 +41,15 @@ export class AddBookModalPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.book = this.book || {};
     this.form = new FormGroup({
-      title: new FormControl('', [Validators.required, Validators.minLength(5)]),
-      description: new FormControl('')
+      title: new FormControl(this.book.title, [Validators.required, Validators.minLength(5)]),
+      description: new FormControl(this.book.description)
     });
-    this.songBookService.getCoverBook().subscribe(book => {
-      this.book = book;
-    });
+    if (!this.book.thumb) {
+      this.songBookService.getCoverBook().subscribe(book => {
+        this.book.thumb = book.thumb;
+      });
+    }
   }
 }
