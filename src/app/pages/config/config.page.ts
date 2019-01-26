@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {SongNumberService} from '../../services/song-number.service';
-import {AlertController, ModalController} from '@ionic/angular';
+import {AlertController, IonItemSliding, ModalController} from '@ionic/angular';
 import {LoggerService} from '../../services/logger.service';
 import {Book} from '../../services/types/api';
 import {BookModalPageComponent} from '../book-modal/book-modal.page';
@@ -15,6 +15,8 @@ export class ConfigPageComponent implements OnInit {
 
   i18n: any[];
   possibleDigits: number[] = [1, 2, 3, 4, 5];
+  @ViewChildren('booksListRef')
+  booksListRef: QueryList<IonItemSliding>;
 
   constructor(private i18nService: TranslateService,
               protected songNumberService: SongNumberService,
@@ -45,6 +47,7 @@ export class ConfigPageComponent implements OnInit {
           {
             text: this.i18n['pages.config.remove'],
             handler: () => {
+              this.closeItemSliders();
               const idx = this.songNumberService.books.indexOf(item);
               this.songNumberService.books.splice(idx, 1);
             }
@@ -55,7 +58,7 @@ export class ConfigPageComponent implements OnInit {
     });
   }
 
-  async openAddBookModal(item: Book) {
+  async openModal(item?: Book) {
     const modal = await this.modalCtrl.create({
       component: BookModalPageComponent,
       componentProps: {
@@ -68,6 +71,7 @@ export class ConfigPageComponent implements OnInit {
       if (item) {
         const index = this.songNumberService.books.findIndex(i => i.title === item.title && i.description === item.description);
         if (index > -1) {
+          this.closeItemSliders();
           // use splice in order to trigger the save db
           this.songNumberService.books.splice(index, 1, data);
         }
@@ -84,6 +88,11 @@ export class ConfigPageComponent implements OnInit {
 
   set debug(value: boolean) {
     this.log.logLevel = value ? LoggerService.DEBUG : LoggerService.INFO;
+  }
+
+  private closeItemSliders() {
+    // workaround for item-slider
+    this.booksListRef.forEach(v => v.close());
   }
 
   ngOnInit(): void {

@@ -49,7 +49,7 @@ export class SongNumberService {
     this._notes = await this.storage.get(STORAGE_ID_NOTES);
     this._book = await this.storage.get(STORAGE_ID_BOOK);
     this.books = await this.storage.get(STORAGE_ID_BOOKS);
-    if (!this.books) {
+    if (!this.books || this.books.length === 0) {
       this.books = await this.songBooksService.getDefaultSongBooks().toPromise();
     }
     // make books observable
@@ -164,7 +164,6 @@ export class SongNumberService {
         return target[property];
       },
       set: (target, property, value) => {
-        console.log(property);
         target[property] = value;
         if (property === 'length' && callback) {
           callback(target);
@@ -182,7 +181,6 @@ export class SongNumberService {
   }
 
   private saveBooks(books: any[]) {
-    console.log(books);
     this.storage.set(STORAGE_ID_BOOKS, books);
   }
 
