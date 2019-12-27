@@ -1,15 +1,4 @@
 {
-  "nav": {
-    "title": "Menu",
-    "main": "Display Song Number",
-    "info": "Display Information",
-    "config": "Settings"
-  },
-  "backgroundMode": {
-    "defaultTitle": "Not presenting",
-    "defaultText": "Touch to present",
-    "presenting": "Presenting..."
-  },
   "pages": {
     "cast": {
       "startPresenting": "Present",
@@ -23,7 +12,8 @@
       "currentlyPresenting": "On display:",
       "close": "Close",
       "empty": "Nothing is displayed",
-      "queryState": "Query State"
+      "queryState": "Query State",
+      "notes": "Notes"
     },
     "info": {
       "title": "Broadcast information",
@@ -36,18 +26,25 @@
       "debug": "Debug",
       "digits": "Digits",
       "books": "Books",
+      "edit": "Edit",
       "delete": "Delete",
       "cancel": "Cancel",
       "remove": "Remove",
       "permanentRemoval": "This operation cannot be undone",
       "removeBook": "Remove {{value}}?"
     },
-    "addBookModal": {
-      "title": "Add Book",
+    "bookModal": {
+      "add": {
+        "title": "Add Book",
+        "submit": "Add Book"
+      },
+      "edit": {
+        "title": "Edit Book",
+        "submit": "Edit Book"
+      },
       "cancel": "Cancel",
       "bookTitle": "Title",
-      "bookDescription": "Description",
-      "submit": "Add Book"
+      "bookDescription": "Description"
     },
     "selectBookModal": {
       "title": "Select Book",
