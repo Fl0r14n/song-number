@@ -2,10 +2,6 @@
 // http://ionicframework.com/docs/theming/
 
 /** Ionic CSS Variables **/
-
-$UbuntuFontsPath: "../../node_modules/ubuntu-fontface/fonts";
-@import "~ubuntu-fontface/_ubuntu.scss";
-
 :root {
   /** primary **/
   --ion-color-primary: #3880ff;
@@ -78,38 +74,4 @@ $UbuntuFontsPath: "../../node_modules/ubuntu-fontface/fonts";
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
-
-  --ion-default-font: "Ubuntu" !important;
-}
-
-.toast-info {
-  .toast-container {
-    border-color: #0a9dc7;
-    background-color: #11c1f3;
-    color: #fff;
-  }
-}
-
-.toast-warn {
-  .toast-container {
-    border-color: #e6b500;
-    background-color: #ffc900;
-    color: #fff;
-  }
-}
-
-.toast-error {
-  .toast-container {
-    border-color: #e42112;
-    background-color: #ef473a;
-    color: #fff;
-  }
-}
-
-.toast-debug {
-  .toast-container {
-    border-color: #111;
-    background-color: #444444;
-    color: #fff;
-  }
 }

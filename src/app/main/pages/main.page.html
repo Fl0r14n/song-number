@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <ion-icon name="musical-notes"></ion-icon>
+      {{ 'pages.main.title' | translate}}
+    </ion-title>
+    <ion-fab-button slot="end"
+                    [disabled]="!initialized"
+                    [color]="connected ? 'secondary' : 'primary'"
+                    (click)="cast()">
+      <ion-icon name="desktop"></ion-icon>
+    </ion-fab-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <song-number [value]="songNumberService.digits"></song-number>
+
+  <ion-item class="ion-padding-start ion-padding-end">
+    <ion-label position="floating">{{ 'pages.main.notes' | translate}}</ion-label>
+    <ion-input type="text" [(ngModel)]="songNumberService.notes"></ion-input>
+  </ion-item>
+
+  <ion-item (click)="openSelectBookModal()" class="ion-padding">
+    <ion-thumbnail slot="start" *ngIf="songNumberService.book">
+      <img [src]="songNumberService.book.thumb">
+    </ion-thumbnail>
+    <ion-label>
+      <h2 [hidden]="songNumberService.book">{{ 'pages.main.book' | translate}}</h2>
+      <h3 *ngIf="songNumberService.book">{{songNumberService.book.title}}</h3>
+      <p *ngIf="songNumberService.book">{{songNumberService.book.description}}</p>
+    </ion-label>
+  </ion-item>
+
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button [disabled]="!connected"
+                    color="secondary"
+                    (click)="songNumberService.readPresented()">
+      <ion-icon name="information"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button [disabled]="!connected"
+                    [color]="button.color"
+                    (click)="present()">
+      <ion-icon [name]="button.icon"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

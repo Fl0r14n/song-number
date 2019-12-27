@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">
+      {{ 'pages.selectBookModal.title' | translate}}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="primary" (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list inset>
+    <ion-item *ngFor="let item of books" (click)="selectBook(item)"
+              [color]="item == book? 'primary': ''">
+      <ion-thumbnail slot="start">
+        <img [src]="item.thumb">
+      </ion-thumbnail>
+      <ion-label>
+        <h2>{{item.title}}</h2>
+        <p>{{item.description}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
