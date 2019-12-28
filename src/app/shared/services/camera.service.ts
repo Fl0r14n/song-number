@@ -41,7 +41,7 @@ export class CameraService {
       quality: 50,
       destinationType: this.camera.DestinationType.DATA_URL,
       // In this app, dynamically set the picture source, Camera or photo gallery
-      sourceType: SourceType.GALLERY ? PictureSourceType.SAVEDPHOTOALBUM : PictureSourceType.CAMERA,
+      sourceType: type === SourceType.GALLERY ? PictureSourceType.SAVEDPHOTOALBUM : PictureSourceType.CAMERA,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,
       allowEdit: true,
