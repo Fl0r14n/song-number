@@ -33,6 +33,15 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'books',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('../books/books.module').then(m => m.BooksModule)
+          }
+        ]
+      },
+      {
         path: 'config',
         children: [
           {

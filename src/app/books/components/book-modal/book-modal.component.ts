@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ModalController} from '@ionic/angular';
-import {Book} from '../../../shared/models/api';
+import {Book, BookCollection} from '../../../shared/models/api';
 import {SongBooksService} from '../../../shared/services/song-books.service';
 import {CameraService, SourceType} from '../../../shared/services/camera.service';
 
@@ -14,6 +14,8 @@ export class BookModalPageComponent implements OnInit {
 
   form: FormGroup;
   book: Book;
+  collection: BookCollection;
+  collections: BookCollection[];
   editMode;
 
   constructor(private songBookService: SongBooksService,
@@ -41,15 +43,23 @@ export class BookModalPageComponent implements OnInit {
     });
   }
 
+  get sections() {
+    return this.collections ? this.collections.map(v => v.section).sort() : [];
+  }
+
   ngOnInit(): void {
     this.book = this.book || {};
+    this.collection = this.collection || {
+      section: ''
+    };
     this.editMode = !!this.book.title;
     this.form = new FormGroup({
       title: new FormControl(this.book.title, [Validators.required, Validators.minLength(5)]),
-      description: new FormControl(this.book.description)
+      description: new FormControl(this.book.description),
+      section: new FormControl(this.collection.section)
     });
     if (!this.book.thumb) {
-      this.songBookService.getCoverBook().subscribe(book => {
+      this.songBookService.getCover().subscribe(book => {
         this.book.thumb = book.thumb;
       });
     }

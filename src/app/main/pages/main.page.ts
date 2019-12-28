@@ -41,7 +41,7 @@ export class MainPageComponent extends CastPage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: SelectBookModalComponent,
       componentProps: {
-        books: this.songNumberService.books,
+        collections: this.songNumberService.collections,
         book: this.songNumberService.book
       }
     });

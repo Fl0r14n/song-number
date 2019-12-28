@@ -1,20 +1,25 @@
 import {NgModule} from '@angular/core';
+import {BooksPageComponent} from './pages/books.page';
 import {RouterModule, Routes} from '@angular/router';
-import {ConfigPageComponent} from './pages/config.page';
 import {IonicModule} from '@ionic/angular';
 import {TranslateModule} from '@ngx-translate/core';
-import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
+import {BookModalPageComponent} from './components/book-modal/book-modal.component';
+import {ReactiveFormsModule} from '@angular/forms';
 
+const entryComponents = [
+  BookModalPageComponent
+];
 
 const declarations = [
-  ConfigPageComponent
+  ...entryComponents,
+  BooksPageComponent
 ];
 
 const routes: Routes = [
   {
     path: '',
-    component: ConfigPageComponent
+    component: BooksPageComponent
   }
 ];
 
@@ -23,10 +28,11 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     IonicModule,
     TranslateModule,
-    FormsModule,
     CommonModule,
+    ReactiveFormsModule
   ],
+  entryComponents,
   declarations
 })
-export class ConfigModule {
+export class BooksModule {
 }

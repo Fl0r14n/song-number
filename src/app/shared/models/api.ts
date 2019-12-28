@@ -8,3 +8,10 @@ export interface Book {
   description?: string;
   thumb?: string;
 }
+
+export interface BookCollection {
+  section?: string;
+  books?: Book[];
+}
+
+

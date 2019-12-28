@@ -21,17 +21,19 @@
       "startPresenting": "Present",
       "stopPresenting": "Stop"
     },
-    "config": {
-      "title": "Settings",
-      "debug": "Debug",
-      "digits": "Digits",
-      "books": "Books",
+    "books": {
+      "title": "Books",
       "edit": "Edit",
       "delete": "Delete",
       "cancel": "Cancel",
       "remove": "Remove",
       "permanentRemoval": "This operation cannot be undone",
       "removeBook": "Remove {{value}}?"
+    },
+    "config": {
+      "title": "Settings",
+      "debug": "Debug",
+      "digits": "Digits"
     },
     "bookModal": {
       "add": {
@@ -44,7 +46,8 @@
       },
       "cancel": "Cancel",
       "bookTitle": "Title",
-      "bookDescription": "Description"
+      "bookDescription": "Description",
+      "collection": "Section"
     },
     "selectBookModal": {
       "title": "Select Book",

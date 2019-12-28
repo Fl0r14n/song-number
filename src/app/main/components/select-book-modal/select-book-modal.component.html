@@ -12,15 +12,20 @@
 </ion-header>
 <ion-content>
   <ion-list inset>
-    <ion-item *ngFor="let item of books" (click)="selectBook(item)"
-              [color]="item == book? 'primary': ''">
-      <ion-thumbnail slot="start">
-        <img [src]="item.thumb">
-      </ion-thumbnail>
-      <ion-label>
-        <h2>{{item.title}}</h2>
-        <p>{{item.description}}</p>
-      </ion-label>
-    </ion-item>
+    <ng-container *ngFor="let collection of collections">
+      <ion-item-divider>
+        <ion-label>{{collection.section}}</ion-label>
+      </ion-item-divider>
+      <ion-item *ngFor="let item of collection.books" (click)="selectBook(item)"
+                [color]="item == book? 'primary': ''">
+        <ion-thumbnail slot="start">
+          <img [src]="item.thumb">
+        </ion-thumbnail>
+        <ion-label>
+          <h2>{{item.title}}</h2>
+          <p>{{item.description}}</p>
+        </ion-label>
+      </ion-item>
+    </ng-container>
   </ion-list>
 </ion-content>

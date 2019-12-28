@@ -37,6 +37,16 @@
             </ion-label>
             <ion-input type="text" formControlName="description"></ion-input>
           </ion-item>
+          <ion-item>
+            <ion-label position="floating">
+              {{'pages.bookModal.collection' | translate}}
+            </ion-label>
+            <ion-select formControlName="section">
+              <ion-select-option *ngFor="let section of sections" [value]="section">
+                {{section}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
         </ion-list>
         <ion-button expand="block" color="primary" type="submit" [disabled]="!form.valid">
           {{(editMode ? 'pages.bookModal.edit.submit' : 'pages.bookModal.add.submit') | translate}}

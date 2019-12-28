@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
 import {SongBooksService} from './song-books.service';
 import {ChromeCastService} from './chrome-cast.service';
-import {Book, Digit} from '../models/api';
+import {Book, BookCollection, Digit} from '../models/api';
 import {Storage} from '@ionic/storage';
 import {noop} from 'rxjs';
 
 const STORAGE_ID_DIGITS = 'song-number-settings-digits';
 const STORAGE_ID_NOTES = 'song-number-settings-notes';
 const STORAGE_ID_BOOK = 'song-number-settings-book';
-const STORAGE_ID_BOOKS = 'song-number-settings-books';
+const STORAGE_ID_COLLECTIONS = 'song-number-settings-collections';
 const STORAGE_ID_INFO = 'song-number-settings-info';
 
 const MESSAGE_TYPE_READ = 0;
@@ -23,7 +23,8 @@ export class SongNumberService {
 
   isPresenting = false;
   digits: Digit[] = [];
-  books: Book[];
+  collections: BookCollection[];
+
   // tslint:disable-next-line:variable-name
   private _info: string;
   // tslint:disable-next-line:variable-name
@@ -54,12 +55,11 @@ export class SongNumberService {
     this.digits = proxyArray(this.digits, this.saveDigits.bind(this));
     this._notes = await this.storage.get(STORAGE_ID_NOTES);
     this._book = await this.storage.get(STORAGE_ID_BOOK);
-    this.books = await this.storage.get(STORAGE_ID_BOOKS);
-    if (!this.books || this.books.length === 0) {
-      this.books = await this.songBooksService.getDefaultSongBooks().toPromise();
+    this.collections = await this.storage.get(STORAGE_ID_COLLECTIONS);
+    if (!this.collections || this.collections.length === 0) {
+      this.collections = await this.songBooksService.getCollections().toPromise();
     }
-    // make books observable
-    this.books = proxyArray(this.books, this.saveBooks.bind(this));
+    this.collections = proxyArray(this.collections, this.saveCollection.bind(this));
     this._info = await this.storage.get(STORAGE_ID_INFO);
   }
 
@@ -147,8 +147,8 @@ export class SongNumberService {
     this.storage.set(STORAGE_ID_INFO, value);
   }
 
-  private saveBooks(books: any[]) {
-    this.storage.set(STORAGE_ID_BOOKS, books);
+  private saveCollection(books: any[]) {
+    this.storage.set(STORAGE_ID_COLLECTIONS, books);
   }
 
   private saveDigits() {

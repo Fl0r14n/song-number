@@ -21,17 +21,19 @@
       "startPresenting": "Prezintă",
       "stopPresenting": "Oprește"
     },
-    "config": {
-      "title": "Setări",
-      "debug": "Mod depanare",
-      "digits": "Numărul de cifre",
-      "books": "Cărți",
+    "books": {
+      "title": "Cărți",
       "edit": "Editează",
       "delete": "Șterge",
       "cancel": "Anulează",
       "remove": "Elimină",
       "permanentRemoval": "Această operație nu poate fi anulată",
       "removeBook": "Eliminați {{value}}?"
+    },
+    "config": {
+      "title": "Setări",
+      "debug": "Mod depanare",
+      "digits": "Numărul de cifre"
     },
     "bookModal": {
       "add": {
@@ -44,7 +46,8 @@
       },
       "cancel": "Anulează",
       "bookTitle": "Titlu",
-      "bookDescription": "Descriere"
+      "bookDescription": "Descriere",
+      "collection": "Secțiune"
     },
     "selectBookModal": {
       "title": "Selectați o carte",
