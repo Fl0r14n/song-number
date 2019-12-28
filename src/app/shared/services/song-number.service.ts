@@ -3,6 +3,7 @@ import {SongBooksService} from './song-books.service';
 import {ChromeCastService} from './chrome-cast.service';
 import {Book, Digit} from '../models/api';
 import {Storage} from '@ionic/storage';
+import {noop} from 'rxjs';
 
 const STORAGE_ID_DIGITS = 'song-number-settings-digits';
 const STORAGE_ID_NOTES = 'song-number-settings-notes';
@@ -15,7 +16,9 @@ const MESSAGE_TYPE_SONG = 1;
 const MESSAGE_TYPE_INFO = 2;
 const MESSAGE_TYPE_CLEAR = 3;
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SongNumberService {
 
   isPresenting = false;
@@ -31,7 +34,7 @@ export class SongNumberService {
   constructor(private songBooksService: SongBooksService,
               private storage: Storage,
               private chromeCastService: ChromeCastService) {
-    this.init();
+    this.init().then(noop, noop);
   }
 
   async init() {
@@ -47,8 +50,8 @@ export class SongNumberService {
       value: 0
     }];
     // make digits observable
-    this.digits = this.enhanceArray(this.digits, this.saveDigits.bind(this));
-    this.digits = this.observableArray(this.digits, this.saveDigits.bind(this));
+    this.digits = arrayOfProxy(this.digits, this.saveDigits.bind(this));
+    this.digits = proxyArray(this.digits, this.saveDigits.bind(this));
     this._notes = await this.storage.get(STORAGE_ID_NOTES);
     this._book = await this.storage.get(STORAGE_ID_BOOK);
     this.books = await this.storage.get(STORAGE_ID_BOOKS);
@@ -56,7 +59,7 @@ export class SongNumberService {
       this.books = await this.songBooksService.getDefaultSongBooks().toPromise();
     }
     // make books observable
-    this.books = this.observableArray(this.books, this.saveBooks.bind(this));
+    this.books = proxyArray(this.books, this.saveBooks.bind(this));
     this._info = await this.storage.get(STORAGE_ID_INFO);
   }
 
@@ -107,13 +110,14 @@ export class SongNumberService {
   }
 
   changeDigitLength(size: number) {
-    this.digits = this.observableArray([], this.saveDigits.bind(this));
+    const digits = proxyArray([], this.saveDigits.bind(this));
     for (let i = 0; i < size; i++) {
-      this.digits.push(this.observableObject({
+      digits.push(proxyObject({
         pos: i,
         value: 0
       }, this.saveDigits.bind(this)));
     }
+    this.digits = digits;
   }
 
   get notes(): string {
@@ -143,46 +147,6 @@ export class SongNumberService {
     this.storage.set(STORAGE_ID_INFO, value);
   }
 
-
-  // watch for change in digit and save to storage
-  private observableObject(val: any, callback?: (object) => any) {
-    return new Proxy(val, {
-      get: (target, property) => {
-        return target[property];
-      },
-      set: (target, property, value) => {
-        target[property] = value;
-        if (callback) {
-          callback(target);
-        }
-        return true;
-      }
-    });
-  }
-
-  // watch for change in array and save to storage
-  private observableArray(array: any[], callback?: ([]) => []) {
-    return new Proxy(array, {
-      get: (target, property) => {
-        return target[property];
-      },
-      set: (target, property, value) => {
-        target[property] = value;
-        if (property === 'length' && callback) {
-          callback(target);
-        }
-        return true;
-      }
-    });
-  }
-
-  private enhanceArray(arr: any[], callback?: () => []): any[] {
-    for (let i = 0; i < arr.length; i++) {
-      arr[i] = this.observableObject(arr[i], callback);
-    }
-    return arr;
-  }
-
   private saveBooks(books: any[]) {
     this.storage.set(STORAGE_ID_BOOKS, books);
   }
@@ -199,3 +163,42 @@ export class SongNumberService {
     this.storage.set(STORAGE_ID_DIGITS, buf);
   }
 }
+
+const arrayOfProxy = (arr: any[], callback?: () => []): any[] => {
+  for (let i = 0; i < arr.length; i++) {
+    arr[i] = proxyObject(arr[i], callback);
+  }
+  return arr;
+};
+
+// watch for change in array and save to storage
+const proxyArray = (array: any[], callback?: ([]) => []) => {
+  return new Proxy(array, {
+    get: (target, property) => {
+      return target[property];
+    },
+    set: (target, property, value) => {
+      target[property] = value;
+      if (property === 'length' && callback) {
+        callback(target);
+      }
+      return true;
+    }
+  });
+};
+
+// watch for change in digit and save to storage
+const proxyObject = (val: any, callback?: (object) => any) => {
+  return new Proxy(val, {
+    get: (target, property) => {
+      return target[property];
+    },
+    set: (target, property, value) => {
+      target[property] = value;
+      if (callback) {
+        callback(target);
+      }
+      return true;
+    }
+  });
+};

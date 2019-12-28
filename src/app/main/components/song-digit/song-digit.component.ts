@@ -7,9 +7,9 @@ import {Component, Input, Output, EventEmitter} from '@angular/core';
 export class SongDigitComponent {
 
   @Input()
-  value = 0;
+  digit = 0;
   @Output()
-  valueChange: EventEmitter<number> = new EventEmitter<number>();
+  digitChange: EventEmitter<number> = new EventEmitter<number>();
 
   inc() {
     this.change(+1);
@@ -20,12 +20,12 @@ export class SongDigitComponent {
   }
 
   change(value: number) {
-    this.value += value;
-    if (this.value < 0) {
-      this.value = 9;
-    } else if (this.value > 9) {
-      this.value = 0;
+    this.digit += value;
+    if (this.digit < 0) {
+      this.digit = 9;
+    } else if (this.digit > 9) {
+      this.digit = 0;
     }
-    this.valueChange.emit(this.value);
+    this.digitChange.emit(this.digit);
   }
 }

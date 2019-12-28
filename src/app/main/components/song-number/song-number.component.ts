@@ -1,4 +1,5 @@
 import {Component, Input} from '@angular/core';
+import {Digit} from '../../../shared/models/api';
 
 @Component({
   selector: 'song-number',
@@ -7,5 +8,5 @@ import {Component, Input} from '@angular/core';
 export class SongNumberComponent {
 
   @Input()
-  value: any[];
+  digits: Digit[];
 }

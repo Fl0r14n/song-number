@@ -11,7 +11,9 @@ export enum SourceType {
 const width = 600;
 const height = 600;
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class CameraService {
 
   constructor(private camera: Camera,

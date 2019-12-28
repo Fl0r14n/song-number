@@ -11,6 +11,7 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {IonicStorageModule} from '@ionic/storage';
+import {Camera} from '@ionic-native/camera/ngx';
 
 const routes: Routes = [
   {
@@ -34,9 +35,10 @@ const routes: Routes = [
         useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
         deps: [HttpClient]
       }
-    }),
+    })
   ],
   providers: [
+    Camera,
     StatusBar,
     SplashScreen,
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}

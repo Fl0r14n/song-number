@@ -4,7 +4,6 @@ import {InfoPageComponent} from './pages/info.page';
 import {IonicModule} from '@ionic/angular';
 import {TranslateModule} from '@ngx-translate/core';
 import {FormsModule} from '@angular/forms';
-import {SharedModule} from '../shared/shared.module';
 
 const declarations = [
   InfoPageComponent
@@ -22,8 +21,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     IonicModule,
     TranslateModule,
-    FormsModule,
-    SharedModule
+    FormsModule
   ],
   declarations
 })

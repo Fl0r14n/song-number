@@ -3,7 +3,9 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Book} from '../models/api';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SongBooksService {
 
   constructor(private http: HttpClient) {

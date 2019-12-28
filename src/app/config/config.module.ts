@@ -6,7 +6,6 @@ import {IonicModule} from '@ionic/angular';
 import {TranslateModule} from '@ngx-translate/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {SharedModule} from '../shared/shared.module';
 
 const entryComponents = [
   BookModalPageComponent
@@ -31,8 +30,7 @@ const routes: Routes = [
     TranslateModule,
     FormsModule,
     CommonModule,
-    ReactiveFormsModule,
-    SharedModule
+    ReactiveFormsModule
   ],
   entryComponents,
   declarations

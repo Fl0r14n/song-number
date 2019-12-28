@@ -11,7 +11,9 @@ export enum ChromeCastState {
 
 const CHROME = 'chrome';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ChromeCastService {
 
   applicationId = '20CAA3A2';

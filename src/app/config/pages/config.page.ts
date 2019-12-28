@@ -67,11 +67,11 @@ export class ConfigPageComponent implements OnInit {
     });
     await modal.present();
     const {data} = await modal.onDidDismiss();
+    this.closeItemSliders();
     if (data) {
       if (item) {
         const index = this.songNumberService.books.findIndex(i => i.title === item.title && i.description === item.description);
         if (index > -1) {
-          this.closeItemSliders();
           // use splice in order to trigger the save db
           this.songNumberService.books.splice(index, 1, data);
         }

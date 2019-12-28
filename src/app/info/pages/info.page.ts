@@ -5,13 +5,22 @@ import {SongNumberService} from '../../shared/services/song-number.service';
 
 @Component({
   selector: 'info-page',
-  templateUrl: 'info.page.html'
+  templateUrl: 'info.page.html',
+  styleUrls: ['info.page.scss']
 })
 export class InfoPageComponent extends CastPage {
 
   constructor(chromeCastService: ChromeCastService,
               private songNumberService: SongNumberService) {
     super(chromeCastService);
+  }
+
+  get info() {
+    return this.songNumberService.info;
+  }
+
+  set info(info) {
+    this.songNumberService.info = info;
   }
 
   present() {

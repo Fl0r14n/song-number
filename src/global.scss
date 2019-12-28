@@ -24,3 +24,38 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+$UbuntuFontsPath: "~ubuntu-fontface/fonts";
+@import "~ubuntu-fontface/ubuntu";
+
+.toast-info {
+  .toast-container {
+    border-color: #0a9dc7;
+    background-color: #11c1f3;
+    color: #fff;
+  }
+}
+
+.toast-warn {
+  .toast-container {
+    border-color: #e6b500;
+    background-color: #ffc900;
+    color: #fff;
+  }
+}
+
+.toast-error {
+  .toast-container {
+    border-color: #e42112;
+    background-color: #ef473a;
+    color: #fff;
+  }
+}
+
+.toast-debug {
+  .toast-container {
+    border-color: #111;
+    background-color: #444444;
+    color: #fff;
+  }
+}

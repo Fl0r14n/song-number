@@ -9,6 +9,7 @@ import {SongNumberService} from '../../shared/services/song-number.service';
 @Component({
   selector: 'main-page',
   templateUrl: 'main.page.html',
+  styleUrls: ['main.page.scss']
 })
 export class MainPageComponent extends CastPage implements OnInit {
 
@@ -18,6 +19,22 @@ export class MainPageComponent extends CastPage implements OnInit {
               private modalCtrl: ModalController,
               private alertCtrl: AlertController) {
     super(chromeCastService);
+  }
+
+  get digits() {
+    return this.songNumberService.digits;
+  }
+
+  set notes(notes) {
+    this.songNumberService.notes = notes;
+  }
+
+  get notes() {
+    return this.songNumberService.notes;
+  }
+
+  get book() {
+    return this.songNumberService.book;
   }
 
   async openSelectBookModal() {
@@ -41,6 +58,10 @@ export class MainPageComponent extends CastPage implements OnInit {
       this.songNumberService.stopPresentation();
       CastPage.presentButton = CastPage.presentButtonOFF;
     }
+  }
+
+  readPresented() {
+    this.songNumberService.readPresented();
   }
 
   ngOnInit(): void {

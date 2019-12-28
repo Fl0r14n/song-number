@@ -6,7 +6,9 @@ import {Storage} from '@ionic/storage';
 
 const STORAGE_ID_DEBUG = 'song-number-settings-log-level';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class LoggerService {
 
   public static get INFO(): number {
