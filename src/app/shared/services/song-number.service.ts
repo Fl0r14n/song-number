@@ -39,8 +39,8 @@ export class SongNumberService {
   }
 
   async init() {
-    this.digits = await this.storage.get(STORAGE_ID_DIGITS);
-    this.digits = this.digits || [{
+    let digits = await this.storage.get(STORAGE_ID_DIGITS);
+    digits = digits || [{
       pos: 0,
       value: 0
     }, {
@@ -51,15 +51,15 @@ export class SongNumberService {
       value: 0
     }];
     // make digits observable
-    this.digits = arrayOfProxy(this.digits, this.saveDigits.bind(this));
-    this.digits = proxyArray(this.digits, this.saveDigits.bind(this));
+    this.digits = proxify(digits, this.saveDigits.bind(this));
     this._notes = await this.storage.get(STORAGE_ID_NOTES);
     this._book = await this.storage.get(STORAGE_ID_BOOK);
-    this.collections = await this.storage.get(STORAGE_ID_COLLECTIONS);
-    if (!this.collections || this.collections.length === 0) {
-      this.collections = await this.songBooksService.getCollections().toPromise();
+    let collections = await this.storage.get(STORAGE_ID_COLLECTIONS);
+    if (!collections || collections.length === 0) {
+      collections = await this.songBooksService.getCollections().toPromise();
+      await this.storage.set(STORAGE_ID_COLLECTIONS, collections);
     }
-    this.collections = proxyArray(this.collections, this.saveCollection.bind(this));
+    this.collections = proxify(collections, () => this.storage.set(STORAGE_ID_COLLECTIONS, unproxify(collections)));
     this._info = await this.storage.get(STORAGE_ID_INFO);
   }
 
@@ -109,15 +109,16 @@ export class SongNumberService {
     this.isPresenting = false;
   }
 
-  changeDigitLength(size: number) {
-    const digits = proxyArray([], this.saveDigits.bind(this));
+  async changeDigitLength(size: number) {
+    const digits = [];
     for (let i = 0; i < size; i++) {
-      digits.push(proxyObject({
+      digits.push({
         pos: i,
         value: 0
-      }, this.saveDigits.bind(this)));
+      });
     }
-    this.digits = digits;
+    await this.storage.set(STORAGE_ID_DIGITS, digits);
+    this.digits = proxify(digits, this.saveDigits.bind(this));
   }
 
   get notes(): string {
@@ -147,58 +148,51 @@ export class SongNumberService {
     this.storage.set(STORAGE_ID_INFO, value);
   }
 
-  private saveCollection(books: any[]) {
-    this.storage.set(STORAGE_ID_COLLECTIONS, books);
+  private saveCollections(collections) {
+    // this.storage.set(STORAGE_ID_COLLECTIONS, collections);
   }
 
-  private saveDigits() {
-    // unwrap all proxy's since there is something wrong with storage
-    const buf: Digit[] = [];
-    for (const obj of this.digits) {
-      buf.push({
-        pos: obj.pos,
-        value: obj.value
-      });
-    }
-    this.storage.set(STORAGE_ID_DIGITS, buf);
+  private async saveDigits() {
+    await this.storage.set(STORAGE_ID_DIGITS, unproxify(this.digits));
   }
 }
 
-const arrayOfProxy = (arr: any[], callback?: () => []): any[] => {
-  for (let i = 0; i < arr.length; i++) {
-    arr[i] = proxyObject(arr[i], callback);
+const proxify = (value: any, callback?: (object) => any) => {
+  if (typeof value === 'object') {
+    for (const key of Object.keys(value)) {
+      value[key] = proxify(value[key], callback);
+    }
+    return new Proxy(value, {
+      get: (target, property) => {
+        if (property === 'length') {
+          return value.length;
+        }
+        return target[property];
+      },
+      set: (target, property, val) => {
+        target[property] = val;
+        if (callback) {
+          callback(target);
+        }
+        return true;
+      }
+    });
+  } else {
+    return value;
   }
-  return arr;
 };
 
-// watch for change in array and save to storage
-const proxyArray = (array: any[], callback?: ([]) => []) => {
-  return new Proxy(array, {
-    get: (target, property) => {
-      return target[property];
-    },
-    set: (target, property, value) => {
-      target[property] = value;
-      if (property === 'length' && callback) {
-        callback(target);
-      }
-      return true;
+const unproxify = (value) => {
+  if (typeof value === 'object') {
+    if (value === null) {
+      return null;
     }
-  });
-};
-
-// watch for change in digit and save to storage
-const proxyObject = (val: any, callback?: (object) => any) => {
-  return new Proxy(val, {
-    get: (target, property) => {
-      return target[property];
-    },
-    set: (target, property, value) => {
-      target[property] = value;
-      if (callback) {
-        callback(target);
-      }
-      return true;
+    const obj = value.length ? [] : {};
+    for (const key of Object.keys(value)) {
+      obj[key] = unproxify(value[key]);
     }
-  });
+    return obj;
+  } else {
+    return value;
+  }
 };
