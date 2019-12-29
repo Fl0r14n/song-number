@@ -21,17 +21,19 @@
       "startPresenting": "Present",
       "stopPresenting": "Stop"
     },
-    "config": {
-      "title": "Settings",
-      "debug": "Debug",
-      "digits": "Digits",
-      "books": "Books",
+    "books": {
+      "title": "Books",
       "edit": "Edit",
       "delete": "Delete",
       "cancel": "Cancel",
       "remove": "Remove",
       "permanentRemoval": "This operation cannot be undone",
       "removeBook": "Remove {{value}}?"
+    },
+    "config": {
+      "title": "Settings",
+      "debug": "Debug",
+      "digits": "Digits"
     },
     "bookModal": {
       "add": {
@@ -44,11 +46,24 @@
       },
       "cancel": "Cancel",
       "bookTitle": "Title",
-      "bookDescription": "Description"
+      "bookDescription": "Description",
+      "collection": "Collection"
     },
     "selectBookModal": {
       "title": "Select Book",
       "cancel": "Cancel"
+    },
+    "collectionModal": {
+      "title": "Collections",
+      "editDialog": "Edit {{value}}?",
+      "removeDialog": "Remove {{value}}?",
+      "addDialog": "Add new collection",
+      "add": "Add",
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "remove": "Remove",
+      "permanentRemoval": "This operation will also remove the books in the collection!",
+      "collection": "Collection"
     }
   },
   "providers": {

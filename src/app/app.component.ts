@@ -15,14 +15,14 @@ export class AppComponent {
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    i18nService: TranslateService,
+    private i18nService: TranslateService
   ) {
-    i18nService.setDefaultLang('en');
-    i18nService.use(i18nService.getBrowserLang());
     this.initializeApp();
   }
 
   initializeApp() {
+    this.i18nService.setDefaultLang('en');
+    this.i18nService.use(this.i18nService.getBrowserLang());
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
