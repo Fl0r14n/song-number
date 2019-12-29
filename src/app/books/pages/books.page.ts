@@ -4,6 +4,7 @@ import {SongNumberService} from '../../shared/services/song-number.service';
 import {Book, BookCollection} from '../../shared/models/api';
 import {TranslateService} from '@ngx-translate/core';
 import {BookModalPageComponent} from '../components/book-modal/book-modal.component';
+import {CollectionModalComponent} from '../components/collection-modal/collection-modal.component';
 
 @Component({
   selector: 'books-page',
@@ -29,11 +30,10 @@ export class BooksPageComponent implements OnInit {
     return this.songNumberService.book;
   }
 
-  bookReorder(collection, $event) {
-    const {detail} = $event;
+  async reorderBook(collection, {detail}) {
     const {books} = collection;
     books.splice(detail.to, 0, books.splice(detail.from, 1)[0]);
-    detail.complete(true);
+    await detail.complete(true);
   }
 
   removeBook(item: Book, collection: BookCollection) {
@@ -77,76 +77,26 @@ export class BooksPageComponent implements OnInit {
     if (data) {
       // did the collection change?
       if (data.label === collection.name) {
-        this.sBook(data, book, collection);
+        delete data.label;
+        this.songNumberService.editBook(book, data);
       } else {
-        this.dBook(book, collection);
-        this.cBook(data);
+        this.songNumberService.deleteBook(book, collection);
+        const {label} = data;
+        delete data.label;
+        this.songNumberService.addBook(data, label);
       }
+      // TODO remove
       delete data.label;
       this.songNumberService.book = data;
     }
   }
 
-  removeCollection(collection) {
-    this.i18nService.get('pages.books.removeBook', {
-      value: collection.name
-    }).subscribe(async (value) => {
-      const confirm = await this.alertCtrl.create({
-        header: value,
-        message: this.i18n['pages.books.permanentRemoval'],
-        buttons: [
-          {
-            text: this.i18n['pages.books.cancel'],
-            handler: () => {
-              this.closeItemSliders();
-            }
-          },
-          {
-            text: this.i18n['pages.books.remove'],
-            handler: () => {
-              this.closeItemSliders();
-              const idx = this.collections.indexOf(collection);
-              this.collections.splice(idx, 1);
-            }
-          }
-        ]
-      });
-      await confirm.present();
+  async reorderCollections() {
+    const modal = await this.modalCtrl.create({
+      component: CollectionModalComponent
     });
-  }
-
-  editCollection(collection) {
-    this.i18nService.get('pages.books.editDialog', {
-      value: collection.name
-    }).subscribe(async (value) => {
-      const confirm = await this.alertCtrl.create({
-        header: value,
-        inputs: [
-          {
-            name: 'label',
-            placeholder: this.i18n['pages.books.collection'],
-            type: 'text',
-            value: collection.name
-          }
-        ],
-        buttons: [
-          {
-            text: this.i18n['pages.books.cancel'],
-            handler: () => {
-              this.closeItemSliders();
-            }
-          },
-          {
-            text: this.i18n['pages.books.edit'],
-            handler: (data) => {
-              this.closeItemSliders();
-              collection.name = data.label;
-            }
-          }
-        ]
-      });
-      await confirm.present();
-    });
+    await modal.present();
+    const {data} = await modal.onDidDismiss();
   }
 
   async addBook() {
@@ -161,30 +111,11 @@ export class BooksPageComponent implements OnInit {
     const {data} = await modal.onDidDismiss();
     this.closeItemSliders();
     if (data) {
-      this.cBook(data);
+      const {label} = data;
+      delete data.label;
+      this.songNumberService.addBook(data, label);
       this.songNumberService.book = data;
     }
-  }
-
-  private sBook(data, book, collection) {
-    const idx = collection.books.findIndex(i => i.title === book.title && i.description === book.description);
-    if (idx > -1) {
-      delete data.label;
-      collection.books[idx] = data;
-    }
-  }
-
-  private dBook(book, collection) {
-    const idx = collection.books.findIndex(i => i.title === book.title && i.description === book.description);
-    if (idx > -1) {
-      collection.books.splice(idx, 1);
-    }
-  }
-
-  private cBook(data) {
-    const collection = this.collections.find(c => c.name === data.label);
-    delete data.label;
-    collection.books.push(data);
   }
 
   private closeItemSliders() {
@@ -194,12 +125,10 @@ export class BooksPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.i18nService.get([
-      'pages.books.edit',
       'pages.books.cancel',
       'pages.books.remove',
       'pages.books.permanentRemoval',
       'pages.books.removeBook',
-      'pages.books.collection',
     ]).subscribe((value) => {
       this.i18n = value;
     });

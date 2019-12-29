@@ -6,9 +6,8 @@ import {SongBooksService} from '../../../shared/services/song-books.service';
 import {CameraService, SourceType} from '../../../shared/services/camera.service';
 
 @Component({
-  selector: 'book-modal-page',
-  templateUrl: 'book-modal.component.html',
-  styleUrls: ['book-modal.component.scss']
+  selector: 'book-modal',
+  templateUrl: 'book-modal.component.html'
 })
 export class BookModalPageComponent implements OnInit {
 
@@ -23,12 +22,12 @@ export class BookModalPageComponent implements OnInit {
               private cameraService: CameraService) {
   }
 
-  submit() {
-    this.modalController.dismiss(Object.assign(this.book, this.form.value));
+  async submit() {
+    await this.modalController.dismiss(Object.assign(this.book, this.form.value));
   }
 
-  dismiss() {
-    this.modalController.dismiss();
+  async dismiss() {
+    await this.modalController.dismiss();
   }
 
   takePicture() {

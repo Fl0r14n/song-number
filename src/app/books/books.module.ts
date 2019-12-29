@@ -6,9 +6,11 @@ import {TranslateModule} from '@ngx-translate/core';
 import {CommonModule} from '@angular/common';
 import {BookModalPageComponent} from './components/book-modal/book-modal.component';
 import {ReactiveFormsModule} from '@angular/forms';
+import {CollectionModalComponent} from './components/collection-modal/collection-modal.component';
 
 const entryComponents = [
-  BookModalPageComponent
+  BookModalPageComponent,
+  CollectionModalComponent
 ];
 
 const declarations = [

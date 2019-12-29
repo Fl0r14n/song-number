@@ -29,7 +29,6 @@
       "remove": "Elimină",
       "permanentRemoval": "Această operație nu poate fi anulată",
       "removeBook": "Eliminați {{value}}?",
-      "editDialog": "Editați {{value}}?",
       "collection": "Colecție"
     },
     "config": {
@@ -54,6 +53,18 @@
     "selectBookModal": {
       "title": "Selectați o carte",
       "cancel": "Anulează"
+    },
+    "collectionModal": {
+      "title": "Colecții",
+      "editDialog": "Editați {{value}}?",
+      "removeDialog": "Eliminați {{value}}?",
+      "addDialog": "Adaugă colecție",
+      "add": "Adaugă",
+      "edit": "Editează",
+      "cancel": "Anulează",
+      "remove": "Elimină",
+      "permanentRemoval": "Această operație va șterge și cărțile din colecție!",
+      "collection": "Colecție"
     }
   },
   "providers": {

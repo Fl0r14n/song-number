@@ -51,16 +51,50 @@ export class SongNumberService {
       value: 0
     }];
     // make digits observable
-    this.digits = proxify(digits, this.saveDigits.bind(this));
+    this.digits = proxify(digits, this.saveDigits);
     this._notes = await this.storage.get(STORAGE_ID_NOTES);
     this._book = await this.storage.get(STORAGE_ID_BOOK);
+    this.initCollections();
+    this._info = await this.storage.get(STORAGE_ID_INFO);
+  }
+
+  async initCollections() {
     let collections = await this.storage.get(STORAGE_ID_COLLECTIONS);
     if (!collections || collections.length === undefined || collections.length === 0) {
       collections = await this.songBooksService.getCollections().toPromise();
       await this.storage.set(STORAGE_ID_COLLECTIONS, collections);
     }
-    this.collections = proxify(collections, () => this.storage.set(STORAGE_ID_COLLECTIONS, unproxify(collections)));
-    this._info = await this.storage.get(STORAGE_ID_INFO);
+    this.collections = proxify(collections, this.saveCollection);
+  }
+
+  saveCollection = () => this.storage.set(STORAGE_ID_COLLECTIONS, unproxify(this.collections));
+  saveDigits = () => this.storage.set(STORAGE_ID_DIGITS, unproxify(this.digits));
+
+  addCollection(name) {
+    this.collections.push(proxify({
+      name,
+      books: null
+    }, this.saveCollection));
+  }
+
+  addBook(data: Book, collectionName: string) {
+    const collection = this.collections.find(c => c.name === collectionName);
+    if (!collection.books || collection.books.length === undefined) {
+      collection.books = [];
+    }
+    collection.books.push(data);
+    // TODO proxify
+  }
+
+  editBook(oldBook: Book, newBook: Book) {
+    Object.assign(oldBook, newBook);
+  }
+
+  deleteBook(book: Book, collection: BookCollection) {
+    const idx = collection.books.findIndex(i => i.title === book.title && i.description === book.description);
+    if (idx > -1) {
+      collection.books.splice(idx, 1);
+    }
   }
 
   presentNumber() {
@@ -118,7 +152,7 @@ export class SongNumberService {
       });
     }
     await this.storage.set(STORAGE_ID_DIGITS, digits);
-    this.digits = proxify(digits, this.saveDigits.bind(this));
+    this.digits = proxify(digits, this.saveDigits);
   }
 
   get notes(): string {
@@ -148,9 +182,7 @@ export class SongNumberService {
     this.storage.set(STORAGE_ID_INFO, value);
   }
 
-  private async saveDigits() {
-    await this.storage.set(STORAGE_ID_DIGITS, unproxify(this.digits));
-  }
+
 }
 
 const proxify = (value: any, callback?: (object) => any) => {

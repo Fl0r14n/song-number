@@ -28,9 +28,7 @@
       "cancel": "Cancel",
       "remove": "Remove",
       "permanentRemoval": "This operation cannot be undone",
-      "removeBook": "Remove {{value}}?",
-      "editDialog": "Edit {{value}}?",
-      "collection": "Collection"
+      "removeBook": "Remove {{value}}?"
     },
     "config": {
       "title": "Settings",
@@ -54,6 +52,18 @@
     "selectBookModal": {
       "title": "Select Book",
       "cancel": "Cancel"
+    },
+    "collectionModal": {
+      "title": "Collections",
+      "editDialog": "Edit {{value}}?",
+      "removeDialog": "Remove {{value}}?",
+      "addDialog": "Add new collection",
+      "add": "Add",
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "remove": "Remove",
+      "permanentRemoval": "This operation will also remove the books in the collection!",
+      "collection": "Collection"
     }
   },
   "providers": {
