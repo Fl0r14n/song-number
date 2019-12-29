@@ -148,10 +148,6 @@ export class SongNumberService {
     this.storage.set(STORAGE_ID_INFO, value);
   }
 
-  private saveCollections(collections) {
-    // this.storage.set(STORAGE_ID_COLLECTIONS, collections);
-  }
-
   private async saveDigits() {
     await this.storage.set(STORAGE_ID_DIGITS, unproxify(this.digits));
   }
@@ -160,7 +156,9 @@ export class SongNumberService {
 const proxify = (value: any, callback?: (object) => any) => {
   if (typeof value === 'object') {
     for (const key of Object.keys(value)) {
-      value[key] = proxify(value[key], callback);
+      if (value[key] != null) {
+        value[key] = proxify(value[key], callback);
+      }
     }
     return new Proxy(value, {
       get: (target, property) => {
@@ -184,7 +182,7 @@ const proxify = (value: any, callback?: (object) => any) => {
 
 const unproxify = (value) => {
   if (typeof value === 'object') {
-    if (value === null) {
+    if (value == null) {
       return null;
     }
     const obj = value.length ? [] : {};
