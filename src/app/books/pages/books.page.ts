@@ -29,6 +29,13 @@ export class BooksPageComponent implements OnInit {
     return this.songNumberService.book;
   }
 
+  bookReorder(collection, $event) {
+    const {detail} = $event;
+    const {books} = collection;
+    books.splice(detail.to, 0, books.splice(detail.from, 1)[0]);
+    detail.complete(true);
+  }
+
   removeBook(item: Book, collection: BookCollection) {
     this.i18nService.get('pages.books.removeBook', {value: item.title}).subscribe(async (value) => {
       const confirm = await this.alertCtrl.create({

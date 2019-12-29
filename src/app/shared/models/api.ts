@@ -12,6 +12,7 @@ export interface Book {
 export interface BookCollection {
   name?: string;
   books?: Book[];
+  reorder?: boolean
 }
 
 
