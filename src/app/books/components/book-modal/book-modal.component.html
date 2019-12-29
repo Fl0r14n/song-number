@@ -41,9 +41,9 @@
             <ion-label position="floating">
               {{'pages.bookModal.collection' | translate}}
             </ion-label>
-            <ion-select formControlName="section">
-              <ion-select-option *ngFor="let section of sections" [value]="section">
-                {{section}}
+            <ion-select formControlName="label">
+              <ion-select-option *ngFor="let label of labels" [value]="label">
+                {{label}}
               </ion-select-option>
             </ion-select>
           </ion-item>

@@ -28,7 +28,9 @@
       "cancel": "Anulează",
       "remove": "Elimină",
       "permanentRemoval": "Această operație nu poate fi anulată",
-      "removeBook": "Eliminați {{value}}?"
+      "removeBook": "Eliminați {{value}}?",
+      "editDialog": "Editați {{value}}?",
+      "collection": "Colecție"
     },
     "config": {
       "title": "Setări",
@@ -47,7 +49,7 @@
       "cancel": "Anulează",
       "bookTitle": "Titlu",
       "bookDescription": "Descriere",
-      "collection": "Secțiune"
+      "collection": "Colecție"
     },
     "selectBookModal": {
       "title": "Selectați o carte",

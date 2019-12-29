@@ -1,6 +1,6 @@
 [
   {
-    "section": "Cântarile Evangheliei",
+    "name": "Cântarile Evangheliei",
     "books": [
       {
         "title": "Cântările Evangheliei",
@@ -15,7 +15,7 @@
     ]
   },
   {
-    "section": "Jubilate",
+    "name": "Jubilate",
     "books": [
       {
         "title": "Jubilate",
@@ -40,7 +40,7 @@
     ]
   },
   {
-    "section": "De laudă slavei Sale",
+    "name": "De laudă slavei Sale",
     "books": [
       {
         "title": "Fața Ta",
@@ -125,7 +125,7 @@
     ]
   },
   {
-    "section": "Vrednic este Mielul",
+    "name": "Vrednic este Mielul",
     "books": [
       {
         "title": "Vrednic este Mielul",
@@ -145,7 +145,7 @@
     ]
   },
   {
-    "section": "",
+    "name": "",
     "books": [
       {
         "title": "Armonii corale",

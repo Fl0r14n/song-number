@@ -14,7 +14,7 @@
   <ion-list inset>
     <ng-container *ngFor="let collection of collections">
       <ion-item-divider>
-        <ion-label>{{collection.section}}</ion-label>
+        <ion-label>{{collection.name}}</ion-label>
       </ion-item-divider>
       <ion-item *ngFor="let item of collection.books" (click)="selectBook(item)"
                 [color]="item == book? 'primary': ''">

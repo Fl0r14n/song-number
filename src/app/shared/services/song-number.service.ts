@@ -55,7 +55,7 @@ export class SongNumberService {
     this._notes = await this.storage.get(STORAGE_ID_NOTES);
     this._book = await this.storage.get(STORAGE_ID_BOOK);
     let collections = await this.storage.get(STORAGE_ID_COLLECTIONS);
-    if (!collections || collections.length === 0) {
+    if (!collections || collections.length === undefined || collections.length === 0) {
       collections = await this.songBooksService.getCollections().toPromise();
       await this.storage.set(STORAGE_ID_COLLECTIONS, collections);
     }
@@ -136,7 +136,7 @@ export class SongNumberService {
 
   set book(value: Book) {
     this._book = value;
-    this.storage.set(STORAGE_ID_BOOK, value);
+    this.storage.set(STORAGE_ID_BOOK, unproxify(value));
   }
 
   get info(): string {

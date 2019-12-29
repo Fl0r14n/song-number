@@ -43,20 +43,20 @@ export class BookModalPageComponent implements OnInit {
     });
   }
 
-  get sections() {
-    return this.collections ? this.collections.map(v => v.section).sort() : [];
+  get labels() {
+    return this.collections ? this.collections.map(v => v.name).sort() : [];
   }
 
   ngOnInit(): void {
     this.book = this.book || {};
     this.collection = this.collection || {
-      section: ''
+      name: ''
     };
     this.editMode = !!this.book.title;
     this.form = new FormGroup({
       title: new FormControl(this.book.title, [Validators.required, Validators.minLength(5)]),
       description: new FormControl(this.book.description),
-      section: new FormControl(this.collection.section)
+      label: new FormControl(this.collection.name)
     });
     if (!this.book.thumb) {
       this.songBookService.getCover().subscribe(book => {

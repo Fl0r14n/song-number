@@ -10,7 +10,7 @@ export interface Book {
 }
 
 export interface BookCollection {
-  section?: string;
+  name?: string;
   books?: Book[];
 }
 
