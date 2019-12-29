@@ -23,9 +23,6 @@ export class CollectionModalComponent implements OnInit {
     return this.songNumberService.collections;
   }
 
-  submit() {
-  }
-
   async dismiss() {
     await this.modalController.dismiss();
   }
@@ -122,7 +119,7 @@ export class CollectionModalComponent implements OnInit {
   }
 
   async reorderCollection({detail}) {
-    // TODO
+    this.collections.splice(detail.to, 0, this.collections.splice(detail.from, 1)[0]);
     await detail.complete(true);
   }
 

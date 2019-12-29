@@ -73,17 +73,17 @@ export class SongNumberService {
   addCollection(name) {
     this.collections.push(proxify({
       name,
-      books: null
     }, this.saveCollection));
   }
 
   addBook(data: Book, collectionName: string) {
-    const collection = this.collections.find(c => c.name === collectionName);
+    const collections = unproxify(this.collections);
+    const collection = collections.find(c => c.name === collectionName);
     if (!collection.books || collection.books.length === undefined) {
       collection.books = [];
     }
     collection.books.push(data);
-    // TODO proxify
+    this.collections = proxify(collections, this.saveCollection);
   }
 
   editBook(oldBook: Book, newBook: Book) {

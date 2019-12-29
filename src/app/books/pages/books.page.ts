@@ -52,8 +52,7 @@ export class BooksPageComponent implements OnInit {
             text: this.i18n['pages.books.remove'],
             handler: () => {
               this.closeItemSliders();
-              const idx = collection.books.indexOf(item);
-              collection.books.splice(idx, 1);
+              this.songNumberService.deleteBook(item, collection);
             }
           }
         ]
@@ -85,7 +84,6 @@ export class BooksPageComponent implements OnInit {
         delete data.label;
         this.songNumberService.addBook(data, label);
       }
-      // TODO remove
       delete data.label;
       this.songNumberService.book = data;
     }
@@ -96,7 +94,6 @@ export class BooksPageComponent implements OnInit {
       component: CollectionModalComponent
     });
     await modal.present();
-    const {data} = await modal.onDidDismiss();
   }
 
   async addBook() {
