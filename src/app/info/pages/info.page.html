@@ -1,29 +1,31 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      <ion-icon name="information-circle"></ion-icon>
-      {{ 'pages.info.title' | translate}}
-    </ion-title>
-    <ion-fab-button slot="end"
-                    [disabled]="!initialized"
-                    [color]="connected ? 'secondary' : 'primary'"
-                    (click)="cast()">
-      <ion-icon name="desktop"></ion-icon>
-    </ion-fab-button>
-  </ion-toolbar>
-</ion-header>
+<ng-container *ngIf="chromeCastState$ | async as state">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>
+        <ion-icon name="information-circle"></ion-icon>
+        {{ 'pages.info.title' | translate}}
+      </ion-title>
+      <ion-fab-button slot="end"
+                      [disabled]="!isInitialized(state)"
+                      [color]="isConnected(state) ? 'secondary' : 'primary'"
+                      (click)="cast(state)">
+        <ion-icon name="desktop"></ion-icon>
+      </ion-fab-button>
+    </ion-toolbar>
+  </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-item>
-    <ion-textarea placeholder="{{ 'pages.info.textArea' | translate}}" clearInput rows="6"
-                  [(ngModel)]="info"></ion-textarea>
-  </ion-item>
+  <ion-content class="ion-padding">
+    <ion-item>
+      <ion-textarea placeholder="{{ 'pages.info.textArea' | translate}}" clearInput rows="6"
+                    [(ngModel)]="info"></ion-textarea>
+    </ion-item>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button [disabled]="!connected"
-                    [color]="button.color"
-                    (click)="present()">
-      <ion-icon [name]="button.icon"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-</ion-content>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button [disabled]="!isConnected(state)"
+                      [color]="button.color"
+                      (click)="present()">
+        <ion-icon [name]="button.icon"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </ion-content>
+</ng-container>

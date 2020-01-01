@@ -1,6 +1,7 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import {EventEmitter, Injectable, NgZone} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {LoggerService} from './logger.service';
+import {BehaviorSubject} from 'rxjs';
 
 export enum ChromeCastState {
   DISABLED = 0,
@@ -25,11 +26,12 @@ export class ChromeCastService {
 
   // tslint:disable-next-line:variable-name
   private _state: ChromeCastState = ChromeCastState.DISABLED;
-  public stateChanged: EventEmitter<ChromeCastState> = new EventEmitter();
-  public messageListener: EventEmitter<any> = new EventEmitter();
+  public stateChanged$: BehaviorSubject<ChromeCastState> = new BehaviorSubject(undefined);
+  public messageListener$: EventEmitter<any> = new EventEmitter();
 
   constructor(private i18nService: TranslateService,
-              private log: LoggerService) {
+              private log: LoggerService,
+              private zone: NgZone) {
     this.i18nService.get([
       'providers.chromecast.session',
       'providers.chromecast.newSession',
@@ -52,19 +54,11 @@ export class ChromeCastService {
     });
   }
 
-  public get state(): ChromeCastState {
-    return this._state;
-  }
 
-  private setState(state: ChromeCastState) {
-    this._state = state;
-    this.stateChanged.emit(state);
-  }
-
-  init() {
+  init = () => {
     this.cast = window[CHROME].cast;
     if (this.cast) {
-      const apiConfig = new this.cast.ApiConfig(new this.cast.SessionRequest(this.applicationId), this.onSession.bind(this), (status) => {
+      const apiConfig = new this.cast.ApiConfig(new this.cast.SessionRequest(this.applicationId), this.onSession, (status) => {
         switch (status) {
           case this.cast.ReceiverAvailability.UNAVAILABLE: {
             this.setState(ChromeCastState.INITIALIZED);
@@ -77,7 +71,7 @@ export class ChromeCastService {
             if (!this.session) {
               this.setState(ChromeCastState.AVAILABLE);
             }
-            this.log.info(this.i18n['providers.chromecast.receiverFound']);
+            this.log.debug(this.i18n['providers.chromecast.receiverFound']);
             break;
           }
           default: {
@@ -87,38 +81,43 @@ export class ChromeCastService {
       });
       this.cast.initialize(apiConfig, () => {
         this.setState(ChromeCastState.INITIALIZED);
-      }, this.onError.bind(this));
+      }, this.onError);
     }
   }
 
-  open() {
-    if (this.state === ChromeCastState.AVAILABLE) {
-      this.cast.requestSession(this.onSession.bind(this));
+  open = () => {
+    if (this._state === ChromeCastState.AVAILABLE) {
+      this.cast.requestSession(this.onSession);
     } else {
-      if (this.state === ChromeCastState.INITIALIZED) {
+      if (this._state === ChromeCastState.INITIALIZED) {
         // force init since it might not get it the first time
         this.init();
       }
     }
   }
 
-  close(state?: ChromeCastState) {
+  close = (state?: ChromeCastState) => {
     if (this.session) {
       this.session.stop(() => {
         this.setState(state ? state : ChromeCastState.AVAILABLE);
         this.log.debug(this.i18n['providers.chromecast.stop']);
         delete this.session;
-      }, this.onError.bind(this));
+      }, this.onError);
     }
   }
 
-  send(msg) {
+  send = (msg) => {
     if (this.session) {
-      this.session.sendMessage(this.namespace, msg, this.onSendSuccess.bind(this, msg), this.onError.bind(this));
+      this.session.sendMessage(this.namespace, msg, this.onSendSuccess, this.onError);
     }
   }
 
-  private loadScript() {
+  private setState = (state: ChromeCastState) => {
+    this._state = state;
+    this.zone.run(() => this.stateChanged$.next(state));
+  }
+
+  private loadScript = () => {
     this.cast = window[CHROME].cast;
     if (this.cast) {
       this.init();
@@ -128,25 +127,25 @@ export class ChromeCastService {
       const script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = 'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js';
-      script.onload = this.onLoadCastApi.bind(this);
+      script.onload = this.onLoadCastApi;
       head.appendChild(script);
     }
   }
 
-  private onLoadCastApi() {
+  private onLoadCastApi = () => {
     this.cast = window[CHROME].cast;
     if (this.cast) {
       this.init();
     } else {
       // might not be injected in page
-      setTimeout(this.init.bind(this), 1000);
+      setTimeout(this.init, 1000);
     }
   }
 
-  private onSession(session: any) {
+  private onSession = (session: any) => {
     this.setState(ChromeCastState.CONNECTED);
     this.session = session;
-    this.log.info(this.i18n['providers.chromecast.newSession'] + this.session.sessionId);
+    this.log.debug(this.i18n['providers.chromecast.newSession'] + this.session.sessionId);
     this.session.addUpdateListener((isAlive) => {
       if (this.session) {
         let message = isAlive ? this.i18n['providers.chromecast.sessionUpdated'] : this.i18n['providers.chromecast.sessionRemoved'];
@@ -160,15 +159,15 @@ export class ChromeCastService {
     this.session.addMessageListener(this.namespace, (namespace, message) => {
       // message received
       this.log.debug(this.i18n['providers.chromecast.messageReceived'] + message);
-      this.messageListener.emit(JSON.parse(message));
+      this.messageListener$.emit(JSON.parse(message));
     });
   }
 
-  private onError(err) {
-    this.log.error(this.i18n['providers.chromecast.error'] + err);
+  private onError = (err) => {
+    this.log.error(this.i18n['providers.chromecast.error'] + JSON.stringify(err));
   }
 
-  private onSendSuccess(msg) {
+  private onSendSuccess = (msg) => {
     this.log.debug(this.i18n['providers.chromecast.sendMessage'] + JSON.stringify(msg));
   }
 }

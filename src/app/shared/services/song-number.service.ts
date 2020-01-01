@@ -8,7 +8,7 @@ import {noop} from 'rxjs';
 const STORAGE_ID_DIGITS = 'song-number-settings-digits';
 const STORAGE_ID_NOTES = 'song-number-settings-notes';
 const STORAGE_ID_BOOK = 'song-number-settings-book';
-const STORAGE_ID_COLLECTIONS = 'song-number-settings-collections';
+const STORAGE_ID_COLLECTIONS = 'song-number-settings-collection';
 const STORAGE_ID_INFO = 'song-number-settings-info';
 
 const MESSAGE_TYPE_READ = 0;
@@ -98,13 +98,13 @@ export class SongNumberService {
   }
 
   presentNumber() {
-    const nr = this.buildNumber();
-    this.chromeCastService.send({
+    const message = {
       type: MESSAGE_TYPE_SONG,
-      number: nr,
-      book: this.book,
+      number: this.buildNumber(),
+      book: unproxify(this.book),
       notes: this.notes
-    });
+    };
+    this.chromeCastService.send(message);
     this.isPresenting = true;
   }
 
@@ -181,8 +181,6 @@ export class SongNumberService {
     this._info = value;
     this.storage.set(STORAGE_ID_INFO, value);
   }
-
-
 }
 
 const proxify = (value: any, callback?: (object) => any) => {
