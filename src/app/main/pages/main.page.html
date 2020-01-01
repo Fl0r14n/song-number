@@ -1,50 +1,52 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      <ion-icon name="musical-notes"></ion-icon>
-      {{ 'pages.main.title' | translate}}
-    </ion-title>
-    <ion-fab-button slot="end"
-                    [disabled]="!initialized"
-                    [color]="connected ? 'secondary' : 'primary'"
-                    (click)="cast()">
-      <ion-icon name="desktop"></ion-icon>
-    </ion-fab-button>
-  </ion-toolbar>
-</ion-header>
+<ng-container *ngIf="chromeCastState$ | async as state">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>
+        <ion-icon name="musical-notes"></ion-icon>
+        {{ 'pages.main.title' | translate}}
+      </ion-title>
+      <ion-fab-button slot="end"
+                      [disabled]="!isInitialized(state)"
+                      [color]="isConnected(state) ? 'secondary' : 'primary'"
+                      (click)="cast(state)">
+        <ion-icon name="desktop"></ion-icon>
+      </ion-fab-button>
+    </ion-toolbar>
+  </ion-header>
 
-<ion-content class="ion-padding">
-  <song-number [digits]="digits"></song-number>
+  <ion-content class="ion-padding">
+    <song-number [digits]="digits"></song-number>
 
-  <ion-item class="ion-padding-start ion-padding-end">
-    <ion-label position="floating">{{ 'pages.main.notes' | translate}}</ion-label>
-    <ion-input type="text" [(ngModel)]="notes"></ion-input>
-  </ion-item>
+    <ion-item class="ion-padding-start ion-padding-end">
+      <ion-label position="floating">{{ 'pages.main.notes' | translate}}</ion-label>
+      <ion-input type="text" [(ngModel)]="notes"></ion-input>
+    </ion-item>
 
-  <ion-item (click)="openSelectBookModal()" class="ion-padding">
-    <ion-thumbnail slot="start" *ngIf="book">
-      <img [src]="book.thumb">
-    </ion-thumbnail>
-    <ion-label>
-      <h2 [hidden]="book">{{ 'pages.main.book' | translate}}</h2>
-      <h3 *ngIf="book">{{book.title}}</h3>
-      <p *ngIf="book">{{book.description}}</p>
-    </ion-label>
-  </ion-item>
+    <ion-item (click)="openSelectBookModal()" class="ion-padding">
+      <ion-thumbnail slot="start" *ngIf="book">
+        <img [src]="book.thumb">
+      </ion-thumbnail>
+      <ion-label>
+        <h2 [hidden]="book">{{ 'pages.main.book' | translate}}</h2>
+        <h3 *ngIf="book">{{book.title}}</h3>
+        <p *ngIf="book">{{book.description}}</p>
+      </ion-label>
+    </ion-item>
 
-  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
-    <ion-fab-button [disabled]="!connected"
-                    color="secondary"
-                    (click)="readPresented()">
-      <ion-icon name="information"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+    <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+      <ion-fab-button [disabled]="!isConnected(state)"
+                      color="secondary"
+                      (click)="readPresented()">
+        <ion-icon name="information"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button [disabled]="!connected"
-                    [color]="button.color"
-                    (click)="present()">
-      <ion-icon [name]="button.icon"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-</ion-content>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button [disabled]="!isConnected(state)"
+                      [color]="button.color"
+                      (click)="present()">
+        <ion-icon [name]="button.icon"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </ion-content>
+</ng-container>

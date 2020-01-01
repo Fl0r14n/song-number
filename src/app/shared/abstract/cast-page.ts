@@ -1,4 +1,5 @@
 import {ChromeCastService, ChromeCastState} from '../services/chrome-cast.service';
+import {tap} from 'rxjs/operators';
 
 export interface CastButton {
   icon: string;
@@ -17,40 +18,39 @@ export abstract class CastPage {
   };
   protected static presentButton: CastButton = CastPage.presentButtonOFF;
   protected i18n: any[];
-  protected state: ChromeCastState = ChromeCastState.DISABLED;
 
   protected constructor(protected chromeCastService: ChromeCastService) {
-    this.state = chromeCastService.state;
-    this.chromeCastService.stateChanged.subscribe((state) => {
-      this.state = state;
-    });
   }
 
-  public get disabled(): boolean {
-    return this.state === ChromeCastState.DISABLED;
+  get chromeCastState$() {
+    return this.chromeCastService.stateChanged$;
   }
 
-  public get initialized(): boolean {
+  public isDisabled(state: ChromeCastState): boolean {
+    return state === ChromeCastState.DISABLED;
+  }
+
+  public isInitialized(state: ChromeCastState): boolean {
     // tslint:disable-next-line:no-bitwise
-    return (this.state & ChromeCastState.INITIALIZED) === ChromeCastState.INITIALIZED;
+    return (state & ChromeCastState.INITIALIZED) === ChromeCastState.INITIALIZED;
   }
 
-  public get available(): boolean {
+  public isAvailable(state: ChromeCastState): boolean {
     // tslint:disable-next-line:no-bitwise
-    return (this.state & ChromeCastState.AVAILABLE) === ChromeCastState.AVAILABLE;
+    return (state & ChromeCastState.AVAILABLE) === ChromeCastState.AVAILABLE;
   }
 
-  public get connected(): boolean {
+  public isConnected(state: ChromeCastState): boolean {
     // tslint:disable-next-line:no-bitwise
-    return (this.state & ChromeCastState.CONNECTED) === ChromeCastState.CONNECTED;
+    return (state & ChromeCastState.CONNECTED) === ChromeCastState.CONNECTED;
   }
 
   public get button(): CastButton {
     return CastPage.presentButton;
   }
 
-  cast() {
-    if (this.connected) {
+  cast(state: ChromeCastState) {
+    if (this.isConnected(state)) {
       CastPage.presentButton = CastPage.presentButtonOFF;
       this.chromeCastService.close();
     } else {

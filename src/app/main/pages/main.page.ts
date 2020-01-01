@@ -72,7 +72,7 @@ export class MainPageComponent extends CastPage implements OnInit {
     ]).subscribe((value) => {
       this.i18n = value;
     });
-    this.chromeCastService.messageListener.subscribe(async data => {
+    this.chromeCastService.messageListener$.subscribe(async data => {
       if (data.isFeedback) {
         let subTitle = '';
         switch (data.type) {
