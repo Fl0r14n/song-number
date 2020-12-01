@@ -26,7 +26,7 @@ const routes: Routes = [
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
-    RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules}),
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules, relativeLinkResolution: 'legacy' }),
     IonicStorageModule.forRoot(),
     HttpClientModule,
     TranslateModule.forRoot({
