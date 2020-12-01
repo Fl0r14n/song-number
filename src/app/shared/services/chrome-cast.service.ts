@@ -1,7 +1,7 @@
-import {EventEmitter, Injectable, NgZone} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {LoggerService} from './logger.service';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, ReplaySubject} from 'rxjs';
 
 export enum ChromeCastState {
   DISABLED = 0,
@@ -26,8 +26,8 @@ export class ChromeCastService {
 
   // tslint:disable-next-line:variable-name
   private _state: ChromeCastState = ChromeCastState.DISABLED;
-  public stateChanged$: BehaviorSubject<ChromeCastState> = new BehaviorSubject(undefined);
-  public messageListener$: EventEmitter<any> = new EventEmitter();
+  public stateChanged$: ReplaySubject<ChromeCastState> = new ReplaySubject(1);
+  public messageListener$: ReplaySubject<any> = new ReplaySubject(1);
 
   constructor(private i18nService: TranslateService,
               private log: LoggerService,
@@ -159,7 +159,7 @@ export class ChromeCastService {
     this.session.addMessageListener(this.namespace, (namespace, message) => {
       // message received
       this.log.debug(this.i18n['providers.chromecast.messageReceived'] + message);
-      this.messageListener$.emit(JSON.parse(message));
+      this.messageListener$.next(JSON.parse(message));
     });
   }
 

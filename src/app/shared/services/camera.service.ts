@@ -29,6 +29,8 @@ export class CameraService {
   }
 
   getPicture(source: CameraSource): Observable<string> {
-    return from(Camera.getPhoto(cameraOptions(source))).pipe(map(img => img.base64String));
+    return from(Camera.getPhoto(cameraOptions(source))).pipe(
+      map(img => `data:image/jpeg;base64,${img.base64String}`)
+    );
   }
 }

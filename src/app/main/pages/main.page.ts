@@ -5,6 +5,8 @@ import {SelectBookModalComponent} from '../components/select-book-modal/select-b
 import {CastPage} from '../../shared/abstract/cast-page';
 import {ChromeCastService} from '../../shared/services/chrome-cast.service';
 import {SongNumberService} from '../../shared/services/song-number.service';
+import {filter, map, switchMap, tap} from 'rxjs/operators';
+import {from} from 'rxjs';
 
 @Component({
   selector: 'main-page',
@@ -72,37 +74,41 @@ export class MainPageComponent extends CastPage implements OnInit {
     ]).subscribe((value) => {
       this.i18n = value;
     });
-    this.chromeCastService.messageListener$.subscribe(async data => {
-      if (data.isFeedback) {
-        let subTitle = '';
+    this.chromeCastService.messageListener$.pipe(
+      filter(data => data.isFeedback),
+      map(data => {
+        const {thumb} = data.book;
+        let image = '';
+        if (thumb) {
+          image = thumb.match(/\((.*?)\)/)[1].replace(/('|")/g, '');
+          image = `<img src="${image}">`;
+        }
+        const notes = data.notes ? `<ion-card-content>${data.notes}</ion-card-content>` : '';
+
         switch (data.type) {
           case 1: {
-            subTitle = [
-              data.number,
-              ' ',
-              data.book.title,
-              '\n',
-              data.book.description,
-              '\n',
-              data.notes
-            ].join('');
-            break;
+            return `
+                ${image}
+                <ion-card-header>
+                <ion-card-title>${data.number} ${data.book.title}</ion-card-title>
+                <ion-card-subtitle>${data.book.description}</ion-card-subtitle>
+                </ion-card-header>
+                ${notes}
+            `;
           }
           case 2: {
-            subTitle = data.message;
-            break;
+            return data.message;
           }
           default: {
-            subTitle = this.i18n['pages.main.empty'];
+            return this.i18n['pages.main.empty'];
           }
         }
-        const feedbackMessage = await this.alertCtrl.create({
-          header: this.i18n['pages.main.currentlyPresenting'],
-          subHeader: subTitle,
-          buttons: [this.i18n['pages.main.close']]
-        });
-        return await feedbackMessage.present();
-      }
-    });
+      }),
+      switchMap(data => from(this.alertCtrl.create({
+        cssClass: 'info-modal',
+        message: data,
+        buttons: [this.i18n['pages.main.close']]
+      })))
+    ).subscribe(feedbackMessage => feedbackMessage.present());
   }
 }

@@ -1,11 +1,7 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {PreloadAllModules, RouteReuseStrategy, RouterModule, Routes} from '@angular/router';
-
+import {RouteReuseStrategy, RouterModule, Routes} from '@angular/router';
 import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
-import {SplashScreen} from '@ionic-native/splash-screen/ngx';
-import {StatusBar} from '@ionic-native/status-bar/ngx';
-
 import {AppComponent} from './app.component';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
@@ -25,7 +21,7 @@ const routes: Routes = [
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules, relativeLinkResolution: 'legacy' }),
+    RouterModule.forRoot(routes),
     IonicStorageModule.forRoot(),
     HttpClientModule,
     TranslateModule.forRoot({
@@ -37,8 +33,6 @@ const routes: Routes = [
     })
   ],
   providers: [
-    StatusBar,
-    SplashScreen,
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
   ],
   bootstrap: [AppComponent]
