@@ -1,6 +1,6 @@
 {
   "name": "song-number",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "author": "Florian Chiș",
   "homepage": "https://github.com/Fl0r14n/song-number.git",
   "scripts": {
@@ -43,7 +43,7 @@
     "@types/jasminewd2": "~2.0.8",
     "@types/node": "^14.14.10",
     "codelyzer": "^6.0.1",
-    "cordova-chromecast": "git+https://github.com/Fl0r14n/cordova-chromecast.git",
+    "cordova-chromecast": "git+https://github.com/jellyfin/cordova-plugin-chromecast.git",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~6.0.0",
     "karma": "~5.2.3",
