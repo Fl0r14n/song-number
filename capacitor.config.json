@@ -1,1 +1,13 @@
-{}
+{
+  "appId": "com.ionicframework.songnumber142959",
+  "appName": "song-number",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {}
+}
