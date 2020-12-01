@@ -38,52 +38,10 @@
             ],
             "styles": [
               {
-                "input": "src/theme/variables.scss",
-                "inject": true
+                "input": "src/theme/variables.scss"
               },
               {
-                "input": "src/global.scss",
-                "inject": true
-              },
-              {
-                "input": "node_modules/@ionic/angular/css/normalize.css",
-                "inject": true
-              },
-              {
-                "input": "node_modules/@ionic/angular/css/structure.css",
-                "inject": true
-              },
-              {
-                "input": "node_modules/@ionic/angular/css/typography.css",
-                "inject": true
-              },
-              {
-                "input": "node_modules/@ionic/angular/css/core.css",
-                "inject": true
-              },
-              {
-                "input": "node_modules/@ionic/angular/css/padding.css",
-                "inject": true
-              },
-              {
-                "input": "node_modules/@ionic/angular/css/float-elements.css",
-                "inject": true
-              },
-              {
-                "input": "node_modules/@ionic/angular/css/text-alignment.css",
-                "inject": true
-              },
-              {
-                "input": "node_modules/@ionic/angular/css/text-transformation.css",
-                "inject": true
-              },
-              {
-                "input": "node_modules/@ionic/angular/css/flex-utils.css",
-                "inject": true
-              },
-              {
-                "input": "src/theme/variables.css",
-                "inject": true
+                "input": "src/global.scss"
               }
             ],
             "scripts": [],
@@ -99,6 +57,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
+              "sourceMap": false,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,

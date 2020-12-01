@@ -1,9 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.ionicframework.songnumber142959" version="0.1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>SongNumber</name>
-    <description>A small mobile app that will allow user to set a song number from a list of song books and cast it.
-  </description>
-    <author email="florian.chis@gmail.com" href="https://github.com/Fl0r14n/">Florian Chis</author>
+    <description>A small mobile app that will allow user to set a song number from a list of song books and cast it.</description>
+    <author email="florian.chis@gmail.com" href="https://github.com/Fl0r14n/">Florian Chiș</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
