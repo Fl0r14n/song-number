@@ -11,7 +11,6 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {IonicStorageModule} from '@ionic/storage';
-import {Camera} from '@ionic-native/camera/ngx';
 
 const routes: Routes = [
   {
@@ -38,7 +37,6 @@ const routes: Routes = [
     })
   ],
   providers: [
-    Camera,
     StatusBar,
     SplashScreen,
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
