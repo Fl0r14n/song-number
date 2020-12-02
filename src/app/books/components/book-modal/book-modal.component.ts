@@ -3,7 +3,9 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ModalController} from '@ionic/angular';
 import {Book, BookCollection} from '../../../shared/models/api';
 import {SongBooksService} from '../../../shared/services/song-books.service';
-import {CameraService, SourceType} from '../../../shared/services/camera.service';
+import {CameraService} from '../../../shared/services/camera.service';
+import {CameraSource} from '@capacitor/core';
+
 
 @Component({
   selector: 'book-modal',
@@ -31,13 +33,13 @@ export class BookModalPageComponent implements OnInit {
   }
 
   takePicture() {
-    this.cameraService.getPicture(SourceType.CAMERA).subscribe((image) => {
+    this.cameraService.getPicture(CameraSource.Camera).subscribe((image) => {
       this.book.thumb = image;
     });
   }
 
   selectPicture() {
-    this.cameraService.getPicture(SourceType.GALLERY).subscribe((image) => {
+    this.cameraService.getPicture(CameraSource.Photos).subscribe((image) => {
       this.book.thumb = image;
     });
   }

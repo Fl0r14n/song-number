@@ -59,3 +59,12 @@ $UbuntuFontsPath: "~ubuntu-fontface/fonts";
     color: #fff;
   }
 }
+
+.info-modal {
+
+  .alert-message {
+    max-height: 100%;
+    padding-bottom: 0;
+  }
+}
+
