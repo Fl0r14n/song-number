@@ -2,27 +2,24 @@
 SongNumber is a small mobile app that will allow user to set a song number from a list of song books and cast it
 
 ### Build
-* ```sudo npm install -g ionic cordova```
-* ```ionic cordova platforms add android```
-* ```ionic cordova plugin add cordova-plugin-camera```
-* ```npm install --save @ionic-native/camera```
-* ```ionic cordova plugin add https://github.com/Fl0r14n/cordova-chromecast```
-* ```npm install @ionic/storage --save```
-* ```npm install ubuntu-fontface --save```
-* ```npm install @ngx-translate/core @ngx-translate/http-loader --save```
-
-if you want to change the api version search for "android-XX" in project where XX is the current version and change it to whatever android api version you like
-
-* ```ionic cordova resources```
-* ```ionic build android```
+* Install global dependencies
+  ```sudo npm install -g @ionic/cli cordova-res```
+* Build app
+  ```ionic build```
+* Add deployment platform
+  ```npx cap add android```
+* Copy build files to platform
+  ```npx cap copy```
+* Generate assets (icon and splash)
+  ```cordova-res android --skip-config --copy```
 
 ### Deploy
+* Open platform ide for native build. You might need to change path in `capacitor.config.json`
+  ```npx cap open```
 
 #### Android
-
-* set android phone in develop mode
-* check if it is visible under adb devices
-* ```ionic cordova run android```
+* From android studio build the project and run it on mobile device
+* To change the android version edit `./android/app/build.gradle`
 
 ### Setup Receiver App
 
@@ -32,5 +29,4 @@ if you want to change the api version search for "android-XX" in project where X
 * Copy index.html from receiver to your own server
 
 ### License
-
-See LICENSE
+[GPLv2](LICENSE)
