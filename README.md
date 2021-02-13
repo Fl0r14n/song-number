@@ -8,14 +8,20 @@ SongNumber is a small mobile app that will allow user to set a song number from 
   ```ionic build```
 * Add deployment platform
   ```npx cap add android```
+  or  
+  ```npx cap add ios```
 * Copy build files to platform
   ```npx cap copy```
 * Generate assets (icon and splash)
   ```cordova-res android --skip-config --copy```
+  or
+  ```cordova-res ios --skip-config --copy```
 
 ### Deploy
 * Open platform ide for native build. You might need to change path in `capacitor.config.json`
   ```npx cap open```
+* For iOS open xcode
+   ```npx cap open ios```
 
 #### Android
 * From android studio build the project and run it on mobile device
