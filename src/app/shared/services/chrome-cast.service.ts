@@ -1,7 +1,7 @@
 import {Injectable, NgZone} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {LoggerService} from './logger.service';
-import {BehaviorSubject, ReplaySubject} from 'rxjs';
+import {ReplaySubject} from 'rxjs';
 
 export enum ChromeCastState {
   DISABLED = 0,
@@ -83,7 +83,7 @@ export class ChromeCastService {
         this.setState(ChromeCastState.INITIALIZED);
       }, this.onError);
     }
-  }
+  };
 
   open = () => {
     if (this._state === ChromeCastState.AVAILABLE) {
@@ -94,7 +94,7 @@ export class ChromeCastService {
         this.init();
       }
     }
-  }
+  };
 
   close = (state?: ChromeCastState) => {
     if (this.session) {
@@ -104,18 +104,18 @@ export class ChromeCastService {
         delete this.session;
       }, this.onError);
     }
-  }
+  };
 
   send = (msg) => {
     if (this.session) {
       this.session.sendMessage(this.namespace, msg, this.onSendSuccess, this.onError);
     }
-  }
+  };
 
   private setState = (state: ChromeCastState) => {
     this._state = state;
     this.zone.run(() => this.stateChanged$.next(state));
-  }
+  };
 
   private loadScript = () => {
     this.cast = window[CHROME].cast;
@@ -130,7 +130,7 @@ export class ChromeCastService {
       script.onload = this.onLoadCastApi;
       head.appendChild(script);
     }
-  }
+  };
 
   private onLoadCastApi = () => {
     this.cast = window[CHROME].cast;
@@ -140,7 +140,7 @@ export class ChromeCastService {
       // might not be injected in page
       setTimeout(this.init, 1000);
     }
-  }
+  };
 
   private onSession = (session: any) => {
     this.setState(ChromeCastState.CONNECTED);
@@ -161,13 +161,13 @@ export class ChromeCastService {
       this.log.debug(this.i18n['providers.chromecast.messageReceived'] + message);
       this.messageListener$.next(JSON.parse(message));
     });
-  }
+  };
 
   private onError = (err) => {
     this.log.error(this.i18n['providers.chromecast.error'] + JSON.stringify(err));
-  }
+  };
 
   private onSendSuccess = (msg) => {
     this.log.debug(this.i18n['providers.chromecast.sendMessage'] + JSON.stringify(msg));
-  }
+  };
 }

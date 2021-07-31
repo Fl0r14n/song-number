@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {SongBooksService} from './song-books.service';
 import {ChromeCastService} from './chrome-cast.service';
 import {Book, BookCollection, Digit} from '../models/api';
-import {Storage} from '@ionic/storage';
 import {noop} from 'rxjs';
+import {StorageService} from './storage.service';
 
 const STORAGE_ID_DIGITS = 'song-number-settings-digits';
 const STORAGE_ID_NOTES = 'song-number-settings-notes';
@@ -32,8 +32,8 @@ export class SongNumberService {
   // tslint:disable-next-line:variable-name
   private _book: Book;
 
-  constructor(private songBooksService: SongBooksService,
-              private storage: Storage,
+  constructor(private storage: StorageService,
+              private songBooksService: SongBooksService,
               private chromeCastService: ChromeCastService) {
     this.init().then(noop, noop);
   }
@@ -54,14 +54,14 @@ export class SongNumberService {
     this.digits = proxify(digits, this.saveDigits);
     this._notes = await this.storage.get(STORAGE_ID_NOTES);
     this._book = await this.storage.get(STORAGE_ID_BOOK);
-    this.initCollections();
+    await this.initCollections();
     this._info = await this.storage.get(STORAGE_ID_INFO);
   }
 
   async initCollections() {
     let collections = await this.storage.get(STORAGE_ID_COLLECTIONS);
     if (!collections || collections.length === undefined || collections.length === 0) {
-      collections = await this.songBooksService.getCollections().toPromise();
+      collections = await this.songBooksService.getCollections$().toPromise();
       await this.storage.set(STORAGE_ID_COLLECTIONS, collections);
     }
     this.collections = proxify(collections, this.saveCollection);

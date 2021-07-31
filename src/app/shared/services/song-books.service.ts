@@ -11,11 +11,11 @@ export class SongBooksService {
   constructor(private http: HttpClient) {
   }
 
-  getCollections(): Observable<BookCollection[]> {
+  getCollections$(): Observable<BookCollection[]> {
     return this.http.get<BookCollection[]>('assets/json/collection.json');
   }
 
-  getCover(): Observable<Book> {
+  getCover$(): Observable<Book> {
     return this.http.get<Book>('assets/json/cover.json');
   }
 }
