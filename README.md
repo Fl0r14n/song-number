@@ -3,9 +3,21 @@ SongNumber is a small mobile app that will allow user to set a song number from 
 
 ### Build
 * Install global dependencies
-  ```sudo npm install -g @ionic/cli cordova-res```
+  ```sudo npm i -g @ionic/cli cordova-res```
+* Install dependencies
+  ```npm i```
 * Build app
   ```ionic build```
+
+### Electron
+* Add deployment platform
+  ```npx cap add @capacitor-community/electron```
+* Copy build files to platform
+  ```npx cap copy```
+* Open project for electron
+  ```npx cap open @capacitor-community/electron```
+
+### Android
 * Add deployment platform
   ```npx cap add android```
 * Copy build files to platform
@@ -13,8 +25,16 @@ SongNumber is a small mobile app that will allow user to set a song number from 
 * Generate assets (icon and splash)
   ```cordova-res android --skip-config --copy```
 
+### IOS
+* Add deployment platform
+  ```npx cap add ios```
+* Copy build files to platform
+  ```npx cap copy```
+* Generate assets (icon and splash)
+  ```cordova-res ios --skip-config --copy```
+
 ### Deploy
-* Open platform ide for native build. You might need to change path in `capacitor.config.json`
+* Open platform ide for native build. You might need to change path in `capacitor.config.ts`
   ```npx cap open```
 
 #### Android

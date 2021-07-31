@@ -32,3 +32,5 @@ npm-debug.log*
 
 package-lock.json
 android
+electron
+ios
