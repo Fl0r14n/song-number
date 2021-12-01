@@ -2,6 +2,7 @@ import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {AlertController, IonItemSliding, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {SongNumberService} from '../../../shared/services/song-number.service';
+import {BookCollection} from '../../../shared/models/api';
 
 @Component({
   selector: 'collection-modal',
@@ -9,9 +10,9 @@ import {SongNumberService} from '../../../shared/services/song-number.service';
 })
 export class CollectionModalComponent implements OnInit {
 
-  i18n: any[];
+  i18n: Record<string, any> = {};
   @ViewChildren('slidersRef')
-  slidersRef: QueryList<IonItemSliding>;
+  slidersRef: QueryList<IonItemSliding> | undefined;
 
   constructor(private modalController: ModalController,
               private i18nService: TranslateService,
@@ -56,7 +57,7 @@ export class CollectionModalComponent implements OnInit {
     await confirm.present();
   }
 
-  removeCollection(collection) {
+  removeCollection(collection: BookCollection) {
     this.i18nService.get('pages.collectionModal.removeDialog', {
       value: collection.name
     }).subscribe(async (value) => {
@@ -84,7 +85,7 @@ export class CollectionModalComponent implements OnInit {
     });
   }
 
-  editCollection(collection) {
+  editCollection(collection: BookCollection) {
     this.i18nService.get('pages.collectionModal.editDialog', {
       value: collection.name
     }).subscribe(async (value) => {
@@ -118,14 +119,14 @@ export class CollectionModalComponent implements OnInit {
     });
   }
 
-  async reorderCollection({detail}) {
+  async reorderCollection({detail}: CustomEvent) {
     this.collections.splice(detail.to, 0, this.collections.splice(detail.from, 1)[0]);
     await detail.complete(true);
   }
 
   private closeItemSliders() {
     // workaround for item-slider
-    this.slidersRef.forEach(v => v.close());
+    this.slidersRef?.forEach(v => v.close());
   }
 
   ngOnInit(): void {

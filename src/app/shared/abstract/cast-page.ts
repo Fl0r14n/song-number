@@ -16,7 +16,7 @@ export abstract class CastPage {
     color: 'danger'
   };
   protected static presentButton: CastButton = CastPage.presentButtonOFF;
-  protected i18n: any[];
+  protected i18n: Record<string, any> = {};
 
   protected constructor(protected chromeCastService: ChromeCastService) {
   }
@@ -54,5 +54,5 @@ export abstract class CastPage {
     }
   }
 
-  abstract present();
+  abstract present(): void;
 }

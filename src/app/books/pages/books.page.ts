@@ -12,9 +12,9 @@ import {CollectionModalComponent} from '../components/collection-modal/collectio
 })
 export class BooksPageComponent implements OnInit {
 
-  i18n: any[];
+  i18n: Record<string, any> = {};
   @ViewChildren('slidersRef')
-  slidersRef: QueryList<IonItemSliding>;
+  slidersRef: QueryList<IonItemSliding> | undefined;
 
   constructor(private songNumberService: SongNumberService,
               private modalCtrl: ModalController,
@@ -30,9 +30,9 @@ export class BooksPageComponent implements OnInit {
     return this.songNumberService.book;
   }
 
-  async reorderBook(collection, {detail}) {
+  async reorderBook(collection: BookCollection, {detail}: CustomEvent) {
     const {books} = collection;
-    books.splice(detail.to, 0, books.splice(detail.from, 1)[0]);
+    books && books.splice(detail.to, 0, books.splice(detail.from, 1)[0]);
     await detail.complete(true);
   }
 
@@ -117,7 +117,7 @@ export class BooksPageComponent implements OnInit {
 
   private closeItemSliders() {
     // workaround for item-slider
-    this.slidersRef.forEach(v => v.close());
+    this.slidersRef?.forEach(v => v.close());
   }
 
   ngOnInit(): void {

@@ -8,7 +8,7 @@ export class StorageService {
 
   async get(key: string) {
     const {value} = await Storage.get({key});
-    return JSON.parse(value);
+    return value && JSON.parse(value);
   }
 
   async set(key: string, value: any) {

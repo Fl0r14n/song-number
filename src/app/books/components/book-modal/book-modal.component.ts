@@ -13,11 +13,11 @@ import {CameraSource} from '@capacitor/camera';
 })
 export class BookModalPageComponent implements OnInit {
 
-  form: FormGroup;
-  book: Book;
-  collection: BookCollection;
-  collections: BookCollection[];
-  editMode;
+  form: FormGroup | undefined;
+  book: Book | undefined;
+  collection: BookCollection | undefined;
+  collections: BookCollection[] | undefined;
+  editMode = false;
 
   constructor(private songBookService: SongBooksService,
               private modalController: ModalController,
@@ -25,7 +25,7 @@ export class BookModalPageComponent implements OnInit {
   }
 
   async submit() {
-    await this.modalController.dismiss(Object.assign(this.book, this.form.value));
+    await this.modalController.dismiss(Object.assign(this.book, this.form?.value));
   }
 
   async dismiss() {
@@ -33,14 +33,18 @@ export class BookModalPageComponent implements OnInit {
   }
 
   takePicture() {
-    this.cameraService.getPicture$(CameraSource.Camera).subscribe((image) => {
-      this.book.thumb = image;
+    this.cameraService.getPicture$(CameraSource.Camera).subscribe(image => {
+      if (this.book) {
+        this.book.thumb = image;
+      }
     });
   }
 
   selectPicture() {
-    this.cameraService.getPicture$(CameraSource.Photos).subscribe((image) => {
-      this.book.thumb = image;
+    this.cameraService.getPicture$(CameraSource.Photos).subscribe(image => {
+      if (this.book) {
+        this.book.thumb = image;
+      }
     });
   }
 
@@ -61,7 +65,9 @@ export class BookModalPageComponent implements OnInit {
     });
     if (!this.book.thumb) {
       this.songBookService.getCover$().subscribe(book => {
-        this.book.thumb = book.thumb;
+        if (this.book) {
+          this.book.thumb = book.thumb;
+        }
       });
     }
   }

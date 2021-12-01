@@ -23,14 +23,11 @@ export class SongNumberService {
 
   isPresenting = false;
   digits: Digit[] = [];
-  collections: BookCollection[];
+  collections: BookCollection[] = [];
 
-  // tslint:disable-next-line:variable-name
-  private _info: string;
-  // tslint:disable-next-line:variable-name
-  private _notes: string;
-  // tslint:disable-next-line:variable-name
-  private _book: Book;
+  private _info: string | undefined;
+  private _notes: string | undefined;
+  private _book: Book | undefined;
 
   constructor(private storage: StorageService,
               private songBooksService: SongBooksService,
@@ -70,7 +67,7 @@ export class SongNumberService {
   saveCollection = () => this.storage.set(STORAGE_ID_COLLECTIONS, unproxify(this.collections));
   saveDigits = () => this.storage.set(STORAGE_ID_DIGITS, unproxify(this.digits));
 
-  addCollection(name) {
+  addCollection(name: string) {
     this.collections.push(proxify({
       name,
     }, this.saveCollection));
@@ -78,7 +75,7 @@ export class SongNumberService {
 
   addBook(data: Book, collectionName: string) {
     const collections = unproxify(this.collections);
-    const collection = collections.find(c => c.name === collectionName);
+    const collection = collections.find((c: BookCollection) => c.name === collectionName);
     if (!collection.books || collection.books.length === undefined) {
       collection.books = [];
     }
@@ -91,9 +88,11 @@ export class SongNumberService {
   }
 
   deleteBook(book: Book, collection: BookCollection) {
-    const idx = collection.books.findIndex(i => i.title === book.title && i.description === book.description);
-    if (idx > -1) {
-      collection.books.splice(idx, 1);
+    if (collection.books) {
+      const idx = collection.books.findIndex(i => i.title === book.title && i.description === book.description);
+      if (idx > -1) {
+        collection.books.splice(idx, 1);
+      }
     }
   }
 
@@ -156,7 +155,7 @@ export class SongNumberService {
   }
 
   get notes(): string {
-    return this._notes;
+    return this._notes || '';
   }
 
   set notes(value: string) {
@@ -165,7 +164,7 @@ export class SongNumberService {
   }
 
   get book(): Book {
-    return this._book;
+    return this._book || {};
   }
 
   set book(value: Book) {
@@ -174,7 +173,7 @@ export class SongNumberService {
   }
 
   get info(): string {
-    return this._info;
+    return this._info || '';
   }
 
   set info(value: string) {
@@ -183,7 +182,7 @@ export class SongNumberService {
   }
 }
 
-const proxify = (value: any, callback?: (object) => any) => {
+const proxify = (value: any, callback?: (object: any) => any) => {
   if (typeof value === 'object') {
     for (const key of Object.keys(value)) {
       if (value[key] != null) {
@@ -210,12 +209,12 @@ const proxify = (value: any, callback?: (object) => any) => {
   }
 };
 
-const unproxify = (value) => {
+const unproxify = (value: any) => {
   if (typeof value === 'object') {
     if (value == null) {
       return null;
     }
-    const obj = value.length ? [] : {};
+    const obj = value.length ? [] : {} as any;
     for (const key of Object.keys(value)) {
       obj[key] = unproxify(value[key]);
     }
