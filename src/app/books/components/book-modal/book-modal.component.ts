@@ -4,7 +4,7 @@ import {ModalController} from '@ionic/angular';
 import {Book, BookCollection} from '../../../shared/models/api';
 import {SongBooksService} from '../../../shared/services/song-books.service';
 import {CameraService} from '../../../shared/services/camera.service';
-import {CameraSource} from '@capacitor/core';
+import {CameraSource} from '@capacitor/camera';
 
 
 @Component({
@@ -33,13 +33,13 @@ export class BookModalPageComponent implements OnInit {
   }
 
   takePicture() {
-    this.cameraService.getPicture(CameraSource.Camera).subscribe((image) => {
+    this.cameraService.getPicture$(CameraSource.Camera).subscribe((image) => {
       this.book.thumb = image;
     });
   }
 
   selectPicture() {
-    this.cameraService.getPicture(CameraSource.Photos).subscribe((image) => {
+    this.cameraService.getPicture$(CameraSource.Photos).subscribe((image) => {
       this.book.thumb = image;
     });
   }
@@ -60,7 +60,7 @@ export class BookModalPageComponent implements OnInit {
       label: new FormControl(this.collection.name)
     });
     if (!this.book.thumb) {
-      this.songBookService.getCover().subscribe(book => {
+      this.songBookService.getCover$().subscribe(book => {
         this.book.thumb = book.thumb;
       });
     }

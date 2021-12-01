@@ -1,9 +1,7 @@
 import {Component} from '@angular/core';
 import {Platform} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {Plugins} from '@capacitor/core';
-
-const {SplashScreen} = Plugins;
+import {SplashScreen} from '@capacitor/splash-screen';
 
 @Component({
   selector: 'app-root',
@@ -18,11 +16,10 @@ export class AppComponent {
     this.initializeApp();
   }
 
-  initializeApp() {
+  async initializeApp() {
     this.i18nService.setDefaultLang('en');
     this.i18nService.use(this.i18nService.getBrowserLang());
-    this.platform.ready().then(() => {
-      SplashScreen.hide();
-    });
+    await this.platform.ready();
+    await SplashScreen.hide();
   }
 }

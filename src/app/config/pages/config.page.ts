@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {SongNumberService} from '../../shared/services/song-number.service';
-import {LoggerService} from '../../shared/services/logger.service';
+import {LoggerService, LogLevel} from '../../shared/services/logger.service';
 
 @Component({
   selector: 'config-page',
@@ -23,10 +23,10 @@ export class ConfigPageComponent {
   }
 
   get debug(): boolean {
-    return this.log.logLevel === LoggerService.DEBUG;
+    return this.log.logLevel === LogLevel.DEBUG;
   }
 
   set debug(value: boolean) {
-    this.log.logLevel = value ? LoggerService.DEBUG : LoggerService.INFO;
+    this.log.logLevel = value ? LogLevel.DEBUG : LogLevel.INFO;
   }
 }

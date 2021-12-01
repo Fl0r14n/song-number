@@ -1,5 +1,4 @@
 import {ChromeCastService, ChromeCastState} from '../services/chrome-cast.service';
-import {tap} from 'rxjs/operators';
 
 export interface CastButton {
   icon: string;
@@ -26,26 +25,23 @@ export abstract class CastPage {
     return this.chromeCastService.stateChanged$;
   }
 
-  public isDisabled(state: ChromeCastState): boolean {
+  isDisabled(state: ChromeCastState): boolean {
     return state === ChromeCastState.DISABLED;
   }
 
-  public isInitialized(state: ChromeCastState): boolean {
-    // tslint:disable-next-line:no-bitwise
+  isInitialized(state: ChromeCastState): boolean {
     return (state & ChromeCastState.INITIALIZED) === ChromeCastState.INITIALIZED;
   }
 
-  public isAvailable(state: ChromeCastState): boolean {
-    // tslint:disable-next-line:no-bitwise
+  isAvailable(state: ChromeCastState): boolean {
     return (state & ChromeCastState.AVAILABLE) === ChromeCastState.AVAILABLE;
   }
 
-  public isConnected(state: ChromeCastState): boolean {
-    // tslint:disable-next-line:no-bitwise
+  isConnected(state: ChromeCastState): boolean {
     return (state & ChromeCastState.CONNECTED) === ChromeCastState.CONNECTED;
   }
 
-  public get button(): CastButton {
+  get button(): CastButton {
     return CastPage.presentButton;
   }
 

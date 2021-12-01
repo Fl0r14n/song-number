@@ -1,74 +1,57 @@
 import {Injectable} from '@angular/core';
 import {ToastController} from '@ionic/angular';
 import {noop} from 'rxjs';
-import {Storage} from '@ionic/storage';
-
+import {StorageService} from './storage.service';
 
 const STORAGE_ID_DEBUG = 'song-number-settings-log-level';
+
+export enum LogLevel {
+  INFO,
+  WARN,
+  ERROR,
+  DEBUG
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoggerService {
 
-  public static get INFO(): number {
-    return 0;
-  }
+  private _logLevel: LogLevel = LogLevel.ERROR;
 
-  public static get WARN(): number {
-    return 1;
-  }
-
-  public static get ERROR(): number {
-    return 2;
-  }
-
-  public static get DEBUG(): number {
-    return 3;
-  }
-
-  // tslint:disable-next-line:variable-name
-  private _logLevel: number = LoggerService.ERROR;
-
-  constructor(private storage: Storage,
+  constructor(private storage: StorageService,
               private toastCtrl: ToastController) {
-    this.storage.get(STORAGE_ID_DEBUG).then(data => {
-      if (data) {
-        this._logLevel = data;
-      } else {
-        this.logLevel = LoggerService.INFO;
-      }
-    });
+    this.storage.get(STORAGE_ID_DEBUG).then(value => value ? this._logLevel = Number(value) : this.logLevel = LogLevel.INFO, noop);
   }
 
-  get logLevel(): number {
+  get logLevel(): LogLevel {
     return this._logLevel;
   }
 
-  set logLevel(value: number) {
+  set logLevel(value: LogLevel) {
     this._logLevel = value;
     this.storage.set(STORAGE_ID_DEBUG, value).then(noop, noop);
   }
 
   async info(message) {
-    return await this.toast(message, 'toast-info');
+    return this.toast(message, 'toast-info');
   }
 
   async warn(message) {
-    if (this.logLevel >= LoggerService.WARN) {
-      return await this.toast(message, 'toast-warn');
+    if (this.logLevel >= LogLevel.WARN) {
+      return this.toast(message, 'toast-warn');
     }
   }
 
   async error(message) {
-    if (this.logLevel >= LoggerService.ERROR) {
-      return await this.toast(message, 'toast-error');
+    if (this.logLevel >= LogLevel.ERROR) {
+      return this.toast(message, 'toast-error');
     }
   }
 
   async debug(message) {
-    if (this.logLevel >= LoggerService.DEBUG) {
-      return await this.toast(message, 'toast-debug');
+    if (this.logLevel >= LogLevel.DEBUG) {
+      return this.toast(message, 'toast-debug');
     }
   }
 
