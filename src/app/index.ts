@@ -9,6 +9,13 @@ export interface Book {
   thumb?: string;
 }
 
+export interface BookResourceCollection {
+  name?: string;
+  description?: string;
+  thumb?: string;
+  paths?: string[];
+}
+
 export interface BookCollection {
   name?: string;
   books?: Book[];

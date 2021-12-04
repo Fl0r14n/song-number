@@ -2,7 +2,7 @@ import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {AlertController, IonItemSliding, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {SongNumberService} from '../../../shared/services/song-number.service';
-import {BookCollection} from '../../../shared/models/api';
+import {BookCollection} from '../../../index';
 
 @Component({
   selector: 'collection-modal',

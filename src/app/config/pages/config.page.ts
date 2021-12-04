@@ -29,4 +29,8 @@ export class ConfigPageComponent {
   set debug(value: boolean) {
     this.log.logLevel = value ? LogLevel.DEBUG : LogLevel.INFO;
   }
+
+  importCollection() {
+    //TODO
+  }
 }

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ModalController, NavParams} from '@ionic/angular';
-import {Book, BookCollection} from '../../../shared/models/api';
+import {Book, BookCollection} from '../../../index';
 
 @Component({
   selector: 'select-book-modal',
