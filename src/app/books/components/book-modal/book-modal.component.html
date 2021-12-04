@@ -42,9 +42,7 @@
               {{'pages.bookModal.collection' | translate}}
             </ion-label>
             <ion-select formControlName="label">
-              <ion-select-option *ngFor="let label of labels" [value]="label">
-                {{label}}
-              </ion-select-option>
+              <ion-select-option *ngFor="let label of labels">{{label}}</ion-select-option>
             </ion-select>
           </ion-item>
         </ion-list>

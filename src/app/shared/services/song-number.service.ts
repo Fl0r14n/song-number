@@ -2,12 +2,11 @@ import {Injectable} from '@angular/core';
 import {ChromeCastService} from './chrome-cast.service';
 import {noop} from 'rxjs';
 import {StorageService} from './storage.service';
-import {Book, BookCollection, Digit} from '../../index';
+import {Book, BookCollection, Digit, proxify, unproxify} from '../../index';
 
 const STORAGE_ID_DIGITS = 'song-number-settings-digits';
 const STORAGE_ID_NOTES = 'song-number-settings-notes';
 const STORAGE_ID_BOOK = 'song-number-settings-book';
-const STORAGE_ID_COLLECTIONS = 'song-number-settings-collection';
 const STORAGE_ID_INFO = 'song-number-settings-info';
 
 const MESSAGE_TYPE_READ = 0;
@@ -22,7 +21,6 @@ export class SongNumberService {
 
   isPresenting = false;
   digits: Digit[] = [];
-  collections: BookCollection[] = [];
 
   private _info: string | undefined;
   private _notes: string | undefined;
@@ -49,51 +47,10 @@ export class SongNumberService {
     this.digits = proxify(digits, this.saveDigits);
     this._notes = await this.storage.get(STORAGE_ID_NOTES);
     this._book = await this.storage.get(STORAGE_ID_BOOK);
-    await this.initCollections();
     this._info = await this.storage.get(STORAGE_ID_INFO);
   }
 
-  async initCollections() {
-    let collections = await this.storage.get(STORAGE_ID_COLLECTIONS);
-    if (!collections || collections.length === undefined || collections.length === 0) {
-      // collections = await this.songBooksService.getCollections$().toPromise();
-      // await this.storage.set(STORAGE_ID_COLLECTIONS, collections);
-      this.collections = [];
-    }
-    this.collections = proxify(collections, this.saveCollection);
-  }
-
-  saveCollection = () => this.storage.set(STORAGE_ID_COLLECTIONS, unproxify(this.collections));
   saveDigits = () => this.storage.set(STORAGE_ID_DIGITS, unproxify(this.digits));
-
-  addCollection(name: string) {
-    this.collections.push(proxify({
-      name,
-    }, this.saveCollection));
-  }
-
-  addBook(data: Book, collectionName: string) {
-    const collections = unproxify(this.collections);
-    const collection = collections.find((c: BookCollection) => c.name === collectionName);
-    if (!collection.books || collection.books.length === undefined) {
-      collection.books = [];
-    }
-    collection.books.push(data);
-    this.collections = proxify(collections, this.saveCollection);
-  }
-
-  editBook(oldBook: Book, newBook: Book) {
-    Object.assign(oldBook, newBook);
-  }
-
-  deleteBook(book: Book, collection: BookCollection) {
-    if (collection.books) {
-      const idx = collection.books.findIndex(i => i.title === book.title && i.description === book.description);
-      if (idx > -1) {
-        collection.books.splice(idx, 1);
-      }
-    }
-  }
 
   presentNumber() {
     const message = {
@@ -180,45 +137,3 @@ export class SongNumberService {
     this.storage.set(STORAGE_ID_INFO, value);
   }
 }
-
-const proxify = (value: any, callback?: (object: any) => any) => {
-  if (typeof value === 'object') {
-    for (const key of Object.keys(value)) {
-      if (value[key] != null) {
-        value[key] = proxify(value[key], callback);
-      }
-    }
-    return new Proxy(value, {
-      get: (target, property) => {
-        if (property === 'length') {
-          return value.length;
-        }
-        return target[property];
-      },
-      set: (target, property, val) => {
-        target[property] = val;
-        if (callback) {
-          callback(target);
-        }
-        return true;
-      }
-    });
-  } else {
-    return value;
-  }
-};
-
-const unproxify = (value: any) => {
-  if (typeof value === 'object') {
-    if (value == null) {
-      return null;
-    }
-    const obj = value.length ? [] : {} as any;
-    for (const key of Object.keys(value)) {
-      obj[key] = unproxify(value[key]);
-    }
-    return obj;
-  } else {
-    return value;
-  }
-};

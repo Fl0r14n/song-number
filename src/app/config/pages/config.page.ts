@@ -4,6 +4,7 @@ import {LoggerService, LogLevel} from '../../shared/services/logger.service';
 import {SongBooksService} from '../../shared/services/song-books.service';
 import {ModalController} from '@ionic/angular';
 import {ImportModalComponent} from '../components/import-modal/import-modal.component';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'config-page',
@@ -16,6 +17,7 @@ export class ConfigPageComponent {
   constructor(private songNumberService: SongNumberService,
               public songBooksService: SongBooksService,
               private modalCtrl: ModalController,
+              private router: Router,
               private log: LoggerService) {
   }
 
@@ -41,6 +43,7 @@ export class ConfigPageComponent {
       component: ImportModalComponent
     });
     await modal.present();
-    const {data} = await modal.onDidDismiss();
+    await modal.onDidDismiss();
+    await this.router.navigateByUrl('/tabs/books');
   }
 }

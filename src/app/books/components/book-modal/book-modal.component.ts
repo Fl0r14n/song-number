@@ -54,17 +54,14 @@ export class BookModalPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.book = this.book || {};
-    this.collection = this.collection || {
-      name: ''
-    };
     this.editMode = !!this.book.title;
     this.form = new FormGroup({
       title: new FormControl(this.book.title, [Validators.required, Validators.minLength(5)]),
       description: new FormControl(this.book.description),
-      label: new FormControl(this.collection.name)
+      label: new FormControl(this.collection?.name, [Validators.required])
     });
     if (!this.book.thumb) {
-      this.songBookService.getCover$().subscribe(book => {
+      this.songBookService.getDefaultCover$().subscribe(book => {
         if (this.book) {
           this.book.thumb = book.thumb;
         }

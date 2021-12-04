@@ -7,6 +7,7 @@ import {ChromeCastService} from '../../shared/services/chrome-cast.service';
 import {SongNumberService} from '../../shared/services/song-number.service';
 import {filter, map, switchMap} from 'rxjs/operators';
 import {from} from 'rxjs';
+import {SongBooksService} from '../../shared/services/song-books.service';
 
 @Component({
   selector: 'main-page',
@@ -18,6 +19,7 @@ export class MainPageComponent extends CastPage implements OnInit {
   constructor(chromeCastService: ChromeCastService,
               private i18nService: TranslateService,
               private songNumberService: SongNumberService,
+              private songBooksService: SongBooksService,
               private modalCtrl: ModalController,
               private alertCtrl: AlertController) {
     super(chromeCastService);
@@ -43,7 +45,7 @@ export class MainPageComponent extends CastPage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: SelectBookModalComponent,
       componentProps: {
-        collections: this.songNumberService.collections,
+        collections: this.songBooksService.collections,
         book: this.songNumberService.book
       }
     });

@@ -1,8 +1,8 @@
 import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {AlertController, IonItemSliding, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {SongNumberService} from '../../../shared/services/song-number.service';
 import {BookCollection} from '../../../index';
+import {SongBooksService} from '../../../shared/services/song-books.service';
 
 @Component({
   selector: 'collection-modal',
@@ -17,11 +17,11 @@ export class CollectionModalComponent implements OnInit {
   constructor(private modalController: ModalController,
               private i18nService: TranslateService,
               private alertCtrl: AlertController,
-              private songNumberService: SongNumberService) {
+              private songBookService: SongBooksService) {
   }
 
   get collections() {
-    return this.songNumberService.collections;
+    return this.songBookService.collections;
   }
 
   async dismiss() {
@@ -49,7 +49,7 @@ export class CollectionModalComponent implements OnInit {
           text: this.i18n['pages.collectionModal.add'],
           handler: (data) => {
             this.closeItemSliders();
-            this.songNumberService.addCollection(data.label);
+            this.songBookService.addCollection({name: data.label});
           }
         }
       ]

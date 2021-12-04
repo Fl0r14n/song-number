@@ -22,7 +22,6 @@ export class ChromeCastService {
   private cast: any;
   private session: any;
 
-  // tslint:disable-next-line:variable-name
   private _state: ChromeCastState = ChromeCastState.DISABLED;
   public stateChanged$: ReplaySubject<ChromeCastState> = new ReplaySubject(1);
   public messageListener$: ReplaySubject<any> = new ReplaySubject(1);

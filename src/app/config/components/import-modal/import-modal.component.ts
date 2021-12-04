@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {ModalController} from '@ionic/angular';
 import {SongBooksService} from '../../../shared/services/song-books.service';
 import {BookResourceCollection, Language} from '../../../index';
+import {LoggerService} from '../../../shared/services/logger.service';
 
 @Component({
   selector: 'import-modal',
@@ -14,7 +15,8 @@ export class ImportModalComponent {
   index: BookResourceCollection[] | undefined;
 
   constructor(private modalController: ModalController,
-              private songBooksService: SongBooksService) {
+              private songBooksService: SongBooksService,
+              private log: LoggerService) {
     // cuz of some bug when using async pipe in ionic modal
     this.songBooksService.languages$.subscribe(langs => this.languages = langs);
   }
@@ -38,7 +40,7 @@ export class ImportModalComponent {
 
   async import() {
     let paths = new Set(this.index?.filter(v => v.selected).map(v => v.paths).reduce((a, b) => [...a, ...b], []));
-    this.songBooksService.getCollections$([...paths]).subscribe(v => console.log(v));
-    // await this.dismiss();
+    this.songBooksService.getCollections$([...paths]).subscribe(collections => collections.forEach(collection => this.songBooksService.addCollection(collection)));
+    await this.dismiss();
   }
 }

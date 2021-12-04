@@ -1,10 +1,11 @@
 import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {AlertController, IonItemSliding, ModalController} from '@ionic/angular';
-import {SongNumberService} from '../../shared/services/song-number.service';
 import {TranslateService} from '@ngx-translate/core';
 import {BookModalPageComponent} from '../components/book-modal/book-modal.component';
 import {CollectionModalComponent} from '../components/collection-modal/collection-modal.component';
 import {Book, BookCollection} from '../../index';
+import {SongBooksService} from '../../shared/services/song-books.service';
+import {SongNumberService} from '../../shared/services/song-number.service';
 
 @Component({
   selector: 'books-page',
@@ -16,14 +17,15 @@ export class BooksPageComponent implements OnInit {
   @ViewChildren('slidersRef')
   slidersRef: QueryList<IonItemSliding> | undefined;
 
-  constructor(private songNumberService: SongNumberService,
+  constructor(private songBooksService: SongBooksService,
+              private songNumberService: SongNumberService,
               private modalCtrl: ModalController,
               private i18nService: TranslateService,
               private alertCtrl: AlertController) {
   }
 
   get collections() {
-    return this.songNumberService.collections;
+    return this.songBooksService.collections;
   }
 
   get activeBook() {
@@ -52,7 +54,7 @@ export class BooksPageComponent implements OnInit {
             text: this.i18n['pages.books.remove'],
             handler: () => {
               this.closeItemSliders();
-              this.songNumberService.deleteBook(item, collection);
+              this.songBooksService.deleteBook(item, collection);
             }
           }
         ]
@@ -77,12 +79,12 @@ export class BooksPageComponent implements OnInit {
       // did the collection change?
       if (data.label === collection.name) {
         delete data.label;
-        this.songNumberService.editBook(book, data);
+        this.songBooksService.editBook(book, data);
       } else {
-        this.songNumberService.deleteBook(book, collection);
+        this.songBooksService.deleteBook(book, collection);
         const {label} = data;
         delete data.label;
-        this.songNumberService.addBook(data, label);
+        this.songBooksService.addBook(data, label);
       }
       delete data.label;
       this.songNumberService.book = data;
@@ -110,7 +112,7 @@ export class BooksPageComponent implements OnInit {
     if (data) {
       const {label} = data;
       delete data.label;
-      this.songNumberService.addBook(data, label);
+      this.songBooksService.addBook(data, label);
       this.songNumberService.book = data;
     }
   }
