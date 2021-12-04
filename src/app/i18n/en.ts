@@ -33,7 +33,8 @@ export const en = {
     config: {
       title: 'Settings',
       debug: 'Debug',
-      digits: 'Digits'
+      digits: 'Digits',
+      collections: 'Remote book collections endpoint'
     },
     bookModal: {
       add: {

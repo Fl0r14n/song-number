@@ -5,7 +5,7 @@ import {SelectBookModalComponent} from '../components/select-book-modal/select-b
 import {CastPage} from '../../shared/abstract/cast-page';
 import {ChromeCastService} from '../../shared/services/chrome-cast.service';
 import {SongNumberService} from '../../shared/services/song-number.service';
-import {filter, map, switchMap, tap} from 'rxjs/operators';
+import {filter, map, switchMap} from 'rxjs/operators';
 import {from} from 'rxjs';
 
 @Component({

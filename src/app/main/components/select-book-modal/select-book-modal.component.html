@@ -19,7 +19,7 @@
       <ion-item *ngFor="let item of collection.books" (click)="selectBook(item)"
                 [color]="item == book? 'primary': ''">
         <ion-thumbnail slot="start">
-          <img [src]="item.thumb">
+          <img [src]="item.thumb" alt="item-thumb">
         </ion-thumbnail>
         <ion-label>
           <h2>{{item.title}}</h2>

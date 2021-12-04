@@ -17,8 +17,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: () =>
-              import('../main/main.module').then(m => m.MainModule)
+            loadChildren: () => import('../main/main.module').then(m => m.MainModule)
           }
         ]
       },
@@ -27,8 +26,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: () =>
-              import('../info/info.module').then(m => m.InfoModule)
+            loadChildren: () => import('../info/info.module').then(m => m.InfoModule)
           }
         ]
       },
@@ -46,8 +44,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: () =>
-              import('../config/config.module').then(m => m.ConfigModule)
+            loadChildren: () => import('../config/config.module').then(m => m.ConfigModule)
           }
         ]
       },

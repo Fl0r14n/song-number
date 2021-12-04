@@ -11,7 +11,7 @@ import {ro} from './i18n/ro';
 
 export class I18nLoader implements TranslateLoader {
 
-  lang = {
+  lang: any = {
     en, ro
   };
 

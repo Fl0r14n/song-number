@@ -8,5 +8,5 @@ import {Digit} from '../../../shared/models/api';
 export class SongNumberComponent {
 
   @Input()
-  digits: Digit[];
+  digits: Digit[] | undefined;
 }

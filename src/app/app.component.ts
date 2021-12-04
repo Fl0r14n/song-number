@@ -9,16 +9,14 @@ import {SplashScreen} from '@capacitor/splash-screen';
 })
 export class AppComponent {
 
-  constructor(
-    private platform: Platform,
-    private i18nService: TranslateService,
-  ) {
+  constructor(private platform: Platform,
+              private i18nService: TranslateService) {
     this.initializeApp();
   }
 
   async initializeApp() {
     this.i18nService.setDefaultLang('en');
-    this.i18nService.use(this.i18nService.getBrowserLang());
+    this.i18nService.use(this.i18nService.getBrowserLang() || 'en');
     await this.platform.ready();
     await SplashScreen.hide();
   }

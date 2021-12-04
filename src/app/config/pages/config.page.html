@@ -24,5 +24,15 @@
         <ion-select-option *ngFor="let value of possibleDigits">{{value}}</ion-select-option>
       </ion-select>
     </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">{{'pages.config.collections' | translate}}</ion-label>
+      <ion-input></ion-input>
+      <ion-buttons slot="end">
+        <ion-button id="changeText" onClick="toggleText()">
+          <ion-icon slot="start" name="refresh"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
   </ion-item-group>
 </ion-content>

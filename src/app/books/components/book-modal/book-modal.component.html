@@ -14,7 +14,7 @@
 <ion-content>
   <form [formGroup]="form" (submit)="submit()">
     <ion-card>
-      <img [src]="book.thumb">
+      <img [src]="book.thumb" alt="book-thumb">
       <ion-fab vertical="top" horizontal="end">
         <ion-fab-button (click)="takePicture()" class="ion-margin-bottom">
           <ion-icon name="camera"></ion-icon>

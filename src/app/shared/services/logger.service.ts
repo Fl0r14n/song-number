@@ -33,29 +33,29 @@ export class LoggerService {
     this.storage.set(STORAGE_ID_DEBUG, value).then(noop, noop);
   }
 
-  async info(message) {
+  async info(message: any) {
     return this.toast(message, 'toast-info');
   }
 
-  async warn(message) {
+  async warn(message: any) {
     if (this.logLevel >= LogLevel.WARN) {
       return this.toast(message, 'toast-warn');
     }
   }
 
-  async error(message) {
+  async error(message: any) {
     if (this.logLevel >= LogLevel.ERROR) {
       return this.toast(message, 'toast-error');
     }
   }
 
-  async debug(message) {
+  async debug(message: any) {
     if (this.logLevel >= LogLevel.DEBUG) {
       return this.toast(message, 'toast-debug');
     }
   }
 
-  private async toast(msg, cssClass?: string) {
+  private async toast(msg: any, cssClass?: string) {
     const toastSettings: any = {
       message: msg,
       duration: 3000

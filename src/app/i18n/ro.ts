@@ -34,7 +34,8 @@ export const ro = {
     config: {
       title: 'Setări',
       debug: 'Mod depanare',
-      digits: 'Numărul de cifre'
+      digits: 'Numărul de cifre',
+      collections: 'Locație colectii cărți'
     },
     bookModal: {
       add: {

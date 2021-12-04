@@ -29,7 +29,7 @@
       <ion-item-sliding *ngFor="let book of collection.books" #slidersRef>
         <ion-item [color]="book == activeBook? 'primary': ''">
           <ion-thumbnail slot="start">
-            <img [src]="book.thumb">
+            <img [src]="book.thumb" alt="book-thumb">
           </ion-thumbnail>
           <ion-label>
             <h2>{{book.title}}</h2>
@@ -50,10 +50,6 @@
       </ion-item-sliding>
     </ion-reorder-group>
   </ion-item-group>
-
-  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
-
-  </ion-fab>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="addBook()">
