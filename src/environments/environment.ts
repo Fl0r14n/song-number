@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  resourcesEndpoint: ''
+  downloads: 'https://github.com/Fl0r14n/song-number/tree/master/downloads'
 };
 
 /*

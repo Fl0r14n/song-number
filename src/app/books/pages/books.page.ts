@@ -1,10 +1,10 @@
 import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {AlertController, IonItemSliding, ModalController} from '@ionic/angular';
 import {SongNumberService} from '../../shared/services/song-number.service';
-import {Book, BookCollection} from '../../shared/models/api';
 import {TranslateService} from '@ngx-translate/core';
 import {BookModalPageComponent} from '../components/book-modal/book-modal.component';
 import {CollectionModalComponent} from '../components/collection-modal/collection-modal.component';
+import {Book, BookCollection} from '../../index';
 
 @Component({
   selector: 'books-page',

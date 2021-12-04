@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ModalController} from '@ionic/angular';
-import {Book, BookCollection} from '../../../shared/models/api';
 import {SongBooksService} from '../../../shared/services/song-books.service';
 import {CameraService} from '../../../shared/services/camera.service';
 import {CameraSource} from '@capacitor/camera';
+import {Book, BookCollection} from '../../../index';
 
 
 @Component({

@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {SongBooksService} from './song-books.service';
 import {ChromeCastService} from './chrome-cast.service';
-import {Book, BookCollection, Digit} from '../models/api';
 import {noop} from 'rxjs';
 import {StorageService} from './storage.service';
+import {Book, BookCollection, Digit} from '../../index';
 
 const STORAGE_ID_DIGITS = 'song-number-settings-digits';
 const STORAGE_ID_NOTES = 'song-number-settings-notes';
@@ -58,8 +58,9 @@ export class SongNumberService {
   async initCollections() {
     let collections = await this.storage.get(STORAGE_ID_COLLECTIONS);
     if (!collections || collections.length === undefined || collections.length === 0) {
-      collections = await this.songBooksService.getCollections$().toPromise();
-      await this.storage.set(STORAGE_ID_COLLECTIONS, collections);
+      // collections = await this.songBooksService.getCollections$().toPromise();
+      // await this.storage.set(STORAGE_ID_COLLECTIONS, collections);
+      this.collections = [];
     }
     this.collections = proxify(collections, this.saveCollection);
   }
