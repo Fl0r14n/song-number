@@ -38,7 +38,10 @@ export const en = {
     },
     importModal: {
       title: 'Import',
-      language: 'Language'
+      languageHeader: 'Select Language',
+      collectionsHeader: 'Available Collections',
+      language: 'Language',
+      submit: "Import"
     },
     bookModal: {
       add: {

@@ -23,7 +23,7 @@
     </ion-item>
 
     <ion-item (click)="openSelectBookModal()" class="ion-padding">
-      <ion-thumbnail slot="start" *ngIf="book">
+      <ion-thumbnail slot="start" *ngIf="book.thumb">
         <img [src]="book.thumb" alt="book-thumb">
       </ion-thumbnail>
       <ion-label>

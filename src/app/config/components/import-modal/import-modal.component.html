@@ -13,9 +13,7 @@
 
 <ion-content class="ion-padding">
   <ion-list>
-    <ion-list-header>
-      Select Language
-    </ion-list-header>
+    <ion-list-header>{{'pages.importModal.languageHeader' | translate}}</ion-list-header>
     <ion-item>
       <ion-label>{{'pages.importModal.language' | translate}}</ion-label>
       <ion-select [(ngModel)]="language">
@@ -25,9 +23,7 @@
   </ion-list>
 
   <ion-list *ngIf="index">
-    <ion-list-header>
-      Available Collections
-    </ion-list-header>
+    <ion-list-header>{{'pages.importModal.collectionsHeader' | translate}}</ion-list-header>
     <ion-item *ngFor="let idx of index">
       <ion-label>
         <h2>{{idx.name}}</h2>
@@ -42,6 +38,6 @@
     <ion-button expand="block"
                 color="primary"
                 [disabled]="!hasSelection()"
-                (click)="import()">Import</ion-button>
+                (click)="import()">{{'pages.importModal.submit' | translate}}</ion-button>
   </ion-list>
 </ion-content>

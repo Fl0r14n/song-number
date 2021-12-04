@@ -37,6 +37,13 @@ export const ro = {
       digits: 'Numărul de cifre',
       collections: 'Locație colectii cărți'
     },
+    importModal: {
+      title: 'Importă',
+      languageHeader: 'Selectează limba',
+      collectionsHeader: 'Colecții disponibile',
+      language: 'Limbă',
+      submit: "Importă"
+    },
     bookModal: {
       add: {
         title: 'Adaugați o carte',
