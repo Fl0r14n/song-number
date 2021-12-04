@@ -9,11 +9,17 @@ export interface Book {
   thumb?: string;
 }
 
+export interface Language {
+  code?: string;
+  name?: string;
+}
+
 export interface BookResourceCollection {
   name?: string;
   description?: string;
   thumb?: string;
-  paths?: string[];
+  paths: string[];
+  selected?: boolean;
 }
 
 export interface BookCollection {

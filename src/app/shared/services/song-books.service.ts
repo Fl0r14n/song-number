@@ -1,9 +1,10 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable, of, switchMap} from 'rxjs';
+import {combineLatestAll, from, Observable, of, reduce, switchMap, tap, zip} from 'rxjs';
 import {StorageService} from './storage.service';
 import {environment} from '../../../environments/environment';
-import {Book, BookResourceCollection} from '../../index';
+import {Book, BookCollection, BookResourceCollection, Language} from '../../index';
+import {map} from 'rxjs/operators';
 
 const STORAGE_ID_DOWNLOADS = 'song-number-settings-downloads';
 
@@ -14,28 +15,52 @@ const {downloads} = environment;
 })
 export class SongBooksService {
 
+  private _endpoint = '';
+
   constructor(private http: HttpClient,
               private storage: StorageService) {
+    this.init().then();
   }
 
-  async setEndpoint(path: string) {
-    this.storage.set(STORAGE_ID_DOWNLOADS, path || downloads);
+  protected async init() {
+    this._endpoint = await this.storage.get(STORAGE_ID_DOWNLOADS) || downloads;
   }
 
-  async getEndpoint() {
-    return this.storage.get(STORAGE_ID_DOWNLOADS);
+  get endpoint() {
+    return this._endpoint;
   }
 
-  getCollections$(lang: string): Observable<BookResourceCollection[]> {
-    return of(this.getEndpoint()).pipe(
-      switchMap(url => this.http.get<BookResourceCollection[]>(`${url}/index/${lang}/collections.json`))
+  set endpoint(endpoint: string) {
+    this._endpoint = endpoint || downloads;
+    this.storage.set(STORAGE_ID_DOWNLOADS, this._endpoint).then();
+  }
+
+  /**
+   * get the remote languages which contain collections
+   */
+  get languages$(): Observable<Language[]> {
+    return this.http.get<Language[]>(`${this.endpoint}/languages.json`);
+  }
+
+  /**
+   * Get the index which contain the possible collections
+   * @param lang: language code
+   */
+  getIndex$(lang: string): Observable<BookResourceCollection[]> {
+    return this.http.get<BookResourceCollection[]>(`${this.endpoint}/index/${lang}/collections.json`);
+  }
+
+  /**
+   * Get the collections from the index based on the paths array and merge them
+   * @param paths: url resource paths
+   */
+  getCollections$(paths: string[]): Observable<BookCollection[]> {
+    return from(paths).pipe(
+      map(path => this.http.get<BookCollection[]>(`${this.endpoint}${path}`)),
+      combineLatestAll(),
+      map(v => v.reduce((a, b) => [...a, ...b]))
     );
   }
-
-
-  // getCollections$(): Observable<BookCollection[]> {
-  //   return this.http.get<BookCollection[]>('assets/json/collection.json');
-  // }
 
   getCover$(): Observable<Book> {
     return this.http.get<Book>('assets/json/cover.json');

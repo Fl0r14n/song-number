@@ -36,6 +36,10 @@ export const en = {
       digits: 'Digits',
       collections: 'Remote book collections endpoint'
     },
+    importModal: {
+      title: 'Import',
+      language: 'Language'
+    },
     bookModal: {
       add: {
         title: 'Add Book',

@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  downloads: 'https://github.com/Fl0r14n/song-number/tree/master/downloads'
+  downloads: 'https://raw.githubusercontent.com/Fl0r14n/song-number/master/downloads'
 };

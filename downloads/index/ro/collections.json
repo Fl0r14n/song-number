@@ -34,7 +34,7 @@
     "name": "Biserica2 Timișoara",
     "description": "Colecțiile bisericii baptise nr.2 Timișoara România",
     "paths": [
-      "/assets/ro/biserica2-timisoara.ro",
+      "/assets/ro/biserica2-timisoara.json",
       "/assets/ro/cantarile-evangheliei.json",
       "/assets/ro/jubilate.json",
       "/assets/ro/other.json"

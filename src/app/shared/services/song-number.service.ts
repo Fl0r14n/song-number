@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {SongBooksService} from './song-books.service';
 import {ChromeCastService} from './chrome-cast.service';
 import {noop} from 'rxjs';
 import {StorageService} from './storage.service';
@@ -30,7 +29,6 @@ export class SongNumberService {
   private _book: Book | undefined;
 
   constructor(private storage: StorageService,
-              private songBooksService: SongBooksService,
               private chromeCastService: ChromeCastService) {
     this.init().then(noop, noop);
   }

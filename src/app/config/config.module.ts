@@ -5,10 +5,12 @@ import {IonicModule} from '@ionic/angular';
 import {TranslateModule} from '@ngx-translate/core';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
+import {ImportModalComponent} from './components/import-modal/import-modal.component';
 
 
 const declarations = [
-  ConfigPageComponent
+  ConfigPageComponent,
+  ImportModalComponent
 ];
 
 const routes: Routes = [

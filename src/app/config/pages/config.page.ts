@@ -1,6 +1,9 @@
 import {Component} from '@angular/core';
 import {SongNumberService} from '../../shared/services/song-number.service';
 import {LoggerService, LogLevel} from '../../shared/services/logger.service';
+import {SongBooksService} from '../../shared/services/song-books.service';
+import {ModalController} from '@ionic/angular';
+import {ImportModalComponent} from '../components/import-modal/import-modal.component';
 
 @Component({
   selector: 'config-page',
@@ -11,6 +14,8 @@ export class ConfigPageComponent {
   possibleDigits: number[] = [1, 2, 3, 4, 5];
 
   constructor(private songNumberService: SongNumberService,
+              public songBooksService: SongBooksService,
+              private modalCtrl: ModalController,
               private log: LoggerService) {
   }
 
@@ -19,7 +24,7 @@ export class ConfigPageComponent {
   }
 
   set digitLength(value: number) {
-    this.songNumberService.changeDigitLength(value);
+    this.songNumberService.changeDigitLength(value).then();
   }
 
   get debug(): boolean {
@@ -27,10 +32,15 @@ export class ConfigPageComponent {
   }
 
   set debug(value: boolean) {
-    this.log.logLevel = value ? LogLevel.DEBUG : LogLevel.INFO;
+    this.log.logLevel = value && LogLevel.DEBUG || LogLevel.INFO;
   }
 
-  importCollection() {
-    //TODO
+
+  async importCollection() {
+    const modal = await this.modalCtrl.create({
+      component: ImportModalComponent
+    });
+    await modal.present();
+    const {data} = await modal.onDidDismiss();
   }
 }
