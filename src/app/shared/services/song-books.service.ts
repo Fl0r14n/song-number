@@ -103,14 +103,12 @@ export class SongBooksService {
    * @param collectionName
    */
   addBook(data: Book, collectionName: string) {
-    const collections = unproxify(this.collections);
-    const collection = collections.find((c: BookCollection) => c.name === collectionName) || [];
+    const collection = this.collections.find(c => c.name === collectionName);
     if (collection) {
       if (!collection.books || collection.books.length === undefined) {
-        collection.books = [];
+        collection.books = proxify([], this.saveCollection);
       }
-      collection.books.push(data);
-      this.collections = proxify(collections, this.saveCollection);
+      collection.books?.push(proxify(data, this.saveCollection));
     }
   }
 
