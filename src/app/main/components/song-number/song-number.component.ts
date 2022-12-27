@@ -3,7 +3,13 @@ import {Digit} from '../../../index';
 
 @Component({
   selector: 'song-number',
-  templateUrl: 'song-number.component.html',
+  template: `
+    <ion-row>
+      <ion-col *ngFor="let digit of digits">
+        <song-digit [(digit)]="digit.value"></song-digit>
+      </ion-col>
+    </ion-row>
+  `
 })
 export class SongNumberComponent {
 

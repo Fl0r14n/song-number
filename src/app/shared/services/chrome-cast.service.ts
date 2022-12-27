@@ -23,12 +23,12 @@ export class ChromeCastService {
   private session: any;
 
   private _state: ChromeCastState = ChromeCastState.DISABLED;
-  public stateChanged$: ReplaySubject<ChromeCastState> = new ReplaySubject(1);
-  public messageListener$: ReplaySubject<any> = new ReplaySubject(1);
+  public stateChanged$ = new ReplaySubject<ChromeCastState>(1);
+  public messageListener$ = new ReplaySubject<any>(1);
 
-  constructor(private i18nService: TranslateService,
-              private log: LoggerService,
-              private zone: NgZone) {
+  constructor(protected i18nService: TranslateService,
+              protected log: LoggerService,
+              protected zone: NgZone) {
     this.i18nService.get([
       'providers.chromecast.session',
       'providers.chromecast.newSession',

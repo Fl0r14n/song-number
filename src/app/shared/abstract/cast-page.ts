@@ -7,6 +7,8 @@ export interface CastButton {
 
 export abstract class CastPage {
 
+  chromeCastState$ = this.chromeCastService.stateChanged$
+
   protected static presentButtonOFF: CastButton = {
     icon: 'play',
     color: 'primary'
@@ -15,33 +17,29 @@ export abstract class CastPage {
     icon: 'square',
     color: 'danger'
   };
-  protected static presentButton: CastButton = CastPage.presentButtonOFF;
+  protected static presentButton = CastPage.presentButtonOFF;
   protected i18n: Record<string, any> = {};
 
   protected constructor(protected chromeCastService: ChromeCastService) {
   }
 
-  get chromeCastState$() {
-    return this.chromeCastService.stateChanged$;
-  }
-
-  isDisabled(state: ChromeCastState): boolean {
+  isDisabled(state: ChromeCastState) {
     return state === ChromeCastState.DISABLED;
   }
 
-  isInitialized(state: ChromeCastState): boolean {
+  isInitialized(state: ChromeCastState) {
     return (state & ChromeCastState.INITIALIZED) === ChromeCastState.INITIALIZED;
   }
 
-  isAvailable(state: ChromeCastState): boolean {
+  isAvailable(state: ChromeCastState) {
     return (state & ChromeCastState.AVAILABLE) === ChromeCastState.AVAILABLE;
   }
 
-  isConnected(state: ChromeCastState): boolean {
+  isConnected(state: ChromeCastState) {
     return (state & ChromeCastState.CONNECTED) === ChromeCastState.CONNECTED;
   }
 
-  get button(): CastButton {
+  get button() {
     return CastPage.presentButton;
   }
 

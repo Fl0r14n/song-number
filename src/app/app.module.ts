@@ -1,25 +1,22 @@
+import {HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {PreloadAllModules, RouteReuseStrategy, RouterModule, Routes} from '@angular/router';
 import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
-import {AppComponent} from './app.component';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {HttpClientModule} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {of} from 'rxjs';
+import {AppComponent} from './app.component';
 import {en} from './i18n/en';
 import {ro} from './i18n/ro';
 
 export class I18nLoader implements TranslateLoader {
 
-  lang: any = {
+  lang: Record<string, any> = {
     en, ro
-  };
+  }
 
-  getTranslation(lang: string): Observable<any> {
-    return new Observable<any>(subscriber => {
-      subscriber.next(this.lang[lang]);
-      subscriber.complete();
-    });
+  getTranslation(lang: string) {
+    return of(this.lang[lang])
   }
 }
 

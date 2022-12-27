@@ -17,19 +17,19 @@ export enum LogLevel {
 })
 export class LoggerService {
 
-  private _logLevel: LogLevel = LogLevel.ERROR;
+  #logLevel = LogLevel.ERROR;
 
   constructor(private storage: StorageService,
               private toastCtrl: ToastController) {
-    this.storage.get(STORAGE_ID_DEBUG).then(value => value ? this._logLevel = Number(value) : this.logLevel = LogLevel.INFO, noop);
+    this.storage.get(STORAGE_ID_DEBUG).then(value => value ? this.#logLevel = Number(value) : this.logLevel = LogLevel.INFO, noop);
   }
 
   get logLevel(): LogLevel {
-    return this._logLevel;
+    return this.#logLevel;
   }
 
   set logLevel(value: LogLevel) {
-    this._logLevel = value;
+    this.#logLevel = value;
     this.storage.set(STORAGE_ID_DEBUG, value).then(noop, noop);
   }
 

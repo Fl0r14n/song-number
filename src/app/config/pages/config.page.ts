@@ -8,7 +8,47 @@ import {Router} from '@angular/router';
 
 @Component({
   selector: 'config-page',
-  templateUrl: 'config.page.html'
+  template: `
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>
+          <ion-icon name="settings"></ion-icon>
+          {{'pages.config.title' | translate}}
+        </ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <ion-item-group>
+        <ion-item-divider>
+          <ion-label>{{'pages.config.title' | translate}}</ion-label>
+        </ion-item-divider>
+
+        <ion-item>
+          <ion-label>{{'pages.config.debug' | translate}}</ion-label>
+          <ion-toggle [(ngModel)]="debug"></ion-toggle>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>{{'pages.config.digits' | translate}}</ion-label>
+          <ion-select [(ngModel)]="digitLength">
+            <ion-select-option *ngFor="let value of possibleDigits">{{value}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">{{'pages.config.collections' | translate}}</ion-label>
+          <ion-input [(ngModel)]="songBooksService.endpoint"></ion-input>
+        </ion-item>
+
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+          <ion-fab-button (click)="importCollection()">
+            <ion-icon name="add"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </ion-item-group>
+    </ion-content>
+  `
 })
 export class ConfigPageComponent {
 

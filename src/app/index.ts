@@ -41,8 +41,8 @@ export const unproxify = (value: any) => {
 };
 
 export interface Digit {
-  pos?: number;
-  value?: number;
+  pos: number;
+  value: number;
 }
 
 export interface Book {

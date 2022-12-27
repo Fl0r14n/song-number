@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {ChromeCastService} from './chrome-cast.service';
 import {noop} from 'rxjs';
 import {StorageService} from './storage.service';
-import {Book, BookCollection, Digit, proxify, unproxify} from '../../index';
+import {Book, Digit, proxify, unproxify} from '../../index';
 
 const STORAGE_ID_DIGITS = 'song-number-settings-digits';
 const STORAGE_ID_NOTES = 'song-number-settings-notes';
@@ -22,12 +22,12 @@ export class SongNumberService {
   isPresenting = false;
   digits: Digit[] = [];
 
-  private _info: string | undefined;
-  private _notes: string | undefined;
-  private _book: Book | undefined;
+  #info: string | undefined;
+  #notes: string | undefined;
+  #book: Book | undefined;
 
-  constructor(private storage: StorageService,
-              private chromeCastService: ChromeCastService) {
+  constructor(protected storage: StorageService,
+              protected chromeCastService: ChromeCastService) {
     this.init().then(noop, noop);
   }
 
@@ -45,9 +45,9 @@ export class SongNumberService {
     }];
     // make digits observable
     this.digits = proxify(digits, this.saveDigits);
-    this._notes = await this.storage.get(STORAGE_ID_NOTES);
-    this._book = await this.storage.get(STORAGE_ID_BOOK);
-    this._info = await this.storage.get(STORAGE_ID_INFO);
+    this.#notes = await this.storage.get(STORAGE_ID_NOTES);
+    this.#book = await this.storage.get(STORAGE_ID_BOOK);
+    this.#info = await this.storage.get(STORAGE_ID_INFO);
   }
 
   saveDigits = () => this.storage.set(STORAGE_ID_DIGITS, unproxify(this.digits));
@@ -63,7 +63,7 @@ export class SongNumberService {
     this.isPresenting = true;
   }
 
-  private buildNumber(): string {
+  private buildNumber() {
     let result = '';
     let leadingZeros = true;
     for (const obj of this.digits) {
@@ -111,29 +111,29 @@ export class SongNumberService {
   }
 
   get notes(): string {
-    return this._notes || '';
+    return this.#notes || '';
   }
 
   set notes(value: string) {
-    this._notes = value;
+    this.#notes = value;
     this.storage.set(STORAGE_ID_NOTES, value);
   }
 
-  get book(): Book {
-    return this._book || {};
+  get book() {
+    return this.#book || {};
   }
 
   set book(value: Book) {
-    this._book = value;
+    this.#book = value;
     this.storage.set(STORAGE_ID_BOOK, unproxify(value));
   }
 
-  get info(): string {
-    return this._info || '';
+  get info() {
+    return this.#info || '';
   }
 
   set info(value: string) {
-    this._info = value;
+    this.#info = value;
     this.storage.set(STORAGE_ID_INFO, value);
   }
 }

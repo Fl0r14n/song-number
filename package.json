@@ -59,7 +59,7 @@
     "@ionic/angular-toolkit": "^7.0.0",
     "@types/jasmine": "^4.3.1",
     "@types/node": "^18.11.18",
-    "cordova-chromecast": "git+https://github.com/jellyfin/cordova-plugin-chromecast.git",
+    "cordova-chromecast": "git+https://github.com/miloproductionsinc/cordova-plugin-chromecast",
     "jasmine-core": "^4.5.0",
     "karma": "^6.4.1",
     "karma-chrome-launcher": "^3.1.1",

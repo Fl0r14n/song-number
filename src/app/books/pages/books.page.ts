@@ -1,15 +1,75 @@
 import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
-import {AlertController, IonItemSliding, ModalController} from '@ionic/angular';
+import {AlertController, IonItemSliding, ItemReorderEventDetail, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {BookModalPageComponent} from '../components/book-modal/book-modal.component';
-import {CollectionModalComponent} from '../components/collection-modal/collection-modal.component';
 import {Book, BookCollection} from '../../index';
 import {SongBooksService} from '../../shared/services/song-books.service';
 import {SongNumberService} from '../../shared/services/song-number.service';
+import {BookModalPageComponent} from '../components/book-modal/book-modal.component';
+import {CollectionModalComponent} from '../components/collection-modal/collection-modal.component';
 
 @Component({
   selector: 'books-page',
-  templateUrl: 'books.page.html'
+  template: `
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>
+          <ion-icon name="list"></ion-icon>
+          {{'pages.books.title' | translate}}
+        </ion-title>
+        <ion-buttons slot="primary">
+          <ion-button color="primary" (click)="reorderCollections()">
+            <ion-icon name="reorder-four-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <ion-item-group *ngFor="let collection of collections">
+        <ion-item-sliding #slidersRef>
+          <ion-item>
+            <ion-label color="medium">{{collection.name}}</ion-label>
+          </ion-item>
+          <ion-item-options side="end">
+            <ion-item-option color="primary" (click)="collection.reorder = !collection.reorder">
+              <ion-icon name="reorder-four-outline"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+
+        <ion-reorder-group [disabled]="!collection.reorder" (ionItemReorder)="reorderBook(collection, $any($event))">
+          <ion-item-sliding *ngFor="let book of collection.books" #slidersRef>
+            <ion-item [color]="book == activeBook? 'primary': ''">
+              <ion-thumbnail slot="start">
+                <img [src]="book.thumb" alt="book-thumb">
+              </ion-thumbnail>
+              <ion-label>
+                <h2>{{book.title}}</h2>
+                <p>{{book.description}}</p>
+              </ion-label>
+              <ion-reorder slot="end"></ion-reorder>
+            </ion-item>
+            <ion-item-options side="start">
+              <ion-item-option color="secondary" (click)="editBook(book, collection)">
+                <ion-icon name="create" size="large"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+            <ion-item-options side="end">
+              <ion-item-option color="danger" (click)="removeBook(book, collection)">
+                <ion-icon name="trash" size="large"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-reorder-group>
+      </ion-item-group>
+
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button (click)="addBook()">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </ion-content>
+  `
 })
 export class BooksPageComponent implements OnInit {
 
@@ -32,7 +92,7 @@ export class BooksPageComponent implements OnInit {
     return this.songNumberService.book;
   }
 
-  async reorderBook(collection: BookCollection, {detail}: CustomEvent) {
+  async reorderBook(collection: BookCollection, {detail}: CustomEvent<ItemReorderEventDetail>) {
     const {books} = collection;
     books && books.splice(detail.to, 0, books.splice(detail.from, 1)[0]);
     await detail.complete(true);
