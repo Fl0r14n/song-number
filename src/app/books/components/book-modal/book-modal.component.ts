@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {ModalController} from '@ionic/angular';
 import {SongBooksService} from '../../../shared/services/song-books.service';
 import {CameraService} from '../../../shared/services/camera.service';
@@ -13,7 +13,7 @@ import {Book, BookCollection} from '../../../index';
 })
 export class BookModalPageComponent implements OnInit {
 
-  form: FormGroup | undefined;
+  form: UntypedFormGroup | undefined;
   book: Book | undefined;
   collection: BookCollection | undefined;
   collections: BookCollection[] | undefined;
@@ -55,10 +55,10 @@ export class BookModalPageComponent implements OnInit {
   ngOnInit(): void {
     this.book = this.book || {};
     this.editMode = !!this.book.title;
-    this.form = new FormGroup({
-      title: new FormControl(this.book.title, [Validators.required, Validators.minLength(5)]),
-      description: new FormControl(this.book.description),
-      label: new FormControl(this.collection?.name, [Validators.required])
+    this.form = new UntypedFormGroup({
+      title: new UntypedFormControl(this.book.title, [Validators.required, Validators.minLength(5)]),
+      description: new UntypedFormControl(this.book.description),
+      label: new UntypedFormControl(this.collection?.name, [Validators.required])
     });
     if (!this.book.thumb) {
       this.songBookService.getDefaultCover$().subscribe(book => {
