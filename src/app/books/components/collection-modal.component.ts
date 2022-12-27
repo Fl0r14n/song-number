@@ -171,7 +171,7 @@ export class CollectionModalComponent implements OnInit {
     this.slidersRef?.forEach(v => v.close());
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.i18nService.get([
       'pages.collectionModal.addDialog',
       'pages.collectionModal.add',

@@ -53,7 +53,7 @@ import {LoggerService, SongBooksService} from '../../shared/services';
 })
 export class ImportModalComponent {
 
-  private _language: Language = {};
+  #language: Language = {};
   languages: Language[] | undefined;
   index: BookResourceCollection[] | undefined;
 
@@ -69,12 +69,12 @@ export class ImportModalComponent {
   }
 
   get language() {
-    return this._language;
+    return this.#language;
   }
 
   set language(language: Language) {
-    this._language = language;
-    this._language.code && this.songBooksService.getIndex$(this._language.code).subscribe(index => this.index = index);
+    this.#language = language;
+    this.#language.code && this.songBooksService.getIndex$(this.#language.code).subscribe(index => this.index = index);
   }
 
   hasSelection() {

@@ -33,21 +33,18 @@ export class SongNumberService {
   notes = new StorageModel<string>(STORAGE_ID_NOTES, '')
   book = new StorageModel<Book>(STORAGE_ID_BOOK, {})
 
-  constructor(protected chromeCastService: ChromeCastService) {
+  set digitsLength(size: number) {
+    const digits = [];
+    for (let i = 0; i < size; i++) {
+      digits.push({
+        pos: i,
+        value: 0
+      });
+    }
+    this.digits.model = digits
   }
 
-  presentNumber() {
-    const message = {
-      type: MESSAGE_TYPE_SONG,
-      number: this.buildNumber(),
-      book: this.book,
-      notes: this.notes
-    };
-    this.chromeCastService.send(message);
-    this.isPresenting = true;
-  }
-
-  private buildNumber() {
+  get number() {
     let result = '';
     let leadingZeros = true;
     for (const obj of this.digits.model) {
@@ -59,6 +56,20 @@ export class SongNumberService {
       }
     }
     return result;
+  }
+
+  constructor(protected chromeCastService: ChromeCastService) {
+  }
+
+  presentNumber() {
+    const message = {
+      type: MESSAGE_TYPE_SONG,
+      number: this.number,
+      book: this.book,
+      notes: this.notes
+    };
+    this.chromeCastService.send(message);
+    this.isPresenting = true;
   }
 
   presentInfo() {
@@ -80,16 +91,5 @@ export class SongNumberService {
       type: MESSAGE_TYPE_CLEAR
     });
     this.isPresenting = false;
-  }
-
-  async changeDigitLength(size: number) {
-    const digits = [];
-    for (let i = 0; i < size; i++) {
-      digits.push({
-        pos: i,
-        value: 0
-      });
-    }
-    this.digits.model = digits
   }
 }

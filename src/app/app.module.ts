@@ -9,7 +9,7 @@ import {AppComponent} from './app.component';
 import {en} from './i18n/en';
 import {ro} from './i18n/ro';
 
-export class I18nLoader implements TranslateLoader {
+class I18nLoader implements TranslateLoader {
 
   lang: Record<string, any> = {
     en, ro
@@ -30,9 +30,9 @@ const routes: Routes = [
 @NgModule({
   imports: [
     BrowserModule,
-    IonicModule.forRoot(),
-    RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules}),
     HttpClientModule,
+    RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules}),
+    IonicModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -40,8 +40,8 @@ const routes: Routes = [
       }
     }),
   ],
-  declarations: [AppComponent],
   providers: [{provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
+  declarations: [AppComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

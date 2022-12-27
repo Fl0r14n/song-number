@@ -1,14 +1,10 @@
+import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
 import {RouterModule, Routes} from '@angular/router';
-import {InfoPageComponent} from './pages/info.page';
 import {IonicModule} from '@ionic/angular';
 import {TranslateModule} from '@ngx-translate/core';
-import {FormsModule} from '@angular/forms';
-import {CommonModule} from '@angular/common';
-
-const declarations = [
-  InfoPageComponent
-];
+import {InfoPageComponent} from './pages/info.page';
 
 const routes: Routes = [
   {
@@ -18,14 +14,16 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [
-        RouterModule.forChild(routes),
-        IonicModule,
-        TranslateModule,
-        FormsModule,
-        CommonModule
-    ],
-  declarations
+  imports: [
+    RouterModule.forChild(routes),
+    IonicModule,
+    TranslateModule,
+    FormsModule,
+    CommonModule
+  ],
+  declarations: [
+    InfoPageComponent
+  ]
 })
 export class InfoModule {
 }

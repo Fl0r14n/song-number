@@ -3,10 +3,6 @@ import {RouterModule, Routes} from '@angular/router';
 import {IonicModule} from '@ionic/angular';
 import {LayoutPageComponent} from './pages/layout.page';
 
-const declarations = [
-  LayoutPageComponent
-];
-
 const routes: Routes = [
   {
     path: '',
@@ -41,7 +37,9 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     IonicModule
   ],
-  declarations,
+  declarations: [
+    LayoutPageComponent
+  ],
   exports: [
     RouterModule
   ]

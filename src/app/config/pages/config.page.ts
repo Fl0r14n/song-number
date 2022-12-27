@@ -50,7 +50,7 @@ import {ImportModalComponent} from '../components/import-modal.component';
 })
 export class ConfigPageComponent {
 
-  possibleDigits: number[] = [1, 2, 3, 4, 5];
+  possibleDigits = [1, 2, 3, 4, 5];
 
   constructor(private songNumberService: SongNumberService,
               public songBooksService: SongBooksService,
@@ -59,19 +59,20 @@ export class ConfigPageComponent {
               private log: LoggerService) {
   }
 
-  get digitLength(): number {
-    return this.songNumberService.digits.model.length;
+  get digitLength() {
+    return this.songNumberService.digits.model?.length;
   }
 
   set digitLength(value: number) {
-    this.songNumberService.changeDigitLength(value).then();
+    this.songNumberService.digitsLength = value
   }
 
-  get debug(): boolean {
+  get debug() {
     return this.log.logLevel.model === LogLevel.DEBUG;
   }
 
   set debug(value: boolean) {
+    console.log(value)
     this.log.logLevel.model = value && LogLevel.DEBUG || LogLevel.INFO;
   }
 
@@ -82,6 +83,6 @@ export class ConfigPageComponent {
     });
     await modal.present();
     await modal.onDidDismiss();
-    await this.router.navigateByUrl('/tabs/books');
+    await this.router.navigateByUrl('/books');
   }
 }

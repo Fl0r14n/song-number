@@ -66,7 +66,7 @@ export class StorageModel<T> {
   }
 
   set model(model) {
-    model && set(this.storageKey, model).then(() => this.#model = model)
+    set(this.storageKey, model).then(() => this.#model = model)
   }
 }
 
@@ -84,9 +84,7 @@ export class ProxyStorageModel<T> {
   }
 
   set model(model) {
-    if (model) {
-      const sanitized = unproxify(model)
-      sanitized && set(this.storageKey, sanitized).then(() => this.#model = proxify(sanitized, () => set(this.storageKey, unproxify(this.#model))))
-    }
+    const sanitized = unproxify(model)
+    set(this.storageKey, sanitized).then(() => this.#model = proxify(sanitized, () => set(this.storageKey, unproxify(this.#model))))
   }
 }

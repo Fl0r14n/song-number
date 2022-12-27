@@ -36,7 +36,6 @@ import {Book, BookCollection} from '../../shared/models';
         </ng-container>
       </ion-list>
     </ion-content>
-
   `
 })
 export class SelectBookModalComponent implements OnInit {

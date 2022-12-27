@@ -1,22 +1,12 @@
+import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {BooksPageComponent} from './pages/books.page';
+import {ReactiveFormsModule} from '@angular/forms';
 import {RouterModule, Routes} from '@angular/router';
 import {IonicModule} from '@ionic/angular';
 import {TranslateModule} from '@ngx-translate/core';
-import {CommonModule} from '@angular/common';
 import {BookModalPageComponent} from './components/book-modal.component';
-import {ReactiveFormsModule} from '@angular/forms';
 import {CollectionModalComponent} from './components/collection-modal.component';
-
-const entryComponents = [
-  BookModalPageComponent,
-  CollectionModalComponent
-];
-
-const declarations = [
-  ...entryComponents,
-  BooksPageComponent
-];
+import {BooksPageComponent} from './pages/books.page';
 
 const routes: Routes = [
   {
@@ -33,8 +23,11 @@ const routes: Routes = [
     CommonModule,
     ReactiveFormsModule
   ],
-  entryComponents,
-  declarations
+  declarations: [
+    BookModalPageComponent,
+    CollectionModalComponent,
+    BooksPageComponent
+  ]
 })
 export class BooksModule {
 }

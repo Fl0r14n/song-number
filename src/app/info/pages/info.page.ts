@@ -23,7 +23,9 @@ import {ChromeCastService, SongNumberService} from '../../shared/services';
 
       <ion-content class="ion-padding">
         <ion-item>
-          <ion-textarea placeholder="{{ 'pages.info.textArea' | translate}}" clearInput rows="6"
+          <ion-textarea clearInput
+                        rows="6"
+                        [placeholder]="'pages.info.textArea' | translate"
                         [(ngModel)]="info"></ion-textarea>
         </ion-item>
 
@@ -39,10 +41,10 @@ import {ChromeCastService, SongNumberService} from '../../shared/services';
   `,
   styles: [`
     ion-header {
-    ion-fab-button {
-      margin-right: 8px;
-      padding: 2px;
-    }
+      ion-fab-button {
+        margin-right: 8px;
+        padding: 2px;
+      }
     }
   `]
 })

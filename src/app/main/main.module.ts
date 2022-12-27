@@ -1,24 +1,13 @@
+import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
 import {RouterModule, Routes} from '@angular/router';
-import {MainPageComponent} from './pages/main.page';
-import {SongDigitComponent} from './components/song-digit.component';
-import {SongNumberComponent} from './components/song-number.component';
-import {SelectBookModalComponent} from './components/select-book-modal.component';
 import {IonicModule} from '@ionic/angular';
 import {TranslateModule} from '@ngx-translate/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-
-const entryComponents = [
-  SelectBookModalComponent
-];
-
-const declarations = [
-  ...entryComponents,
-  MainPageComponent,
-  SongDigitComponent,
-  SongNumberComponent
-];
+import {SelectBookModalComponent} from './components/select-book-modal.component';
+import {SongDigitComponent} from './components/song-digit.component';
+import {SongNumberComponent} from './components/song-number.component';
+import {MainPageComponent} from './pages/main.page';
 
 const routes: Routes = [
   {
@@ -35,8 +24,12 @@ const routes: Routes = [
     CommonModule,
     FormsModule
   ],
-  entryComponents,
-  declarations
+  declarations: [
+    MainPageComponent,
+    SongDigitComponent,
+    SongNumberComponent,
+    SelectBookModalComponent
+  ]
 })
 export class MainModule {
 }
