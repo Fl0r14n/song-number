@@ -1,13 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
 import {AlertController, ModalController} from '@ionic/angular';
-import {SelectBookModalComponent} from '../components/select-book-modal/select-book-modal.component';
-import {CastPage} from '../../shared/abstract/cast-page';
-import {ChromeCastService} from '../../shared/services/chrome-cast.service';
-import {SongNumberService} from '../../shared/services/song-number.service';
-import {filter, map, switchMap} from 'rxjs/operators';
+import {TranslateService} from '@ngx-translate/core';
 import {from} from 'rxjs';
-import {SongBooksService} from '../../shared/services/song-books.service';
+import {filter, map, switchMap} from 'rxjs/operators';
+import {CastPage} from '../../shared/pages';
+import {ChromeCastService, SongBooksService, SongNumberService} from '../../shared/services';
+import {SelectBookModalComponent} from '../components/select-book-modal.component';
 
 @Component({
   selector: 'main-page',
@@ -37,7 +35,7 @@ import {SongBooksService} from '../../shared/services/song-books.service';
         </ion-item>
 
         <ion-item (click)="openSelectBookModal()" class="ion-padding">
-          <ion-thumbnail slot="start" *ngIf="book.thumb">
+          <ion-thumbnail slot="start" *ngIf="book?.thumb">
             <img [src]="book.thumb" alt="book-thumb">
           </ion-thumbnail>
           <ion-label>
@@ -86,32 +84,42 @@ export class MainPageComponent extends CastPage implements OnInit {
   }
 
   get digits() {
-    return this.songNumberService.digits;
+    return this.songNumberService.digits.model;
   }
 
   set notes(notes) {
-    this.songNumberService.notes = notes;
+    this.songNumberService.notes.model = notes;
   }
 
   get notes() {
-    return this.songNumberService.notes;
+    return this.songNumberService.notes.model;
   }
 
   get book() {
-    return this.songNumberService.book;
+    return this.songNumberService.book.model;
+  }
+
+  set book(book) {
+    this.songNumberService.book.model = book
+  }
+
+  get collections() {
+    return this.songBooksService.collections.model
   }
 
   async openSelectBookModal() {
     const modal = await this.modalCtrl.create({
       component: SelectBookModalComponent,
       componentProps: {
-        collections: this.songBooksService.collections,
-        book: this.songNumberService.book
+        collections: this.collections,
+        book: this.book
       }
     });
     await modal.present();
     const {data} = await modal.onDidDismiss();
-    this.songNumberService.book = data || this.songNumberService.book;
+    if (data) {
+      this.book = data
+    }
   }
 
   present() {
@@ -128,14 +136,14 @@ export class MainPageComponent extends CastPage implements OnInit {
     this.songNumberService.readPresented();
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.i18nService.get([
       'pages.main.currentlyPresenting',
       'pages.main.close',
       'pages.main.empty',
-    ]).subscribe((value) => {
+    ]).subscribe(value => {
       this.i18n = value;
-    });
+    })
     this.chromeCastService.messageListener$.pipe(
       filter(data => data.isFeedback),
       map(data => {

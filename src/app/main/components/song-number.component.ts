@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Digit} from '../../../index';
+import {Digit} from '../../shared/models';
 
 @Component({
   selector: 'song-number',

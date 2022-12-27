@@ -2,9 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {CameraSource} from '@capacitor/camera';
 import {ModalController} from '@ionic/angular';
-import {Book, BookCollection} from '../../../index';
-import {CameraService} from '../../../shared/services/camera.service';
-import {SongBooksService} from '../../../shared/services/song-books.service';
+import {Book, BookCollection} from '../../shared/models';
+import {CameraService, SongBooksService} from '../../shared/services';
 
 @Component({
   selector: 'book-modal',

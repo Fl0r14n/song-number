@@ -1,11 +1,11 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {catchError, combineLatestAll, EMPTY, from, noop, shareReplay} from 'rxjs';
+import {catchError, combineLatestAll, EMPTY, from, shareReplay} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
-import {Book, BookCollection, BookResourceCollection, Language, proxify, unproxify} from '../../index';
+import {Book, BookCollection, BookResourceCollection, Language} from '../models';
+import {ProxyStorageModel, StorageModel} from '../storage';
 import {LoggerService} from './logger.service';
-import {StorageService} from './storage.service';
 
 const STORAGE_ID_COLLECTIONS = 'song-number-settings-collection';
 const STORAGE_ID_DOWNLOADS = 'song-number-settings-downloads';
@@ -17,42 +17,24 @@ const {downloads} = environment;
 })
 export class SongBooksService {
 
-  #endpoint = '';
-  #saveCollection = () => this.storage.set(STORAGE_ID_COLLECTIONS, unproxify(this.collections));
-  collections: BookCollection[] = [];
+  endpoint = new StorageModel<string>(STORAGE_ID_DOWNLOADS, downloads)
+  collections = new ProxyStorageModel<BookCollection[]>(STORAGE_ID_COLLECTIONS, []);
+  /**
+   * Default book cover.
+   */
   defaultCover$ = this.http.get<Book>('assets/json/cover.json').pipe(
     shareReplay(1)
   )
 
-  constructor(private http: HttpClient,
-              private storage: StorageService,
-              private log: LoggerService) {
-    this.init().then(noop, noop);
-  }
-
-  protected async init() {
-    this.#endpoint = await this.storage.get(STORAGE_ID_DOWNLOADS) || downloads;
-    let collections = await this.storage.get(STORAGE_ID_COLLECTIONS);
-    if (!collections || collections.length === undefined || collections.length === 0) {
-      collections = [];
-    }
-    this.collections = proxify(collections, this.#saveCollection);
-  }
-
-  get endpoint() {
-    return this.#endpoint;
-  }
-
-  set endpoint(endpoint: string) {
-    this.#endpoint = endpoint || downloads;
-    this.storage.set(STORAGE_ID_DOWNLOADS, this.#endpoint).then();
+  constructor(protected http: HttpClient,
+              protected log: LoggerService) {
   }
 
   /**
    * get the remote languages which contain collections
    */
   get languages$() {
-    return this.http.get<Language[]>(`${this.endpoint}/languages.json`).pipe(
+    return this.http.get<Language[]>(`${this.endpoint.model}/languages.json`).pipe(
       catchError(err => {
         this.log.error(err.message);
         return EMPTY;
@@ -65,7 +47,7 @@ export class SongBooksService {
    * @param lang: language code
    */
   getIndex$(lang: string) {
-    return this.http.get<BookResourceCollection[]>(`${this.endpoint}/index/${lang}/collections.json`).pipe(
+    return this.http.get<BookResourceCollection[]>(`${this.endpoint.model}/index/${lang}/collections.json`).pipe(
       catchError(err => {
         this.log.error(err.message);
         return EMPTY;
@@ -83,23 +65,19 @@ export class SongBooksService {
         this.log.error(err.message);
         return EMPTY;
       }),
-      map(path => this.http.get<BookCollection[]>(`${this.endpoint}${path}`)),
+      map(path => this.http.get<BookCollection[]>(`${this.endpoint.model}${path}`)),
       combineLatestAll(),
       map(v => v.reduce((a, b) => [...a, ...b]))
     );
   }
 
   /**
-   * Default book cover.
-   */
-
-
-  /**
    * Create an empty collection
    * @param collection book collection
    */
   addCollection(collection: BookCollection) {
-    this.collections.push(proxify(collection, this.#saveCollection));
+    // so that collection is observable like when changing collection name
+    this.collections.model = [...this.collections.model, collection]
   }
 
   /**
@@ -108,12 +86,14 @@ export class SongBooksService {
    * @param collectionName
    */
   addBook(data: Book, collectionName: string) {
-    const collection = this.collections.find(c => c.name === collectionName);
+    const collection = this.collections.model.find(c => c.name === collectionName);
     if (collection) {
       if (!collection.books || collection.books.length === undefined) {
-        collection.books = proxify([], this.#saveCollection);
+        collection.books = []
       }
-      collection.books?.push(proxify(data, this.#saveCollection));
+      collection.books.push(data)
+      // force observable
+      this.collections.model = this.collections.model
     }
   }
 

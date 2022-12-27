@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
-import {LayoutPageComponent} from './pages/layout.page';
 import {RouterModule, Routes} from '@angular/router';
 import {IonicModule} from '@ionic/angular';
+import {LayoutPageComponent} from './pages/layout.page';
 
 const declarations = [
   LayoutPageComponent
@@ -9,57 +9,31 @@ const declarations = [
 
 const routes: Routes = [
   {
-    path: 'tabs',
+    path: '',
     component: LayoutPageComponent,
     children: [
       {
         path: 'main',
-        children: [
-          {
-            path: '',
-            loadChildren: () => import('../main/main.module').then(m => m.MainModule)
-          }
-        ]
+        loadChildren: () => import('../main/main.module').then(m => m.MainModule)
       },
       {
         path: 'info',
-        children: [
-          {
-            path: '',
-            loadChildren: () => import('../info/info.module').then(m => m.InfoModule)
-          }
-        ]
+        loadChildren: () => import('../info/info.module').then(m => m.InfoModule)
       },
       {
         path: 'books',
-        children: [
-          {
-            path: '',
-            loadChildren: () => import('../books/books.module').then(m => m.BooksModule)
-          }
-        ]
+        loadChildren: () => import('../books/books.module').then(m => m.BooksModule)
       },
       {
         path: 'config',
-        children: [
-          {
-            path: '',
-            loadChildren: () => import('../config/config.module').then(m => m.ConfigModule)
-          }
-        ]
+        loadChildren: () => import('../config/config.module').then(m => m.ConfigModule)
       },
       {
-        path: '',
-        redirectTo: '/tabs/main',
-        pathMatch: 'full'
+        path: '**',
+        redirectTo: 'main',
       }
     ]
   },
-  {
-    path: '',
-    redirectTo: '/tabs/main',
-    pathMatch: 'full'
-  }
 ];
 
 @NgModule({

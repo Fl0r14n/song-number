@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ModalController, NavParams} from '@ionic/angular';
-import {Book, BookCollection} from '../../../index';
+import {Book, BookCollection} from '../../shared/models';
 
 @Component({
   selector: 'select-book-modal',
@@ -42,7 +42,7 @@ import {Book, BookCollection} from '../../../index';
 export class SelectBookModalComponent implements OnInit {
 
   collections: BookCollection[] | undefined;
-  book: any;
+  book: Book | undefined;
 
   constructor(private modalCtrl: ModalController,
               private params: NavParams) {
@@ -56,7 +56,7 @@ export class SelectBookModalComponent implements OnInit {
     return await this.modalCtrl.dismiss();
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.collections = this.params.get('collections');
     this.book = this.params.get('book');
   }

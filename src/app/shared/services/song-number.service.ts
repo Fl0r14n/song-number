@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
+import {Book, Digit} from '../models';
+import {ProxyStorageModel, StorageModel} from '../storage';
 import {ChromeCastService} from './chrome-cast.service';
-import {noop} from 'rxjs';
-import {StorageService} from './storage.service';
-import {Book, Digit, proxify, unproxify} from '../../index';
 
 const STORAGE_ID_DIGITS = 'song-number-settings-digits';
 const STORAGE_ID_NOTES = 'song-number-settings-notes';
@@ -20,43 +19,28 @@ const MESSAGE_TYPE_CLEAR = 3;
 export class SongNumberService {
 
   isPresenting = false;
-  digits: Digit[] = [];
+  digits = new ProxyStorageModel<Digit[]>(STORAGE_ID_DIGITS, [{
+    pos: 0,
+    value: 0
+  }, {
+    pos: 1,
+    value: 0
+  }, {
+    pos: 2,
+    value: 0
+  }]);
+  info = new StorageModel<string>(STORAGE_ID_INFO, '')
+  notes = new StorageModel<string>(STORAGE_ID_NOTES, '')
+  book = new StorageModel<Book>(STORAGE_ID_BOOK, {})
 
-  #info: string | undefined;
-  #notes: string | undefined;
-  #book: Book | undefined;
-
-  constructor(protected storage: StorageService,
-              protected chromeCastService: ChromeCastService) {
-    this.init().then(noop, noop);
+  constructor(protected chromeCastService: ChromeCastService) {
   }
-
-  async init() {
-    let digits = await this.storage.get(STORAGE_ID_DIGITS);
-    digits = digits || [{
-      pos: 0,
-      value: 0
-    }, {
-      pos: 1,
-      value: 0
-    }, {
-      pos: 2,
-      value: 0
-    }];
-    // make digits observable
-    this.digits = proxify(digits, this.saveDigits);
-    this.#notes = await this.storage.get(STORAGE_ID_NOTES);
-    this.#book = await this.storage.get(STORAGE_ID_BOOK);
-    this.#info = await this.storage.get(STORAGE_ID_INFO);
-  }
-
-  saveDigits = () => this.storage.set(STORAGE_ID_DIGITS, unproxify(this.digits));
 
   presentNumber() {
     const message = {
       type: MESSAGE_TYPE_SONG,
       number: this.buildNumber(),
-      book: unproxify(this.book),
+      book: this.book,
       notes: this.notes
     };
     this.chromeCastService.send(message);
@@ -66,7 +50,7 @@ export class SongNumberService {
   private buildNumber() {
     let result = '';
     let leadingZeros = true;
-    for (const obj of this.digits) {
+    for (const obj of this.digits.model) {
       if (obj.value !== 0) {
         leadingZeros = false;
         result += obj.value;
@@ -106,34 +90,6 @@ export class SongNumberService {
         value: 0
       });
     }
-    await this.storage.set(STORAGE_ID_DIGITS, digits);
-    this.digits = proxify(digits, this.saveDigits);
-  }
-
-  get notes(): string {
-    return this.#notes || '';
-  }
-
-  set notes(value: string) {
-    this.#notes = value;
-    this.storage.set(STORAGE_ID_NOTES, value);
-  }
-
-  get book() {
-    return this.#book || {};
-  }
-
-  set book(value: Book) {
-    this.#book = value;
-    this.storage.set(STORAGE_ID_BOOK, unproxify(value));
-  }
-
-  get info() {
-    return this.#info || '';
-  }
-
-  set info(value: string) {
-    this.#info = value;
-    this.storage.set(STORAGE_ID_INFO, value);
+    this.digits.model = digits
   }
 }

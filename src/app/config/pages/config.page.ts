@@ -1,10 +1,8 @@
 import {Component} from '@angular/core';
-import {SongNumberService} from '../../shared/services/song-number.service';
-import {LoggerService, LogLevel} from '../../shared/services/logger.service';
-import {SongBooksService} from '../../shared/services/song-books.service';
-import {ModalController} from '@ionic/angular';
-import {ImportModalComponent} from '../components/import-modal/import-modal.component';
 import {Router} from '@angular/router';
+import {ModalController} from '@ionic/angular';
+import {LoggerService, LogLevel, SongBooksService, SongNumberService} from '../../shared/services';
+import {ImportModalComponent} from '../components/import-modal.component';
 
 @Component({
   selector: 'config-page',
@@ -38,7 +36,7 @@ import {Router} from '@angular/router';
 
         <ion-item>
           <ion-label position="floating">{{'pages.config.collections' | translate}}</ion-label>
-          <ion-input [(ngModel)]="songBooksService.endpoint"></ion-input>
+          <ion-input [(ngModel)]="songBooksService.endpoint.model"></ion-input>
         </ion-item>
 
         <ion-fab vertical="bottom" horizontal="end" slot="fixed">
@@ -62,7 +60,7 @@ export class ConfigPageComponent {
   }
 
   get digitLength(): number {
-    return this.songNumberService.digits.length;
+    return this.songNumberService.digits.model.length;
   }
 
   set digitLength(value: number) {
@@ -70,11 +68,11 @@ export class ConfigPageComponent {
   }
 
   get debug(): boolean {
-    return this.log.logLevel === LogLevel.DEBUG;
+    return this.log.logLevel.model === LogLevel.DEBUG;
   }
 
   set debug(value: boolean) {
-    this.log.logLevel = value && LogLevel.DEBUG || LogLevel.INFO;
+    this.log.logLevel.model = value && LogLevel.DEBUG || LogLevel.INFO;
   }
 
 

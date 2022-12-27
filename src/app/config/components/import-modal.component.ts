@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
 import {ModalController} from '@ionic/angular';
-import {SongBooksService} from '../../../shared/services/song-books.service';
-import {BookResourceCollection, Language} from '../../../index';
-import {LoggerService} from '../../../shared/services/logger.service';
+import {BookResourceCollection, Language} from '../../shared/models';
+import {LoggerService, SongBooksService} from '../../shared/services';
+
 @Component({
   selector: 'import-modal',
   template: `

@@ -1,9 +1,9 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {MainPageComponent} from './pages/main.page';
-import {SongDigitComponent} from './components/song-digit/song-digit.component';
-import {SongNumberComponent} from './components/song-number/song-number.component';
-import {SelectBookModalComponent} from './components/select-book-modal/select-book-modal.component';
+import {SongDigitComponent} from './components/song-digit.component';
+import {SongNumberComponent} from './components/song-number.component';
+import {SelectBookModalComponent} from './components/select-book-modal.component';
 import {IonicModule} from '@ionic/angular';
 import {TranslateModule} from '@ngx-translate/core';
 import {CommonModule} from '@angular/common';

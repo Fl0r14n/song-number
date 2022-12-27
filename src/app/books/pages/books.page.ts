@@ -1,11 +1,10 @@
 import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {AlertController, IonItemSliding, ItemReorderEventDetail, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {Book, BookCollection} from '../../index';
-import {SongBooksService} from '../../shared/services/song-books.service';
-import {SongNumberService} from '../../shared/services/song-number.service';
-import {BookModalPageComponent} from '../components/book-modal/book-modal.component';
-import {CollectionModalComponent} from '../components/collection-modal/collection-modal.component';
+import {Book, BookCollection} from '../../shared/models';
+import {SongBooksService, SongNumberService} from '../../shared/services';
+import {BookModalPageComponent} from '../components/book-modal.component';
+import {CollectionModalComponent} from '../components/collection-modal.component';
 
 @Component({
   selector: 'books-page',
@@ -85,11 +84,11 @@ export class BooksPageComponent implements OnInit {
   }
 
   get collections() {
-    return this.songBooksService.collections;
+    return this.songBooksService.collections.model;
   }
 
   get activeBook() {
-    return this.songNumberService.book;
+    return this.songNumberService.book.model;
   }
 
   async reorderBook(collection: BookCollection, {detail}: CustomEvent<ItemReorderEventDetail>) {

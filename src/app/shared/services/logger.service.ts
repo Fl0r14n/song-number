@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ToastController} from '@ionic/angular';
-import {noop} from 'rxjs';
-import {StorageService} from './storage.service';
+import {StorageModel} from '../storage';
 
 const STORAGE_ID_DEBUG = 'song-number-settings-log-level';
 
@@ -17,20 +16,9 @@ export enum LogLevel {
 })
 export class LoggerService {
 
-  #logLevel = LogLevel.ERROR;
+  logLevel = new StorageModel(STORAGE_ID_DEBUG, LogLevel.INFO, (value) => Number(value))
 
-  constructor(private storage: StorageService,
-              private toastCtrl: ToastController) {
-    this.storage.get(STORAGE_ID_DEBUG).then(value => value ? this.#logLevel = Number(value) : this.logLevel = LogLevel.INFO, noop);
-  }
-
-  get logLevel(): LogLevel {
-    return this.#logLevel;
-  }
-
-  set logLevel(value: LogLevel) {
-    this.#logLevel = value;
-    this.storage.set(STORAGE_ID_DEBUG, value).then(noop, noop);
+  constructor(protected toastCtrl: ToastController) {
   }
 
   async info(message: any) {
@@ -38,19 +26,19 @@ export class LoggerService {
   }
 
   async warn(message: any) {
-    if (this.logLevel >= LogLevel.WARN) {
+    if (this.logLevel.model >= LogLevel.WARN) {
       return this.toast(message, 'toast-warn');
     }
   }
 
   async error(message: any) {
-    if (this.logLevel >= LogLevel.ERROR) {
+    if (this.logLevel.model >= LogLevel.ERROR) {
       return this.toast(message, 'toast-error');
     }
   }
 
   async debug(message: any) {
-    if (this.logLevel >= LogLevel.DEBUG) {
+    if (this.logLevel.model >= LogLevel.DEBUG) {
       return this.toast(message, 'toast-debug');
     }
   }

@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
-import {CastPage} from '../../shared/abstract/cast-page';
-import {ChromeCastService} from '../../shared/services/chrome-cast.service';
-import {SongNumberService} from '../../shared/services/song-number.service';
+import {CastPage} from '../../shared/pages';
+import {ChromeCastService, SongNumberService} from '../../shared/services';
 
 @Component({
   selector: 'info-page',
@@ -55,11 +54,11 @@ export class InfoPageComponent extends CastPage {
   }
 
   get info() {
-    return this.songNumberService.info;
+    return this.songNumberService.info.model;
   }
 
   set info(info) {
-    this.songNumberService.info = info;
+    this.songNumberService.info.model = info;
   }
 
   present() {

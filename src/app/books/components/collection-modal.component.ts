@@ -1,8 +1,8 @@
 import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {AlertController, IonItemSliding, ItemReorderEventDetail, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {BookCollection} from '../../../index';
-import {SongBooksService} from '../../../shared/services/song-books.service';
+import {BookCollection} from '../../shared/models';
+import {SongBooksService} from '../../shared/services';
 
 @Component({
   selector: 'collection-modal',
@@ -63,7 +63,7 @@ export class CollectionModalComponent implements OnInit {
   }
 
   get collections() {
-    return this.songBookService.collections;
+    return this.songBookService.collections.model;
   }
 
   async dismiss() {

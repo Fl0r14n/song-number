@@ -4,9 +4,9 @@ import {RouterModule, Routes} from '@angular/router';
 import {IonicModule} from '@ionic/angular';
 import {TranslateModule} from '@ngx-translate/core';
 import {CommonModule} from '@angular/common';
-import {BookModalPageComponent} from './components/book-modal/book-modal.component';
+import {BookModalPageComponent} from './components/book-modal.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {CollectionModalComponent} from './components/collection-modal/collection-modal.component';
+import {CollectionModalComponent} from './components/collection-modal.component';
 
 const entryComponents = [
   BookModalPageComponent,
