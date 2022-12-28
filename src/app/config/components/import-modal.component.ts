@@ -82,7 +82,7 @@ export class ImportModalComponent {
   }
 
   async import() {
-    let paths = new Set(this.index?.filter(v => v.selected).map(v => v.paths).reduce((a, b) => [...a, ...b], []));
+    const paths = new Set(this.index?.filter(v => v.selected).map(v => v.paths).reduce((a, b) => [...a, ...b], []));
     this.songBooksService.getCollections$([...paths]).subscribe(collections => collections.forEach(collection => this.songBooksService.addCollection(collection)));
     await this.dismiss();
   }

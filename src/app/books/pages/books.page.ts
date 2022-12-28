@@ -1,4 +1,4 @@
-import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Component, QueryList, ViewChildren} from '@angular/core';
 import {AlertController, IonItemSliding, ItemReorderEventDetail, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {Book, BookCollection} from '../../shared/models';
@@ -70,9 +70,14 @@ import {CollectionModalComponent} from '../components/collection-modal.component
     </ion-content>
   `
 })
-export class BooksPageComponent implements OnInit {
+export class BooksPageComponent {
 
-  i18n: Record<string, any> = {};
+  i18n: Record<string, any> = this.i18nService.instant([
+    'pages.books.cancel',
+    'pages.books.remove',
+    'pages.books.permanentRemoval',
+    'pages.books.removeBook',
+  ]);
   @ViewChildren('slidersRef')
   slidersRef: QueryList<IonItemSliding> | undefined;
 
@@ -97,29 +102,27 @@ export class BooksPageComponent implements OnInit {
     await detail.complete(true);
   }
 
-  removeBook(item: Book, collection: BookCollection) {
-    this.i18nService.get('pages.books.removeBook', {value: item.title}).subscribe(async (value) => {
-      const confirm = await this.alertCtrl.create({
-        header: value,
-        message: this.i18n['pages.books.permanentRemoval'],
-        buttons: [
-          {
-            text: this.i18n['pages.books.cancel'],
-            handler: () => {
-              this.closeItemSliders();
-            }
-          },
-          {
-            text: this.i18n['pages.books.remove'],
-            handler: () => {
-              this.closeItemSliders();
-              this.songBooksService.deleteBook(item, collection);
-            }
+  async removeBook(item: Book, collection: BookCollection) {
+    const confirm = await this.alertCtrl.create({
+      header: this.i18nService.instant('pages.books.removeBook', {value: item.title}),
+      message: this.i18n['pages.books.permanentRemoval'],
+      buttons: [
+        {
+          text: this.i18n['pages.books.cancel'],
+          handler: () => {
+            this.closeItemSliders();
           }
-        ]
-      });
-      await confirm.present();
+        },
+        {
+          text: this.i18n['pages.books.remove'],
+          handler: () => {
+            this.closeItemSliders();
+            this.songBooksService.deleteBook(item, collection);
+          }
+        }
+      ]
     });
+    await confirm.present();
   }
 
   async editBook(book: Book, collection: BookCollection) {
@@ -179,16 +182,5 @@ export class BooksPageComponent implements OnInit {
   private closeItemSliders() {
     // workaround for item-slider
     this.slidersRef?.forEach(v => v.close());
-  }
-
-  ngOnInit(): void {
-    this.i18nService.get([
-      'pages.books.cancel',
-      'pages.books.remove',
-      'pages.books.permanentRemoval',
-      'pages.books.removeBook',
-    ]).subscribe((value) => {
-      this.i18n = value;
-    });
   }
 }

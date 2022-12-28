@@ -1,7 +1,9 @@
 import {Injectable} from '@angular/core';
+import {BehaviorSubject, distinctUntilChanged, shareReplay, switchMap} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {Book, Digit} from '../models';
 import {ProxyStorageModel, StorageModel} from '../storage';
-import {ChromeCastService} from './chrome-cast.service';
+import {ChromeCastService, ChromeCastState} from './chrome-cast.service';
 
 const STORAGE_ID_DIGITS = 'song-number-settings-digits';
 const STORAGE_ID_NOTES = 'song-number-settings-notes';
@@ -13,12 +15,57 @@ const MESSAGE_TYPE_SONG = 1;
 const MESSAGE_TYPE_INFO = 2;
 const MESSAGE_TYPE_CLEAR = 3;
 
+export interface PresentButton {
+  icon: string;
+  color: string;
+  disabled: boolean;
+  presenting: boolean
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class SongNumberService {
 
-  isPresenting = false;
+  message$ = this.chromeCastService.message$
+  state$ = this.chromeCastService.state$
+  #present$ = new BehaviorSubject<boolean>(false);
+  isPresenting$ = this.#present$.pipe(
+    distinctUntilChanged(),
+    switchMap(present => this.state$.pipe(
+      map(state => state === ChromeCastState.CONNECTED && present)
+    )),
+    shareReplay(1)
+  )
+  presentButton$ = this.isPresenting$.pipe(
+    map(presenting => {
+      const disabled = !this.isConnected(this.chromeCastService.state)
+      return {
+        presenting,
+        disabled,
+        icon: presenting && 'square' || 'play',
+        color: presenting && 'danger' || 'primary',
+      } as PresentButton
+    }),
+    shareReplay(1)
+  )
+  castButton$ = this.state$.pipe(
+    map(state => ({
+      disabled: !this.isInitialized(state),
+      color: this.isConnected(state) && 'secondary' || 'primary',
+      icon: 'assets/icon/cast-icon.svg'
+    })),
+    shareReplay(1)
+  )
+  presentedButton$ = this.state$.pipe(
+    map(state => ({
+      disabled: !this.isConnected(state),
+      color: 'secondary',
+      icon: 'information'
+    })),
+    shareReplay(1)
+  )
+
   digits = new ProxyStorageModel<Digit[]>(STORAGE_ID_DIGITS, [{
     pos: 0,
     value: 0
@@ -62,22 +109,28 @@ export class SongNumberService {
   }
 
   presentNumber() {
+    if (this.#present$.getValue()) {
+      return this.clear()
+    }
     const message = {
       type: MESSAGE_TYPE_SONG,
       number: this.number,
-      book: this.book,
-      notes: this.notes
+      book: this.book.model,
+      notes: this.notes.model
     };
     this.chromeCastService.send(message);
-    this.isPresenting = true;
+    this.#present$.next(true);
   }
 
   presentInfo() {
+    if (this.#present$.getValue()) {
+      return this.clear()
+    }
     this.chromeCastService.send({
       type: MESSAGE_TYPE_INFO,
-      message: this.info
+      message: this.info.model
     });
-    this.isPresenting = true;
+    this.#present$.next(true);
   }
 
   readPresented() {
@@ -86,10 +139,27 @@ export class SongNumberService {
     });
   }
 
-  stopPresentation() {
+  protected clear() {
     this.chromeCastService.send({
       type: MESSAGE_TYPE_CLEAR
     });
-    this.isPresenting = false;
+    this.#present$.next(false)
+  }
+
+  cast() {
+    if (this.isConnected(this.chromeCastService.state)) {
+      this.#present$.next(false)
+      this.chromeCastService.close();
+    } else {
+      this.chromeCastService.open();
+    }
+  }
+
+  isInitialized(state: ChromeCastState) {
+    return (state & ChromeCastState.INITIALIZED) === ChromeCastState.INITIALIZED;
+  }
+
+  isConnected(state: ChromeCastState) {
+    return (state & ChromeCastState.CONNECTED) === ChromeCastState.CONNECTED;
   }
 }

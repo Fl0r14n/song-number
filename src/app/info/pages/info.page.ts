@@ -1,11 +1,10 @@
 import {Component} from '@angular/core';
-import {CastPage} from '../../shared/pages';
-import {ChromeCastService, SongNumberService} from '../../shared/services';
+import {SongNumberService} from '../../shared/services';
 
 @Component({
   selector: 'info-page',
   template: `
-    <ng-container *ngIf="chromeCastState$ | async as state">
+    <ng-container>
       <ion-header>
         <ion-toolbar>
           <ion-title>
@@ -13,10 +12,11 @@ import {ChromeCastService, SongNumberService} from '../../shared/services';
             {{ 'pages.info.title' | translate}}
           </ion-title>
           <ion-fab-button slot="end"
-                          [disabled]="!isInitialized(state)"
-                          [color]="isConnected(state) ? 'secondary' : 'primary'"
-                          (click)="cast(state)">
-            <img src="assets/icon/cast-icon.svg" alt="cast-icon">
+                          [disabled]="button.disabled"
+                          [color]="button.color"
+                          (click)="songNumberService.cast()"
+                          *ngIf="songNumberService.castButton$ | async as button">
+            <img [src]="button.icon" alt="cast-icon">
           </ion-fab-button>
         </ion-toolbar>
       </ion-header>
@@ -26,13 +26,23 @@ import {ChromeCastService, SongNumberService} from '../../shared/services';
           <ion-textarea clearInput
                         rows="6"
                         [placeholder]="'pages.info.textArea' | translate"
-                        [(ngModel)]="info"></ion-textarea>
+                        [(ngModel)]="songNumberService.info.model"></ion-textarea>
         </ion-item>
 
-        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-          <ion-fab-button [disabled]="!isConnected(state)"
+        <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+          <ion-fab-button [disabled]="button.disabled"
                           [color]="button.color"
-                          (click)="present()">
+                          (click)="songNumberService.readPresented()"
+                          *ngIf="songNumberService.presentedButton$ | async as button">
+            <ion-icon [name]="button.icon"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed"
+                 *ngIf="songNumberService.presentButton$ | async as button">
+          <ion-fab-button [disabled]="button.disabled"
+                          [color]="button.color"
+                          (click)="songNumberService.presentInfo()">
             <ion-icon [name]="button.icon"></ion-icon>
           </ion-fab-button>
         </ion-fab>
@@ -48,28 +58,8 @@ import {ChromeCastService, SongNumberService} from '../../shared/services';
     }
   `]
 })
-export class InfoPageComponent extends CastPage {
+export class InfoPageComponent {
 
-  constructor(chromeCastService: ChromeCastService,
-              private songNumberService: SongNumberService) {
-    super(chromeCastService);
-  }
-
-  get info() {
-    return this.songNumberService.info.model;
-  }
-
-  set info(info) {
-    this.songNumberService.info.model = info;
-  }
-
-  present() {
-    if (!this.songNumberService.isPresenting) {
-      this.songNumberService.presentInfo();
-      CastPage.presentButton = CastPage.presentButtonON;
-    } else {
-      this.songNumberService.stopPresentation();
-      CastPage.presentButton = CastPage.presentButtonOFF;
-    }
+  constructor(public songNumberService: SongNumberService) {
   }
 }

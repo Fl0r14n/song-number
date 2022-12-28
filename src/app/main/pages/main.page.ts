@@ -1,16 +1,15 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {AlertController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {from} from 'rxjs';
 import {filter, map, switchMap} from 'rxjs/operators';
-import {CastPage} from '../../shared/pages';
-import {ChromeCastService, SongBooksService, SongNumberService} from '../../shared/services';
+import {SongBooksService, SongNumberService} from '../../shared/services';
 import {SelectBookModalComponent} from '../components/select-book-modal.component';
 
 @Component({
   selector: 'main-page',
   template: `
-    <ng-container *ngIf="chromeCastState$ | async as state">
+    <ng-container>
       <ion-header>
         <ion-toolbar>
           <ion-title>
@@ -18,20 +17,21 @@ import {SelectBookModalComponent} from '../components/select-book-modal.componen
             {{ 'pages.main.title' | translate}}
           </ion-title>
           <ion-fab-button slot="end"
-                          [disabled]="!isInitialized(state)"
-                          [color]="isConnected(state) ? 'secondary' : 'primary'"
-                          (click)="cast(state)">
-            <img src="assets/icon/cast-icon.svg" alt="cast-icon">
+                          [disabled]="button.disabled"
+                          [color]="button.color"
+                          (click)="songNumberService.cast()"
+                          *ngIf="songNumberService.castButton$ | async as button">
+            <img [src]="button.icon" alt="cast-icon">
           </ion-fab-button>
         </ion-toolbar>
       </ion-header>
 
       <ion-content class="ion-padding">
-        <song-number [digits]="digits"></song-number>
+        <song-number [digits]="songNumberService.digits.model"></song-number>
 
         <ion-item class="ion-padding-start ion-padding-end">
           <ion-label position="floating">{{ 'pages.main.notes' | translate}}</ion-label>
-          <ion-input type="text" [(ngModel)]="notes"></ion-input>
+          <ion-input type="text" [(ngModel)]="songNumberService.notes.model"></ion-input>
         </ion-item>
 
         <ion-item (click)="openSelectBookModal()" class="ion-padding">
@@ -46,17 +46,19 @@ import {SelectBookModalComponent} from '../components/select-book-modal.componen
         </ion-item>
 
         <ion-fab vertical="bottom" horizontal="start" slot="fixed">
-          <ion-fab-button [disabled]="!isConnected(state)"
-                          color="secondary"
-                          (click)="readPresented()">
-            <ion-icon name="information"></ion-icon>
+          <ion-fab-button [disabled]="button.disabled"
+                          [color]="button.color"
+                          (click)="songNumberService.readPresented()"
+                          *ngIf="songNumberService.presentedButton$ | async as button">
+            <ion-icon [name]="button.icon"></ion-icon>
           </ion-fab-button>
         </ion-fab>
 
-        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-          <ion-fab-button [disabled]="!isConnected(state)"
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed"
+                 *ngIf="songNumberService.presentButton$ | async as button">
+          <ion-fab-button [disabled]="button.disabled"
                           [color]="button.color"
-                          (click)="present()">
+                          (click)="songNumberService.presentNumber()">
             <ion-icon [name]="button.icon"></ion-icon>
           </ion-fab-button>
         </ion-fab>
@@ -72,27 +74,54 @@ import {SelectBookModalComponent} from '../components/select-book-modal.componen
     }
   `]
 })
-export class MainPageComponent extends CastPage implements OnInit {
+export class MainPageComponent implements OnDestroy {
 
-  constructor(chromeCastService: ChromeCastService,
-              private i18nService: TranslateService,
-              private songNumberService: SongNumberService,
+  i18n = this.i18nService.instant([
+    'pages.main.currentlyPresenting',
+    'pages.main.close',
+    'pages.main.empty',
+  ])
+  subscription = this.songNumberService.message$.pipe(
+    filter(data => data.isFeedback),
+    map(data => {
+      const {thumb} = data.book || {};
+      let image = '';
+      if (thumb) {
+        image = thumb.match(/\((.*?)\)/)[1].replace(/('|")/g, '');
+        image = `<img src="${image}">`;
+      }
+      const notes = data.notes && `<ion-card-content>${data.notes}</ion-card-content>` || '';
+      switch (data.type) {
+        case 1: {
+          return `
+                ${image}
+                <ion-card-header>
+                <ion-card-title>${data.number} ${data.book.title}</ion-card-title>
+                <ion-card-subtitle>${data.book.description}</ion-card-subtitle>
+                </ion-card-header>
+                ${notes}
+            `;
+        }
+        case 2: {
+          return data.message;
+        }
+        default: {
+          return this.i18n['pages.main.empty'];
+        }
+      }
+    }),
+    switchMap(data => from(this.alertCtrl.create({
+      cssClass: 'info-modal',
+      message: data,
+      buttons: [this.i18n['pages.main.close']]
+    })))
+  ).subscribe(feedbackMessage => feedbackMessage.present());
+
+  constructor(private i18nService: TranslateService,
+              public songNumberService: SongNumberService,
               private songBooksService: SongBooksService,
               private modalCtrl: ModalController,
               private alertCtrl: AlertController) {
-    super(chromeCastService);
-  }
-
-  get digits() {
-    return this.songNumberService.digits.model;
-  }
-
-  set notes(notes) {
-    this.songNumberService.notes.model = notes;
-  }
-
-  get notes() {
-    return this.songNumberService.notes.model;
   }
 
   get book() {
@@ -122,63 +151,7 @@ export class MainPageComponent extends CastPage implements OnInit {
     }
   }
 
-  present() {
-    if (!this.songNumberService.isPresenting) {
-      this.songNumberService.presentNumber();
-      CastPage.presentButton = CastPage.presentButtonON;
-    } else {
-      this.songNumberService.stopPresentation();
-      CastPage.presentButton = CastPage.presentButtonOFF;
-    }
-  }
-
-  readPresented() {
-    this.songNumberService.readPresented();
-  }
-
-  ngOnInit() {
-    this.i18nService.get([
-      'pages.main.currentlyPresenting',
-      'pages.main.close',
-      'pages.main.empty',
-    ]).subscribe(value => {
-      this.i18n = value;
-    })
-    this.chromeCastService.messageListener$.pipe(
-      filter(data => data.isFeedback),
-      map(data => {
-        const {thumb} = data.book;
-        let image = '';
-        if (thumb) {
-          image = thumb.match(/\((.*?)\)/)[1].replace(/('|")/g, '');
-          image = `<img src="${image}">`;
-        }
-        const notes = data.notes ? `<ion-card-content>${data.notes}</ion-card-content>` : '';
-
-        switch (data.type) {
-          case 1: {
-            return `
-                ${image}
-                <ion-card-header>
-                <ion-card-title>${data.number} ${data.book.title}</ion-card-title>
-                <ion-card-subtitle>${data.book.description}</ion-card-subtitle>
-                </ion-card-header>
-                ${notes}
-            `;
-          }
-          case 2: {
-            return data.message;
-          }
-          default: {
-            return this.i18n['pages.main.empty'];
-          }
-        }
-      }),
-      switchMap(data => from(this.alertCtrl.create({
-        cssClass: 'info-modal',
-        message: data,
-        buttons: [this.i18n['pages.main.close']]
-      })))
-    ).subscribe(feedbackMessage => feedbackMessage.present());
+  ngOnDestroy() {
+    this.subscription?.unsubscribe()
   }
 }

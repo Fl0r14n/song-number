@@ -1,4 +1,4 @@
-import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Component, QueryList, ViewChildren} from '@angular/core';
 import {AlertController, IonItemSliding, ItemReorderEventDetail, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {BookCollection} from '../../shared/models';
@@ -50,9 +50,17 @@ import {SongBooksService} from '../../shared/services';
     </ion-content>
   `
 })
-export class CollectionModalComponent implements OnInit {
+export class CollectionModalComponent {
 
-  i18n: Record<string, any> = {};
+  i18n: Record<string, any> = this.i18nService.instant([
+    'pages.collectionModal.addDialog',
+    'pages.collectionModal.add',
+    'pages.collectionModal.edit',
+    'pages.collectionModal.cancel',
+    'pages.collectionModal.remove',
+    'pages.collectionModal.permanentRemoval',
+    'pages.collectionModal.collection'
+  ]);
   @ViewChildren('slidersRef')
   slidersRef: QueryList<IonItemSliding> | undefined;
 
@@ -66,8 +74,8 @@ export class CollectionModalComponent implements OnInit {
     return this.songBookService.collections.model;
   }
 
-  async dismiss() {
-    await this.modalController.dismiss();
+  dismiss() {
+    return this.modalController.dismiss();
   }
 
   async addCollection() {
@@ -99,66 +107,58 @@ export class CollectionModalComponent implements OnInit {
     await confirm.present();
   }
 
-  removeCollection(collection: BookCollection) {
-    this.i18nService.get('pages.collectionModal.removeDialog', {
-      value: collection.name
-    }).subscribe(async (value) => {
-      const confirm = await this.alertCtrl.create({
-        header: value,
-        message: this.i18n['pages.collectionModal.permanentRemoval'],
-        buttons: [
-          {
-            text: this.i18n['pages.collectionModal.cancel'],
-            handler: () => {
-              this.closeItemSliders();
-            }
-          },
-          {
-            text: this.i18n['pages.collectionModal.remove'],
-            handler: () => {
-              this.closeItemSliders();
-              const idx = this.collections.indexOf(collection);
-              this.collections.splice(idx, 1);
-            }
+  async removeCollection(collection: BookCollection) {
+    const confirm = await this.alertCtrl.create({
+      header: this.i18nService.instant('pages.collectionModal.removeDialog', {value: collection.name}),
+      message: this.i18n['pages.collectionModal.permanentRemoval'],
+      buttons: [
+        {
+          text: this.i18n['pages.collectionModal.cancel'],
+          handler: () => {
+            this.closeItemSliders();
           }
-        ]
-      });
-      await confirm.present();
+        },
+        {
+          text: this.i18n['pages.collectionModal.remove'],
+          handler: () => {
+            this.closeItemSliders();
+            const idx = this.collections.indexOf(collection);
+            this.collections.splice(idx, 1);
+          }
+        }
+      ]
     });
+    await confirm.present();
   }
 
-  editCollection(collection: BookCollection) {
-    this.i18nService.get('pages.collectionModal.editDialog', {
-      value: collection.name
-    }).subscribe(async (value) => {
-      const confirm = await this.alertCtrl.create({
-        header: value,
-        inputs: [
-          {
-            name: 'label',
-            placeholder: this.i18n['pages.collectionModal.collection'],
-            type: 'text',
-            value: collection.name
+  async editCollection(collection: BookCollection) {
+    const confirm = await this.alertCtrl.create({
+      header: this.i18nService.instant('pages.collectionModal.editDialog', {value: collection.name}),
+      inputs: [
+        {
+          name: 'label',
+          placeholder: this.i18n['pages.collectionModal.collection'],
+          type: 'text',
+          value: collection.name
+        }
+      ],
+      buttons: [
+        {
+          text: this.i18n['pages.collectionModal.cancel'],
+          handler: () => {
+            this.closeItemSliders();
           }
-        ],
-        buttons: [
-          {
-            text: this.i18n['pages.collectionModal.cancel'],
-            handler: () => {
-              this.closeItemSliders();
-            }
-          },
-          {
-            text: this.i18n['pages.collectionModal.edit'],
-            handler: (data) => {
-              this.closeItemSliders();
-              collection.name = data.label;
-            }
+        },
+        {
+          text: this.i18n['pages.collectionModal.edit'],
+          handler: (data) => {
+            this.closeItemSliders();
+            collection.name = data.label;
           }
-        ]
-      });
-      await confirm.present();
+        }
+      ]
     });
+    await confirm.present();
   }
 
   async reorderCollection({detail}: CustomEvent<ItemReorderEventDetail>) {
@@ -169,19 +169,5 @@ export class CollectionModalComponent implements OnInit {
   private closeItemSliders() {
     // workaround for item-slider
     this.slidersRef?.forEach(v => v.close());
-  }
-
-  ngOnInit() {
-    this.i18nService.get([
-      'pages.collectionModal.addDialog',
-      'pages.collectionModal.add',
-      'pages.collectionModal.edit',
-      'pages.collectionModal.cancel',
-      'pages.collectionModal.remove',
-      'pages.collectionModal.permanentRemoval',
-      'pages.collectionModal.collection',
-    ]).subscribe((value) => {
-      this.i18n = value;
-    });
   }
 }

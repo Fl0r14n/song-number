@@ -1,7 +1,7 @@
 import {HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {PreloadAllModules, RouteReuseStrategy, RouterModule, Routes} from '@angular/router';
+import {PreloadAllModules, RouteReuseStrategy, RouterModule} from '@angular/router';
 import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {of} from 'rxjs';
@@ -20,18 +20,16 @@ class I18nLoader implements TranslateLoader {
   }
 }
 
-const routes: Routes = [
-  {
-    path: '',
-    loadChildren: () => import('./layout/layout.module').then(m => m.LayoutModule)
-  }
-];
-
 @NgModule({
   imports: [
     BrowserModule,
     HttpClientModule,
-    RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules}),
+    RouterModule.forRoot([{
+      path: '',
+      loadChildren: () => import('./layout/layout.module').then(m => m.LayoutModule)
+    }], {
+      preloadingStrategy: PreloadAllModules
+    }),
     IonicModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
@@ -40,7 +38,10 @@ const routes: Routes = [
       }
     }),
   ],
-  providers: [{provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
+  providers: [{
+    provide: RouteReuseStrategy,
+    useClass: IonicRouteStrategy
+  }],
   declarations: [AppComponent],
   bootstrap: [AppComponent]
 })

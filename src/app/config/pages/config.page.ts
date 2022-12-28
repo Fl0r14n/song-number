@@ -72,10 +72,8 @@ export class ConfigPageComponent {
   }
 
   set debug(value: boolean) {
-    console.log(value)
     this.log.logLevel.model = value && LogLevel.DEBUG || LogLevel.INFO;
   }
-
 
   async importCollection() {
     const modal = await this.modalCtrl.create({
