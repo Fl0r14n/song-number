@@ -1,6 +1,6 @@
 {
   "name": "song-number",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "author": "Fl0r14n <florian.chis@gmail.com>",
   "homepage": "https://github.com/Fl0r14n/song-number.git",
   "description": "A small mobile app that will allow user to set a song number from a list of song books and cast it.",
@@ -59,7 +59,7 @@
     "@ionic/angular-toolkit": "^7.0.0",
     "@types/jasmine": "^4.3.1",
     "@types/node": "^18.11.18",
-    "cordova-chromecast": "git+https://github.com/miloproductionsinc/cordova-plugin-chromecast",
+    "cordova-chromecast": "git+https://github.com/funxtionatics/cordova-plugin-chromecast.git",
     "jasmine-core": "^4.5.0",
     "karma": "^6.4.1",
     "karma-chrome-launcher": "^3.1.1",
