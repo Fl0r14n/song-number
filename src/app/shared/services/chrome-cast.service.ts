@@ -64,7 +64,6 @@ export class ChromeCastService {
   )
   #message$ = new BehaviorSubject<any>(undefined);
   message$ = this.#message$.pipe(
-    distinctUntilChanged(),
     map(message => message && JSON.parse(message) || undefined),
     shareReplay(1)
   )
