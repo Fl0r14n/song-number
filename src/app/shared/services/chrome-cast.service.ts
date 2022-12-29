@@ -2,7 +2,8 @@ import {DOCUMENT} from '@angular/common';
 import {Inject, Injectable, NgZone} from '@angular/core';
 import {Platform} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {BehaviorSubject, distinctUntilChanged, ReplaySubject, shareReplay} from 'rxjs';
+import {BehaviorSubject, distinctUntilChanged, shareReplay} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {LoggerService} from './logger.service';
 
 declare global {
@@ -25,6 +26,8 @@ export enum ChromeCastState {
 
 const APPLICATION_ID = '20CAA3A2';
 const NAMESPACE = 'urn:x-cast:ro.biserica2.cast.songnumber';
+
+const CAST_SCRIPT = 'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js'
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +62,12 @@ export class ChromeCastService {
     distinctUntilChanged(),
     shareReplay(1)
   )
-  message$ = new ReplaySubject<any>(1);
+  #message$ = new BehaviorSubject<any>(undefined);
+  message$ = this.#message$.pipe(
+    distinctUntilChanged(),
+    map(message => message && JSON.parse(message) || undefined),
+    shareReplay(1)
+  )
 
   constructor(protected platform: Platform,
               @Inject(DOCUMENT) document: Document,
@@ -71,7 +79,7 @@ export class ChromeCastService {
       if (!cast) {
         const script = document.createElement('script')
         script.type = 'text/javascript'
-        script.src = 'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js'
+        script.src = CAST_SCRIPT
         script.onload = () => setTimeout(this.init, 500)
         document.head.append(script)
       } else {
@@ -131,7 +139,7 @@ export class ChromeCastService {
 
   send = (msg: any) => {
     this.#session && this.#session.sendMessage(NAMESPACE, msg, (msg: any) => {
-      this.log.debug(this.i18n['providers.chromecast.sendMessage'] + JSON.stringify(msg));
+      // this.log.debug(this.i18n['providers.chromecast.sendMessage'] + JSON.stringify(msg));
     }, (err: any) => {
       this.log.error(`${this.i18n['providers.chromecast.error']}${err.description}`);
     });
@@ -146,7 +154,7 @@ export class ChromeCastService {
     session.addMessageListener(NAMESPACE, (namespace: string, message: any) => {
       // message received
       this.log.debug(`${this.i18n['providers.chromecast.messageReceived']}${message}`);
-      this.message$.next(JSON.parse(message));
+      this.zone.run(() => this.#message$.next(message));
     });
     this.#session = session;
     this.state = ChromeCastState.CONNECTED;

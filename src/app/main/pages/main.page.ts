@@ -54,11 +54,11 @@ import {SelectBookModalComponent} from '../components/select-book-modal.componen
           </ion-fab-button>
         </ion-fab>
 
-        <ion-fab vertical="bottom" horizontal="end" slot="fixed"
-                 *ngIf="songNumberService.presentButton$ | async as button">
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
           <ion-fab-button [disabled]="button.disabled"
                           [color]="button.color"
-                          (click)="songNumberService.presentNumber()">
+                          (click)="songNumberService.presentNumber(button.presenting)"
+                          *ngIf="songNumberService.presentButton$ | async as button">
             <ion-icon [name]="button.icon"></ion-icon>
           </ion-fab-button>
         </ion-fab>
@@ -82,7 +82,7 @@ export class MainPageComponent implements OnDestroy {
     'pages.main.empty',
   ])
   subscription = this.songNumberService.message$.pipe(
-    filter(data => data.isFeedback),
+    filter(data => data?.isFeedback),
     map(data => {
       const {thumb} = data.book || {};
       let image = '';
@@ -94,13 +94,13 @@ export class MainPageComponent implements OnDestroy {
       switch (data.type) {
         case 1: {
           return `
-                ${image}
-                <ion-card-header>
-                <ion-card-title>${data.number} ${data.book.title}</ion-card-title>
-                <ion-card-subtitle>${data.book.description}</ion-card-subtitle>
-                </ion-card-header>
-                ${notes}
-            `;
+            ${image}
+            <ion-card-header>
+            <ion-card-title>${data.number} ${data.book.title}</ion-card-title>
+            <ion-card-subtitle>${data.book.description}</ion-card-subtitle>
+            </ion-card-header>
+            ${notes}
+          `;
         }
         case 2: {
           return data.message;

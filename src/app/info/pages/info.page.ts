@@ -42,7 +42,7 @@ import {SongNumberService} from '../../shared/services';
                  *ngIf="songNumberService.presentButton$ | async as button">
           <ion-fab-button [disabled]="button.disabled"
                           [color]="button.color"
-                          (click)="songNumberService.presentInfo()">
+                          (click)="songNumberService.presentInfo(button.presenting)">
             <ion-icon [name]="button.icon"></ion-icon>
           </ion-fab-button>
         </ion-fab>

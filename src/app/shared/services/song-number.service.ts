@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, distinctUntilChanged, shareReplay, switchMap} from 'rxjs';
+import {distinctUntilChanged, shareReplay, switchMap} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Book, Digit} from '../models';
 import {ProxyStorageModel, StorageModel} from '../storage';
@@ -29,24 +29,27 @@ export class SongNumberService {
 
   message$ = this.chromeCastService.message$
   state$ = this.chromeCastService.state$
-  #present$ = new BehaviorSubject<boolean>(false);
-  isPresenting$ = this.#present$.pipe(
+  isConnected$ = this.state$.pipe(
+    map(state => state === ChromeCastState.CONNECTED),
     distinctUntilChanged(),
-    switchMap(present => this.state$.pipe(
-      map(state => state === ChromeCastState.CONNECTED && present)
-    )),
     shareReplay(1)
   )
-  presentButton$ = this.isPresenting$.pipe(
-    map(presenting => {
-      const disabled = !this.isConnected(this.chromeCastService.state)
-      return {
+  isPresenting$ = this.isConnected$.pipe(
+    switchMap(() => this.message$),
+    map(message => message?.type === MESSAGE_TYPE_SONG || message?.type === MESSAGE_TYPE_INFO),
+    distinctUntilChanged(),
+    shareReplay(1)
+  )
+
+  presentButton$ = this.isConnected$.pipe(
+    switchMap(isConnected => this.isPresenting$.pipe(
+      map(presenting => ({
         presenting,
-        disabled,
+        disabled: !isConnected,
         icon: presenting && 'square' || 'play',
         color: presenting && 'danger' || 'primary',
-      } as PresentButton
-    }),
+      } as PresentButton))
+    )),
     shareReplay(1)
   )
   castButton$ = this.state$.pipe(
@@ -57,9 +60,9 @@ export class SongNumberService {
     })),
     shareReplay(1)
   )
-  presentedButton$ = this.state$.pipe(
+  presentedButton$ = this.isConnected$.pipe(
     map(state => ({
-      disabled: !this.isConnected(state),
+      disabled: !this.isConnected(this.chromeCastService.state),
       color: 'secondary',
       icon: 'information'
     })),
@@ -108,29 +111,28 @@ export class SongNumberService {
   constructor(protected chromeCastService: ChromeCastService) {
   }
 
-  presentNumber() {
-    if (this.#present$.getValue()) {
-      return this.clear()
+  presentNumber(clear?: boolean) {
+    if (clear) {
+      this.clear()
+      return
     }
-    const message = {
+    this.chromeCastService.send({
       type: MESSAGE_TYPE_SONG,
       number: this.number,
       book: this.book.model,
       notes: this.notes.model
-    };
-    this.chromeCastService.send(message);
-    this.#present$.next(true);
+    })
   }
 
-  presentInfo() {
-    if (this.#present$.getValue()) {
-      return this.clear()
+  presentInfo(clear?: boolean) {
+    if (clear) {
+      this.clear()
+      return
     }
     this.chromeCastService.send({
       type: MESSAGE_TYPE_INFO,
       message: this.info.model
-    });
-    this.#present$.next(true);
+    })
   }
 
   readPresented() {
@@ -139,15 +141,13 @@ export class SongNumberService {
     });
   }
 
-  protected clear() {
+  clear() {
     this.chromeCastService.send({
       type: MESSAGE_TYPE_CLEAR
     });
-    this.#present$.next(false)
   }
 
   cast() {
-    this.#present$.next(false)
     if (this.isConnected(this.chromeCastService.state)) {
       this.chromeCastService.close();
     } else {
