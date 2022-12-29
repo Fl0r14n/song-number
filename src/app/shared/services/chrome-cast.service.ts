@@ -107,7 +107,7 @@ export class ChromeCastService {
       });
       initialize(apiConfig, () => this.state = ChromeCastState.INITIALIZED, (err: any) => {
         this.state = ChromeCastState.DISABLED
-        this.log.error(this.i18n['providers.chromecast.error'] + JSON.stringify(err));
+        this.log.error(`${this.i18n['providers.chromecast.error']}${err.description}`);
       })
     }
   };
@@ -123,7 +123,7 @@ export class ChromeCastService {
       this.#session = undefined;
       this.state = state || ChromeCastState.AVAILABLE
     }, (err: any) => {
-      this.log.error(this.i18n['providers.chromecast.error'] + JSON.stringify(err));
+      this.log.error(`${this.i18n['providers.chromecast.error']}${err.description}`);
       this.#session = undefined;
       this.state = state || ChromeCastState.AVAILABLE
     });
@@ -133,8 +133,7 @@ export class ChromeCastService {
     this.#session && this.#session.sendMessage(NAMESPACE, msg, (msg: any) => {
       this.log.debug(this.i18n['providers.chromecast.sendMessage'] + JSON.stringify(msg));
     }, (err: any) => {
-      this.log.error(this.i18n['providers.chromecast.error'] + JSON.stringify(err));
-      this.close()
+      this.log.error(`${this.i18n['providers.chromecast.error']}${err.description}`);
     });
   }
 

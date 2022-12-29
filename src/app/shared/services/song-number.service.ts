@@ -147,8 +147,8 @@ export class SongNumberService {
   }
 
   cast() {
+    this.#present$.next(false)
     if (this.isConnected(this.chromeCastService.state)) {
-      this.#present$.next(false)
       this.chromeCastService.close();
     } else {
       this.chromeCastService.open();

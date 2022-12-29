@@ -86,6 +86,9 @@ export class CollectionModalComponent {
           name: 'label',
           placeholder: this.i18n['pages.collectionModal.collection'],
           type: 'text',
+          attributes: {
+            minlength: 1,
+          }
         }
       ],
       buttons: [
@@ -99,7 +102,11 @@ export class CollectionModalComponent {
           text: this.i18n['pages.collectionModal.add'],
           handler: (data) => {
             this.closeItemSliders();
-            this.songBookService.addCollection({name: data.label});
+            if (data.label.length) {
+              this.songBookService.addCollection({name: data.label})
+              return true
+            }
+            return false
           }
         }
       ]
@@ -139,7 +146,10 @@ export class CollectionModalComponent {
           name: 'label',
           placeholder: this.i18n['pages.collectionModal.collection'],
           type: 'text',
-          value: collection.name
+          value: collection.name,
+          attributes: {
+            minlength: 1,
+          }
         }
       ],
       buttons: [
@@ -152,8 +162,12 @@ export class CollectionModalComponent {
         {
           text: this.i18n['pages.collectionModal.edit'],
           handler: (data) => {
-            this.closeItemSliders();
-            collection.name = data.label;
+            if (data.label.length) {
+              this.closeItemSliders();
+              collection.name = data.label;
+              return true
+            }
+            return false
           }
         }
       ]
