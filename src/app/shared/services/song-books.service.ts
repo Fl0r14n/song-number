@@ -61,12 +61,12 @@ export class SongBooksService {
    */
   getCollections$(paths: string[]) {
     return from(paths).pipe(
+      map(path => this.http.get<BookCollection[]>(`${this.endpoint.model}${path}`)),
+      combineLatestAll(),
       catchError(err => {
         this.log.error(err.message);
         return EMPTY;
       }),
-      map(path => this.http.get<BookCollection[]>(`${this.endpoint.model}${path}`)),
-      combineLatestAll(),
       map(v => v.reduce((a, b) => [...a, ...b]))
     );
   }

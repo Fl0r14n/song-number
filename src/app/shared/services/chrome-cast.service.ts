@@ -66,7 +66,7 @@ export class ChromeCastService {
               protected i18nService: TranslateService,
               protected log: LoggerService,
               protected zone: NgZone) {
-    this.platform.ready().then(source => {
+    this.platform.ready().then(() => {
       const {cast} = window.chrome || {}
       if (!cast) {
         const script = document.createElement('script')
@@ -114,7 +114,7 @@ export class ChromeCastService {
 
   open = () => {
     const {cast} = window.chrome || {}
-    this.#state$.getValue() === ChromeCastState.AVAILABLE && cast.requestSession(this.onSession)
+    this.state === ChromeCastState.AVAILABLE && cast.requestSession(this.onSession)
   };
 
   close = (state?: ChromeCastState) => {
